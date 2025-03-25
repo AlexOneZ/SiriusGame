@@ -6,7 +6,5 @@
   
 */
 
-CFBundleDisplayName = "Sirius Game";
-CFBundleName = "Sirius";
-"somekey" = "Hello";
+"somekey" = "Привет";
 
