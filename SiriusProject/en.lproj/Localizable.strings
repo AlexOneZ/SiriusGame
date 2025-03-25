@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  SiriusProject
+
+  Created by Алексей Кобяков on 25.03.2025.
+  
+*/
+CFBundleDisplayName = "Cириус. Соревнования";
+CFBundleName = "Сириус";
+"somekey" = "Привет";
