@@ -1,0 +1,12 @@
+//
+//  Staging.xcconfig
+//  SiriusProject
+//
+//  Created by Maria Mayorova on 26.03.2025.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+APP_DISPLAY_NAME = SiriusGame staging
+PRODUCT_BUNDLE_IDENTIFIER = com.Sirius.SiriusGame
