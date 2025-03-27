@@ -9,11 +9,11 @@ import SwiftUI
 
 struct ContentView: View {
     var appViewModel: AppViewModel
-    
+
     init(appViewModel: AppViewModel) {
         self.appViewModel = appViewModel
     }
-    
+
     var body: some View {
         TabView {
             EventsListView(eventsListViewModel: appViewModel.eventsListViewModel)

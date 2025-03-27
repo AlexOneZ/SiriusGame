@@ -9,7 +9,8 @@ import SwiftUI
 
 @Observable
 class NetworkManager {
-    //MARK: Events
+    // MARK: Events
+
     func getAllEvents() -> [Event] {
         return [
             Event(id: 1, title: "Хоккей", description: "Игра в хоккей", state: .done, score: 3),
@@ -18,25 +19,18 @@ class NetworkManager {
             Event(id: 4, title: "Шашки", description: "Игра в шашки", state: .next, score: 0)
         ]
     }
-    
-    func setScore(for eventId: Int, PIN: String) {
-        
-    }
-    
-    //MARK: Team managment
-    func logIn(name: String) {
-        
-    }
-    
+
+    func setScore(for eventId: Int, PIN: String) {}
+
+    // MARK: Team managment
+
+    func logIn(name: String) {}
+
     func getTeamName() -> String {
         "Team"
     }
-    
-    func changeName(_ newName: String) {
-        
-    }
-    
-    func logOut() {
-        
-    }
+
+    func changeName(_ newName: String) {}
+
+    func logOut() {}
 }

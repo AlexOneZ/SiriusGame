@@ -9,11 +9,11 @@ import SwiftUI
 
 final class EventsListViewModel: ObservableObject {
     let networkManager: NetworkManager
-    
+
     init(networkManager: NetworkManager) {
         self.networkManager = networkManager
     }
-    
+
     func getEvents() -> [Event] {
         networkManager.getAllEvents()
     }

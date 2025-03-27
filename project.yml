@@ -21,6 +21,7 @@ schemes:
                 SiriusProject: all
         run:
             config: Staging Debug
+            
         test:
             config: Staging Debug
             gatherCoverageData: true

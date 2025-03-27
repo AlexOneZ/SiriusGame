@@ -9,7 +9,7 @@ import SwiftUI
 
 struct EventCard: View {
     let event: Event
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -45,6 +45,5 @@ struct EventCard: View {
                 .foregroundStyle(Color(.systemGray3))
         }
         .padding(.horizontal)
-        
     }
 }

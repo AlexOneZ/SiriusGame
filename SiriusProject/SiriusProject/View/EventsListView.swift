@@ -9,11 +9,11 @@ import SwiftUI
 
 struct EventsListView: View {
     @ObservedObject var viewModel: EventsListViewModel
-    
+
     init(eventsListViewModel: EventsListViewModel) {
-        self.viewModel = eventsListViewModel
+        viewModel = eventsListViewModel
     }
-    
+
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading) {
