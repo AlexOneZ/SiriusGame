@@ -12,9 +12,8 @@ async def get_teams() -> list[STeam]:
     return events
 
 @router.post("")
-async def add_team(team: Annotated[STeamAdd, Depends()]) -> STeamId:
-    try:
+async def enter_or_create_team(team: Annotated[STeamAdd, Depends()]) -> STeamId:
+    team_id = await TeamRepository.get_id_by_name(team.name)
+    if team_id is None:
         team_id = await TeamRepository.add_one(team)
-        return {"ok": True, "team_id": team_id}
-    except Exception as e:
-        return {"ok": False, "error": str(e)}
+    return {"ok": True, "team_id": team_id}

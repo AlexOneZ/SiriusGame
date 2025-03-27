@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Union
 from pydantic import BaseModel
 
 class STeamAdd(BaseModel):
@@ -7,12 +7,6 @@ class STeamAdd(BaseModel):
 class STeam(STeamAdd):
     id: int
     
-class STeamIdSuccess(BaseModel):
+class STeamId(BaseModel):
     ok: bool = True
     team_id: int
-
-class STeamIdError(BaseModel):
-    ok: bool = False
-    error: str
-
-STeamId = Union[STeamIdSuccess, STeamIdError]
