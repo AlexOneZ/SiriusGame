@@ -8,9 +8,9 @@
 import SwiftUI
 
 final class EventsListViewModel: ObservableObject {
-    let networkManager: NetworkManager
+    let networkManager: NetworkManagerProtocol
 
-    init(networkManager: NetworkManager) {
+    init(networkManager: NetworkManagerProtocol) {
         self.networkManager = networkManager
     }
 
