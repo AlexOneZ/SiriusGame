@@ -21,6 +21,16 @@ struct ContentView: View {
                     Image(systemName: "rectangle.on.rectangle")
                     Text("events")
                 }
+            MapView()
+                .tabItem {
+                    Image(systemName: "mappin.circle")
+                    Text("map")
+                }
+            LeaderboardView(liderboardViewModel: appViewModel.leaderboardViewModel)
+                .tabItem {
+                    Image(systemName: "chart.bar.xaxis.ascending")
+                    Text("leaderboard")
+                }
             SettingsView(settingsViewModel: appViewModel.settingsViewModel)
                 .tabItem {
                     Image(systemName: "gear")
@@ -31,6 +41,10 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(appViewModel: AppViewModel(eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()), settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager()), loginViewModel: LoginViewModel(networkManager: FakeNetworkManager()), pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager())))
+    ContentView(appViewModel: AppViewModel(eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()),
+                                           settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager()),
+                                           loginViewModel: LoginViewModel(networkManager: FakeNetworkManager()),
+                                           pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager()),
+                                           leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager())))
         .environment(\.locale, .init(identifier: "ru"))
 }
