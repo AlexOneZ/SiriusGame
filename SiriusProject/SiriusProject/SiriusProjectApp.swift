@@ -16,7 +16,8 @@ struct SiriusProjectApp: App {
         networkManager = FakeNetworkManager()
         appViewModel = AppViewModel(
             eventsListViewModel: EventsListViewModel(networkManager: networkManager),
-            settingsViewModel: SettingsViewModel(networkManager: networkManager))
+            settingsViewModel: SettingsViewModel(networkManager: networkManager)
+        )
     }
 
     var body: some Scene {
