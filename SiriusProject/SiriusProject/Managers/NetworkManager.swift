@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct NetworkManager: NetworkManagerProtocol {
+struct FakeNetworkManager: NetworkManagerProtocol {
     func getAllEvents() -> [Event] {
         return [
             Event(id: 1, title: "Хоккей", description: "Игра в хоккей", state: .done, score: 3),

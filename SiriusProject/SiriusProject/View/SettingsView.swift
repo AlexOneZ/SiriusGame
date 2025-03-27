@@ -31,5 +31,5 @@ struct SettingsView: View {
 }
 
 #Preview {
-    SettingsView(settingsViewModel: SettingsViewModel(networkManager: NetworkManager()))
+    SettingsView(settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager()))
 }

@@ -8,9 +8,9 @@
 import SwiftUI
 
 final class SettingsViewModel: ObservableObject {
-    let networkManager: NetworkManager
-
-    init(networkManager: NetworkManager) {
+    let networkManager: NetworkManagerProtocol
+    
+    init(networkManager: NetworkManagerProtocol) {
         self.networkManager = networkManager
     }
 
