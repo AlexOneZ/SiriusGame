@@ -9,26 +9,24 @@ import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject var viewModel: SettingsViewModel
-    
+
     init(settingsViewModel: SettingsViewModel) {
-        self.viewModel = settingsViewModel
+        viewModel = settingsViewModel
     }
-    
+
     var body: some View {
         VStack {
             Spacer()
             Text(viewModel.teamName)
                 .font(.title)
-            
+
             Spacer()
-            
+
             Button("logout") {
                 viewModel.logOutAction()
             }
             .padding(.bottom)
         }
-        
-        
     }
 }
 

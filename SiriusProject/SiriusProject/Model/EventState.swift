@@ -11,7 +11,7 @@ enum EventState: String {
     case done
     case now
     case next
-    
+
     func getColor() -> Color {
         switch self {
         case .done:
@@ -22,7 +22,7 @@ enum EventState: String {
             Color.red
         }
     }
-    
+
     func getDescription() -> LocalizedStringKey? {
         switch self {
         case .done:
