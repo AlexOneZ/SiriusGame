@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct SButton: View {
-    
     var title: LocalizedStringKey
-    
+
     var body: some View {
         RoundedRectangle(cornerRadius: 20)
             .fill(Color("SiriusColor"))

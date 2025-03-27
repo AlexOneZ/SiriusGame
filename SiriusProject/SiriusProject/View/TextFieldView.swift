@@ -8,10 +8,9 @@
 import SwiftUI
 
 struct TextFieldView: View {
-    
     var title: LocalizedStringKey
     @Binding var text: String
-    
+
     var body: some View {
         TextField(title, text: $text)
             .foregroundColor(.black)
@@ -26,7 +25,6 @@ struct TextFieldView: View {
                     }
             }
             .padding(.horizontal, 20)
-        
     }
 }
 
