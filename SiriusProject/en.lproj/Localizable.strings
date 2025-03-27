@@ -7,3 +7,9 @@
 */
 
 "somekey" = "Hello";
+"events" = "Events";
+"settings" = "Settings";
+"logout" = "Log out";
+"score" = "Score";
+"now" = "Now";
+"next" = "Next";

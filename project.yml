@@ -1,0 +1,59 @@
+name: SiriusGameXcodeGenGenerated
+options:
+    bundleIdPrefix: com.Sirius
+    xcodeVersion: "15.4"
+    deploymentTarget:
+        iOS: "17"
+configs:
+    Debug: debug
+    Release: release
+    Staging Debug: debug
+    Staging Release: release
+configFiles:
+    Debug: SiriusProject/SiriusProject/configs/Dev.xcconfig
+    Release: SiriusProject/SiriusProject/configs/Dev.xcconfig
+    Staging Debug: SiriusProject/SiriusProject/configs/Staging.xcconfig
+    Staging Release: SiriusProject/SiriusProject/configs/Staging.xcconfig
+schemes:
+    SiriusProject Staging:
+        build:
+            targets:
+                SiriusProject: all
+        run:
+            config: Staging Debug
+            
+        test:
+            config: Staging Debug
+            gatherCoverageData: true
+            coverageTargets:
+                - SiriusProject
+        profile:
+            config: Staging Release
+        analyze:
+            config: Staging Debug
+        archive:
+            config: Staging Release
+settings:
+    GENERATE_INFOPLIST_FILE: NO
+targets:
+    SiriusProject:
+        platform: iOS
+        type: application
+        deploymentTarget: "17"
+        sources: ["SiriusProject"]
+        settings:
+          base:
+            INFOPLIST_FILE: "SiriusProject/SiriusProject/Info.plist"
+            CODE_SIGN_IDENTITY: "Apple Development: Aleksey Kobyakov (2VHQM6CHHB)"
+            PROVISIONING_PROFILE_SPECIFIER: "Sirius Provisioning"
+        postBuildScripts:
+         - path: scripts/swiftlint_script.sh
+           name: SwiftLint
+        resources:
+            - path: Localizable
+    
+                
+                
+    
+        
+
