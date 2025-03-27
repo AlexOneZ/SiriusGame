@@ -31,6 +31,8 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(appViewModel: AppViewModel(eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()), settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager())))
+    ContentView(appViewModel:
+                    AppViewModel(eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()),
+                                 settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager())))
         .environment(\.locale, .init(identifier: "ru"))
 }
