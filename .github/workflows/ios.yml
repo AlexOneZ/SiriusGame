@@ -30,3 +30,16 @@ jobs:
           -scheme "SiriusProject Staging" \
           -destination 'platform=iOS Simulator,name=iPhone 15,OS=latest' \
           clean build
+  swiftformat:
+    name: Check SwiftFormat
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install SwiftFormat
+        run: brew install swiftformat
+
+      - name: Run SwiftFormat (Lint Mode)
+        run: swiftformat . --lint --config SiriusProject/.swiftformat
