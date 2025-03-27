@@ -9,10 +9,10 @@ import SwiftUI
 
 final class LoginViewModel: ObservableObject {
     let networkManager: NetworkManagerProtocol
-    
+
     init(networkManager: NetworkManagerProtocol) {
         self.networkManager = networkManager
     }
-    
+
     @Published var text = ""
 }
