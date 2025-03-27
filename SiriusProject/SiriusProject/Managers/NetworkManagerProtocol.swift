@@ -17,4 +17,6 @@ protocol NetworkManagerProtocol {
     func changeName(_ newName: String)
 
     func logOut()
+    
+    func getTeams() -> [Team]
 }
