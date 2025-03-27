@@ -13,14 +13,15 @@ struct SiriusProjectApp: App {
     var appViewModel: AppViewModel
 
     init() {
-        self.networkManager = FakeNetworkManager()
-        appViewModel = AppViewModel(eventsListViewModel: EventsListViewModel(networkManager: self.networkManager),
-                                    settingsViewModel: SettingsViewModel(networkManager: self.networkManager))
+        networkManager = FakeNetworkManager()
+        appViewModel = AppViewModel(
+            eventsListViewModel: EventsListViewModel(networkManager: networkManager),
+            settingsViewModel: SettingsViewModel(networkManager: networkManager))
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView(appViewModel: self.appViewModel)
+            ContentView(appViewModel: appViewModel)
         }
     }
 }
