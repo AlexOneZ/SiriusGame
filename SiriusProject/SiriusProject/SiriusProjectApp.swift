@@ -16,7 +16,9 @@ struct SiriusProjectApp: App {
         networkManager = FakeNetworkManager()
         appViewModel = AppViewModel(
             eventsListViewModel: EventsListViewModel(networkManager: networkManager),
-            settingsViewModel: SettingsViewModel(networkManager: networkManager)
+            settingsViewModel: SettingsViewModel(networkManager: networkManager),
+            loginViewModel: LoginViewModel(networkManager: networkManager),
+            pointsViewModel: PointsViewModel(networkManager: networkManager)
         )
     }
 
@@ -30,4 +32,6 @@ struct SiriusProjectApp: App {
 struct AppViewModel {
     var eventsListViewModel: EventsListViewModel
     var settingsViewModel: SettingsViewModel
+    var loginViewModel: LoginViewModel
+    var pointsViewModel: PointsViewModel
 }
