@@ -20,3 +20,9 @@
 "settings" = "Settings";
 "somekey" = "Hello";
 "team title" = "Team name";
+"changename" = "Change team name";
+"teamname" = "Team name";
+"newteamname" = "New team name";
+"cancel" = "Cancel";
+"accept" = "Accept";
+"inputnewname" = "Enter a new team name";
