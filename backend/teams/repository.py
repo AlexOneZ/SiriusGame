@@ -1,4 +1,5 @@
 from sqlalchemy import select
+from typing import Optional
 
 from database import new_session, TeamOrm
 from teams.schemas import STeam, STeamAdd
@@ -14,19 +15,22 @@ class TeamRepository:
             
             return team_schemas
     
-    @staticmethod
-    async def if_exists(name: str) -> bool:
+    @classmethod
+    async def get_id_by_name(cls, name: str) -> Optional[int]:
         async with new_session() as session:
             query = select(TeamOrm).where(TeamOrm.name == name)
             result = await session.execute(query)
-            return result.scalar_one_or_none() is not None
+            team_model = result.scalars().first()
+            if team_model is None:
+                return None
+                
+            team_schema = STeam.model_validate(team_model.__dict__)
+
+            return team_schema.id
 
     @classmethod
     async def add_one(cls, data: STeamAdd) -> int:
         async with new_session() as session:
-            if await cls.if_exists(data.name):
-                raise Exception("Team already exists")
-        
             new_team = TeamOrm(**data.model_dump())
             session.add(new_team)
             await session.flush()
