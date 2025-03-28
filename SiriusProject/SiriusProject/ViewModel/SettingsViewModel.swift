@@ -12,11 +12,11 @@ final class SettingsViewModel: ObservableObject {
 
     init(networkManager: NetworkManagerProtocol) {
         self.networkManager = networkManager
-        self.teamName = networkManager.getTeamName()
+        teamName = networkManager.getTeamName()
     }
 
     @Published var teamName: String
-    
+
     func changeName(newName: String) {
         networkManager.changeName(newName)
         teamName = newName
