@@ -28,7 +28,7 @@ struct TextFieldView: View {
     }
 }
 
-#Preview {
-    @State var previewText = ""
-    TextFieldView(title: "team title", text: $previewText)
-}
+//#Preview {
+//    @State var previewText = ""
+//    TextFieldView(title: "team title", text: $previewText)
+//}
