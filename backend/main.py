@@ -8,13 +8,13 @@ from teams.router import router as teams_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await delete_tables()
-    print("Tables deleted")
-    await create_tables()
-    print("Tables created")
+    # await delete_tables()
+    # print("Tables deleted")
+    # await create_tables()
+    # print("Tables created")
     yield
 
 app = FastAPI(lifespan=lifespan)
 
-app.include_router(events_router)
 app.include_router(teams_router)
+app.include_router(events_router)

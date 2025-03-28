@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, delete
 
 from database import new_session, EventOrm
 from events.schemas import SEventAdd, SEvent
@@ -23,3 +23,17 @@ class EventRepository:
             await session.commit()
 
             return event.id
+
+    @classmethod
+    async def delete(cls, event_id: int) -> bool:
+        async with new_session() as session:
+            query = select(EventOrm).where(EventOrm.id == event_id)
+            result = await session.execute(query)
+            event_model = result.scalars().first()
+            if not event_model:
+                return False
+            
+            query = delete(EventOrm).where(EventOrm.id == event_id)
+            await session.execute(query)
+            await session.commit()
+            return True
