@@ -29,6 +29,6 @@ struct TextFieldView: View {
 }
 
 #Preview {
-    @Previewable @State var previewText = ""
+    @State var previewText = ""
     TextFieldView(title: "team title", text: $previewText)
 }
