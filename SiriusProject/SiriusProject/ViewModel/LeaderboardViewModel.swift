@@ -14,6 +14,6 @@ final class LeaderboardViewModel: ObservableObject {
 
     init(networkManager: NetworkManagerProtocol) {
         self.networkManager = networkManager
-        self.sortedTeams = networkManager.getTeams().sorted(by: { $0.score > $1.score })
-    }   
+        sortedTeams = networkManager.getTeams().sorted(by: { $0.score > $1.score })
+    }
 }

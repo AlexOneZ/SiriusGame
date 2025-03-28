@@ -41,11 +41,13 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(appViewModel: AppViewModel(eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()),
-                                           settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager()),
-                                           loginViewModel: LoginViewModel(networkManager: FakeNetworkManager()),
-                                           pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager()),
-                                           leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager()),
-                                           mapViewModel: MapViewModel()))
-        .environment(\.locale, .init(identifier: "ru"))
+    ContentView(appViewModel: AppViewModel(
+        eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()),
+        settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager()),
+        loginViewModel: LoginViewModel(networkManager: FakeNetworkManager()),
+        pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager()),
+        leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager()),
+        mapViewModel: MapViewModel()
+    ))
+    .environment(\.locale, .init(identifier: "ru"))
 }
