@@ -8,19 +8,18 @@ import MapKit
 import SwiftUI
 
 struct MapView: View {
-    @State private var region: MapCameraPosition = .region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 43.414215, longitude: 39.95040), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)))
+//    @State private var region: MapCameraPosition = .region(MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 43.414215, longitude: 39.95040), span: MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)))
+    @ObservedObject var viewModel: MapViewModel
+    
+    init(mapViewModel: MapViewModel) {
+        viewModel = mapViewModel
+    }
 
     let point = CLLocationCoordinate2D(latitude: 43.40222213237247, longitude: 39.95576828887273)
 
     var body: some View {
-        Map(position: $region) {
+        Map(position: $viewModel.region) {
             Marker("Football", coordinate: point)
         }
-//                .frame(width: 400, height: 900)
-//                .mapStyle(.standard(elevation: .realistic))
     }
-}
-
-#Preview {
-    MapView()
 }

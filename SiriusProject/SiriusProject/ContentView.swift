@@ -21,7 +21,7 @@ struct ContentView: View {
                     Image(systemName: "rectangle.on.rectangle")
                     Text("events")
                 }
-            MapView()
+            MapView(mapViewModel: appViewModel.mapViewModel)
                 .tabItem {
                     Image(systemName: "mappin.circle")
                     Text("map")
@@ -45,6 +45,7 @@ struct ContentView: View {
                                            settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager()),
                                            loginViewModel: LoginViewModel(networkManager: FakeNetworkManager()),
                                            pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager()),
-                                           leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager())))
+                                           leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager()),
+                                           mapViewModel: MapViewModel()))
         .environment(\.locale, .init(identifier: "ru"))
 }
