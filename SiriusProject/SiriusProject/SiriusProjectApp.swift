@@ -11,6 +11,7 @@ import SwiftUI
 struct SiriusProjectApp: App {
     let networkManager: NetworkManagerProtocol
     var appViewModel: AppViewModel
+    @UIApplicationDelegateAdaptor private var appDelegate: CustomAppDelegate
 
     init() {
         networkManager = FakeNetworkManager()
@@ -25,6 +26,9 @@ struct SiriusProjectApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView(appViewModel: appViewModel)
+                .onAppear(perform: {
+                    appDelegate.app = self
+                })
         }
     }
 }
