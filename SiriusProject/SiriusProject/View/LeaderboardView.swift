@@ -37,7 +37,7 @@ struct LeaderboardView: View {
             }
         }
     }
-    
+
     func getPlaceColor(for place: Int) -> Color {
         switch place {
         case 1: return Color(red: 1.0, green: 0.84, blue: 0.0)
