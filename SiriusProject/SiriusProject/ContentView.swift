@@ -27,7 +27,7 @@ struct ContentView: View {
                     Image(systemName: "rectangle.on.rectangle")
                     Text("events")
                 }
-            MapView()
+            MapView(mapViewModel: appViewModel.mapViewModel)
                 .tabItem {
                     Image(systemName: "mappin.circle")
                     Text("map")
@@ -94,7 +94,10 @@ private extension URL {
         loginViewModel: LoginViewModel(networkManager: FakeNetworkManager()),
         pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager()),
         leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager()),
-        notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager())), log: { message in
+        mapViewModel: MapViewModel(),
+        notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager())
+    ),
+    log: { message in
         #if DEBUG
             print(message)
         #endif

@@ -11,13 +11,13 @@ import SwiftUI
 final class LeaderboardViewModel: ObservableObject {
     let networkManager: NetworkManagerProtocol
     var sortedTeams: [Team]
-
+    
     init(networkManager: NetworkManagerProtocol) {
         self.networkManager = networkManager
         sortedTeams = networkManager.getTeams().sorted(by: { $0.score > $1.score })
     }
-
-
+    
+    
     func getPlaceColor(for place: Int) -> Color {
         switch place {
         case 1: return Color(red: 1.0, green: 0.84, blue: 0.0)
@@ -27,3 +27,4 @@ final class LeaderboardViewModel: ObservableObject {
         }
     }
 }
+
