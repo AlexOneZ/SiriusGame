@@ -9,20 +9,22 @@ import SwiftUI
 
 @main
 struct SiriusProjectApp: App {
-    let networkManager: NetworkManager
+    let networkManager: NetworkManagerProtocol
     var appViewModel: AppViewModel
 
     init() {
-        networkManager = NetworkManager()
+        networkManager = FakeNetworkManager()
         appViewModel = AppViewModel(
             eventsListViewModel: EventsListViewModel(networkManager: networkManager),
-            settingsViewModel: SettingsViewModel(networkManager: networkManager)
+            settingsViewModel: SettingsViewModel(networkManager: networkManager),
+            loginViewModel: LoginViewModel(networkManager: networkManager),
+            pointsViewModel: PointsViewModel(networkManager: networkManager)
         )
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView(appViewModel: self.appViewModel)
+            ContentView(appViewModel: appViewModel)
         }
     }
 }
@@ -30,4 +32,6 @@ struct SiriusProjectApp: App {
 struct AppViewModel {
     var eventsListViewModel: EventsListViewModel
     var settingsViewModel: SettingsViewModel
+    var loginViewModel: LoginViewModel
+    var pointsViewModel: PointsViewModel
 }

@@ -6,10 +6,17 @@
   
 */
 
-"somekey" = "Hello";
+"credit" = "Credit";
+"enter" = "Log in";
 "events" = "Events";
-"settings" = "Settings";
+"football" = "Football";
+"login" = "Continue";
 "logout" = "Log out";
-"score" = "Score";
-"now" = "Now";
 "next" = "Next";
+"now" = "Now";
+"pin" = "PIN";
+"points" = "Points";
+"score" = "Score";
+"settings" = "Settings";
+"somekey" = "Hello";
+"team title" = "Team name";

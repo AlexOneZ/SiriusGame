@@ -7,10 +7,7 @@
 
 import SwiftUI
 
-@Observable
-class NetworkManager {
-    // MARK: Events
-
+struct FakeNetworkManager: NetworkManagerProtocol {
     func getAllEvents() -> [Event] {
         return [
             Event(id: 1, title: "Хоккей", description: "Игра в хоккей", state: .done, score: 3),

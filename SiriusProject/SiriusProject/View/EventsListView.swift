@@ -26,6 +26,6 @@ struct EventsListView: View {
 }
 
 #Preview {
-    EventsListView(eventsListViewModel: EventsListViewModel(networkManager: NetworkManager()))
+    EventsListView(eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()))
         .environment(\.locale, .init(identifier: "ru"))
 }
