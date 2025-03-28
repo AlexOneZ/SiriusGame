@@ -27,8 +27,3 @@ struct TextFieldView: View {
             .padding(.horizontal, 20)
     }
 }
-
-//#Preview {
-//    @State var previewText = ""
-//    TextFieldView(title: "team title", text: $previewText)
-//}
