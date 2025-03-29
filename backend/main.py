@@ -28,6 +28,5 @@ else:
 
 app = FastAPI(lifespan=lifespan)
 
-jls_extract_var = app
-jls_extract_var.include_router(teams_router)
+app.include_router(teams_router)
 app.include_router(events_router)

@@ -25,16 +25,16 @@ async def get_team_by_id(team_id: int) -> STeam:
         raise HTTPException(status_code=404, detail="Team not found")
     return team
 
-@router.put("/{team_name}")
-async def update_team_name(name: str, new_name: str) -> STeam:
-    updated_team = await TeamRepository.update(name, new_name)
+@router.put("/{team_id}")
+async def update_team_name(team_id: int, new_name: str) -> STeam:
+    updated_team = await TeamRepository.update(team_id, new_name)
     if updated_team is None:
         raise HTTPException(status_code=404, detail="Team not found")
     return updated_team
 
-@router.delete("/{team_name}")
-async def delete_team(team_name: str):
-    success = await TeamRepository.delete(team_name)
+@router.delete("/{team_id}")
+async def delete_team(team_id: int):
+    success = await TeamRepository.delete(team_id)
     if not success:
         raise HTTPException(status_code=404, detail="Team not found")
     return {"ok": True}

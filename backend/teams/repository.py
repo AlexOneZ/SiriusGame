@@ -44,8 +44,7 @@ class TeamRepository:
             return new_team.id
 
     @classmethod
-    async def update(cls, name: str, new_name: str) -> Optional[STeam]:
-        team_id = await cls.get_id_by_name(name)
+    async def update(cls, team_id: int, new_name: str) -> Optional[STeam]:
         team_model = await cls.get_by_id(team_id)
         if not team_model:
             return None
@@ -59,8 +58,7 @@ class TeamRepository:
             return STeam.model_validate(team_model.__dict__)
 
     @classmethod
-    async def delete(cls, name: str) -> bool:
-        team_id = await cls.get_id_by_name(name)
+    async def delete(cls, team_id: int) -> bool:
         team_model = await cls.get_by_id(team_id)
         if not team_model:
             return False
