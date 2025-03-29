@@ -9,7 +9,7 @@ import SwiftUI
 
 struct NotificationsView: View {
     var header: LocalizedStringKey = "notifications"
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -22,7 +22,7 @@ struct NotificationsView: View {
                     endPoint: .bottomTrailing
                 )
                 .ignoresSafeArea()
-                
+
                 ScrollView {
                     LazyVStack(spacing: 20) {
                         Group {
@@ -38,7 +38,6 @@ struct NotificationsView: View {
                     }
                     .padding()
                 }
-                
             }
             .navigationTitle(header)
             .toolbarBackground(
