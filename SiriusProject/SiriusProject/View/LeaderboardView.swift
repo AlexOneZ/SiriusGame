@@ -47,7 +47,3 @@ struct LeaderboardView: View {
         }
     }
 }
-
-// #Preview {
-//    LeaderboardView(liderboardViewModel: LeaderboardViewModel(networkManager: ))
-// }
