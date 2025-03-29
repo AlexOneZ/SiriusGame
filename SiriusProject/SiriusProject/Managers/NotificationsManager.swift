@@ -38,8 +38,7 @@ extension CustomAppDelegate: UNUserNotificationCenterDelegate {
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse
     ) async {
-        // go to the screen with notifications
-    }
+        }
 
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
