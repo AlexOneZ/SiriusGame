@@ -25,7 +25,3 @@ struct NotificationCell: View {
         .cornerRadius(15)
     }
 }
-
-#Preview {
-    NotificationCell(notification: MockData.sampleNotification)
-}
