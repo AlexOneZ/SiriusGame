@@ -26,3 +26,6 @@
 "cancel" = "Cancel";
 "accept" = "Accept";
 "inputnewname" = "Enter a new team name";
+"teamPlace" = "Place";
+"team" = "Team";
+"leaderboard" = "Leaderboard";

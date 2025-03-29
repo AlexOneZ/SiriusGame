@@ -18,7 +18,9 @@ struct SiriusProjectApp: App {
             eventsListViewModel: EventsListViewModel(networkManager: networkManager),
             settingsViewModel: SettingsViewModel(networkManager: networkManager),
             loginViewModel: LoginViewModel(networkManager: networkManager),
-            pointsViewModel: PointsViewModel(networkManager: networkManager)
+            pointsViewModel: PointsViewModel(networkManager: networkManager),
+            leaderboardViewModel: LeaderboardViewModel(networkManager: networkManager),
+            mapViewModel: MapViewModel()
         )
     }
 
@@ -34,4 +36,6 @@ struct AppViewModel {
     var settingsViewModel: SettingsViewModel
     var loginViewModel: LoginViewModel
     var pointsViewModel: PointsViewModel
+    var leaderboardViewModel: LeaderboardViewModel
+    var mapViewModel: MapViewModel
 }

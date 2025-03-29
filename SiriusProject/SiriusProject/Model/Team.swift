@@ -8,4 +8,5 @@
 struct Team {
     let id: Int
     var name: String
+    var score: Int
 }
