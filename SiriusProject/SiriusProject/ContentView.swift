@@ -27,6 +27,38 @@ struct ContentView: View {
                     Text("settings")
                 }
         }
+        .onOpenURL { url in
+            let event = recieveDeeplinkURL(url: url)
+            print(event?.id ?? -1, event?.title ?? "no title", event?.description ?? "no description", event?.state ?? EventState.now, event?.score ?? -100)
+        }
+    }
+
+    private func recieveDeeplinkURL(url: URL) -> Event? {
+        let infoFromURL = url.absoluteString
+        let parsedInfo = infoFromURL.split(separator: "*")
+
+        guard let id = Int(parsedInfo[1]) else {
+            print("ID not converted!")
+            return nil
+        }
+        let title = String(parsedInfo[2])
+        let description = String(parsedInfo[3])
+        guard let eventState = EventState(rawValue: String(parsedInfo[4])) else {
+            print("StateEvent not converted")
+            return nil
+        }
+        guard let score = Int(parsedInfo[5]) else {
+            print("Score not converted")
+            return nil
+        }
+
+        return Event(
+            id: id,
+            title: title,
+            description: description,
+            state: eventState,
+            score: score
+        )
     }
 }
 

@@ -13,6 +13,14 @@ struct SettingsView: View {
     @State var isPresented: Bool = false
     @State var changedName: String = ""
 
+    let event = Event(
+        id: 1,
+        title: "Title",
+        description: "Description",
+        state: .done,
+        score: 1
+    )
+
     init(settingsViewModel: SettingsViewModel) {
         viewModel = settingsViewModel
     }
@@ -24,6 +32,17 @@ struct SettingsView: View {
                 .font(.title)
 
             Spacer()
+
+            if let urlSceme = getSendInfoURL(event: event) {
+                ShareLink(
+                    item: urlSceme,
+                    preview:
+                    SharePreview("send_url_info", image: Image("AppIcon"))
+                ) {
+                    Label("", systemImage: "square.and.arrow.up")
+                }
+                .padding()
+            }
 
             Button("changename") {
                 isPresented = true
@@ -45,6 +64,11 @@ struct SettingsView: View {
             }
             .padding(.bottom)
         }
+    }
+
+    private func getSendInfoURL(event: Event) -> URL? {
+        print("String to url: siriusgameurl://*\(event.id)*\(event.title)*\(event.description)*\(event.state)*\(event.score)")
+        return URL(string: "siriusgameurl://*\(event.id)*\(event.title)*\(event.description)*\(event.state)*\(event.score)")
     }
 }
 
