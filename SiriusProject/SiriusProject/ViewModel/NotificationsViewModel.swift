@@ -39,9 +39,8 @@ final class NotificationsViewModel: ObservableObject {
             body: "Уважаемые участники! Соревнование по гольфу завершено! Вы набрали 3/10 баллов!"
         )
     ]
-    
+
     init(networkManager: NetworkManagerProtocol) {
         self.networkManager = networkManager
     }
-    
 }

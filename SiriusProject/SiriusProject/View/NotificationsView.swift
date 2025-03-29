@@ -14,7 +14,7 @@ struct NotificationsView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                LazyVStack (spacing: 4) {
+                LazyVStack(spacing: 4) {
                     Group {
                         ForEach(viewModel.notifications.indices, id: \.self) { index in
                             NotificationCell(notification: viewModel.notifications[index])
@@ -28,14 +28,14 @@ struct NotificationsView: View {
             .navigationTitle(header)
             .background(
                 LinearGradient(
-                gradient: Gradient(colors: [
-                    Color("SiriusDarkColor").opacity(0.5),
-                    Color("SiriusDarkColor").opacity(0.1)
-                ]),
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+                    gradient: Gradient(colors: [
+                        Color("SiriusDarkColor").opacity(0.5),
+                        Color("SiriusDarkColor").opacity(0.1)
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
             )
             .toolbarBackground(
                 Color.white,
