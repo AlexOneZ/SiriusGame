@@ -1,8 +1,8 @@
 from sqlalchemy import select, update, delete
 from typing import Optional
 
-from database import new_session, TeamOrm
-from teams.schemas import STeam, STeamAdd
+from database import new_session, TeamOrm, TeamEventOrm, EventOrm
+from teams.schemas import STeam, STeamAdd, STeamEvent
 
 class TeamRepository:
     @classmethod
@@ -68,3 +68,66 @@ class TeamRepository:
             await session.execute(query)
             await session.commit()
             return True
+
+    @classmethod
+    async def get_team_events(cls, team_id: int) -> Optional[list[STeamEvent]]:
+        team_model = await cls.get_by_id(team_id)
+        if not team_model:
+            return None
+
+        async with new_session() as session:
+            query = (
+                select(TeamEventOrm, EventOrm)
+                .join(EventOrm, TeamEventOrm.event_id == EventOrm.id)
+                .where(TeamEventOrm.team_id == team_id)
+                .order_by(TeamEventOrm.order)
+            )
+            result = await session.execute(query)
+            team_event_models = result.scalars().all()
+            return [
+                STeamEvent.model_validate(team_event_model.__dict__)
+                for team_event_model in team_event_models
+            ]
+
+    @classmethod
+    async def set_team_event_score(cls, team_id: int, score: int) -> Optional[STeamEvent]:
+        team_model = await cls.get_by_id(team_id)
+        if not team_model:
+            return None
+
+        async with new_session() as session:
+            query = (
+                update(TeamEventOrm)
+                .where(TeamEventOrm.team_id == team_id, TeamEventOrm.state == "now")
+                .values(score=score, state="done")
+            )
+            result = await session.execute(query)
+            if not result.rowcount:
+                raise RuntimeError("No row updated")
+            await session.flush()
+            await session.commit()
+
+            subquery = (
+                select(TeamEventOrm.id)
+                .where(TeamEventOrm.team_id == team_id, TeamEventOrm.state == "next")
+                .order_by(TeamEventOrm.order)
+                .limit(1)
+                .scalar_subquery()
+            )
+            query = (
+                update(TeamEventOrm)
+                .where(TeamEventOrm.id == subquery)
+                .values(state="now")
+            )
+            await session.execute(query)
+            await session.flush()
+            await session.commit()
+            
+            query = (
+                select(TeamEventOrm, EventOrm)
+                .join(EventOrm, TeamEventOrm.event_id == EventOrm.id)
+                .where(TeamEventOrm.team_id == team_id, TeamEventOrm.state == "done")
+            )
+            result = await session.execute(query)
+            team_event_model = result.scalars().first()
+            return STeamEvent.model_validate(team_event_model.__dict__)

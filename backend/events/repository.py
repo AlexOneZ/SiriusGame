@@ -1,6 +1,6 @@
-from sqlalchemy import select, delete
+from sqlalchemy import select, delete, func
 
-from database import new_session, EventOrm
+from database import new_session, EventOrm, TeamOrm, TeamEventOrm
 from events.schemas import SEventAdd, SEvent
 
 class EventRepository:
@@ -20,8 +20,28 @@ class EventRepository:
             event = EventOrm(**data.model_dump())
             session.add(event)
             await session.flush()
+            
+            teams_result = await session.execute(select(TeamOrm))
+            teams = teams_result.scalars().all()
+            for team in teams:
+                query = (
+                    select(func.max(TeamEventOrm.order))
+                    .where(TeamEventOrm.team_id == team.id)
+                )
+                max_order_result = await session.execute(query)
+                max_order = max_order_result.scalar()
+                new_order = max_order + 1 if max_order else 1
+                state = "next" if new_order > 1 else "now"
+                team_event = TeamEventOrm(
+                    team_id=team.id,
+                    event_id=event.id,
+                    order=new_order,
+                    state=state,
+                    score=0
+                )
+                session.add(team_event)
+            
             await session.commit()
-
             return event.id
 
     @classmethod

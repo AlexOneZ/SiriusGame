@@ -2,6 +2,7 @@ import datetime
 from sqlalchemy import func
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import ForeignKey
 from typing import Optional
 
 engine = create_async_engine('sqlite+aiosqlite:///database.db')
@@ -68,6 +69,15 @@ class DeviceEntity(Model):
             model=model.model,
             localizedModel=model.localizedModel,
         )
+class TeamEventOrm(Model):
+    __tablename__ = "teams_events"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"))
+    event_id: Mapped[int] = mapped_column(ForeignKey("events.id"))
+    order: Mapped[int]
+    score: Mapped[int]
+    state: Mapped[str]
 
 async def create_tables():
     async with engine.begin() as conn:

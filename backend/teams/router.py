@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import Annotated
 
 from teams.repository import TeamRepository
-from teams.schemas import STeam, STeamAdd, STeamId
+from teams.schemas import STeam, STeamAdd, STeamId, STeamEvent
 
 router = APIRouter(prefix="/teams", tags=["teams"])
 
@@ -38,3 +38,22 @@ async def delete_team(team_id: int):
     if not success:
         raise HTTPException(status_code=404, detail="Team not found")
     return {"ok": True}
+
+@router.get("/{team_id}/events")
+async def get_team_events(team_id: int) -> list[STeamEvent]:
+    events = await TeamRepository.get_team_events(team_id)
+    if events is None:
+        raise HTTPException(status_code=404, detail="Team not found")
+    return events
+
+@router.put("/{team_id}/events")
+async def set_team_event_score(team_id: int, score: int) -> STeamEvent:
+    try:
+        event = await TeamRepository.set_team_event_score(team_id, score)
+    except RuntimeError as e:
+        if str(e) == "No row updated":
+            raise HTTPException(status_code=409, detail="Current event does not exist")
+        raise
+    if event is None:
+        raise HTTPException(status_code=404, detail="Team not found")
+    return event
