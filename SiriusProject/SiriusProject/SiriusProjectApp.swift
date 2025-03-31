@@ -23,7 +23,7 @@ struct SiriusProjectApp: App {
             pointsViewModel: PointsViewModel(networkManager: networkManager),
             notificationsViewModel: NotificationsViewModel(networkManager: networkManager)
         )
-        
+
         let center = UNUserNotificationCenter.current()
         appDelegate.setup(notificationCenter: center)
     }

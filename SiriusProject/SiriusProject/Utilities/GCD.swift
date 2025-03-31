@@ -29,4 +29,3 @@ func onMainThread(_ block: @escaping () -> Void) {
 func onMainThreadAsync(_ block: @escaping () -> Void) {
     DispatchQueue.main.async(execute: block)
 }
-

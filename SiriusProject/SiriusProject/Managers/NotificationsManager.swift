@@ -12,16 +12,16 @@ import UserNotifications
 class CustomAppDelegate: NSObject, UIApplicationDelegate {
     var app: SiriusProjectApp?
     var notificationCenter: UNUserNotificationCenter!
-    
+
     override init() {
         super.init()
     }
-    
+
     func setup(notificationCenter: UNUserNotificationCenter) {
         self.notificationCenter = notificationCenter
         notificationCenter.delegate = self
     }
-    
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { granted, _ in
             if granted {
@@ -46,8 +46,7 @@ extension CustomAppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse
-    ) async {
-    }
+    ) async {}
 
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
