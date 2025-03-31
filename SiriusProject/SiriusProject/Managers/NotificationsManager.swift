@@ -38,6 +38,7 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate {
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
         let stringifiedToken = deviceToken.map { String(format: "%02hhx", $0) }.joined()
+        // send token to server
     }
 }
 
