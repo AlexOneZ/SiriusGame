@@ -71,7 +71,7 @@ struct SettingsView: View {
     private func getSendInfoURL(event: Event) -> URL? {
         let logMessage = "String to url: siriusgameurl://*\(event.id)*\(event.title)*\(event.description)*\(event.state)*\(event.score)"
         log(logMessage)
-        
+
         return URL(string: "siriusgameurl://*\(event.id)*\(event.title)*\(event.description)*\(event.state)*\(event.score)")
     }
 }

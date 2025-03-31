@@ -82,6 +82,6 @@ private extension URL {
         #if DEBUG
             print(message)
         #endif
-        })
-        .environment(\.locale, .init(identifier: "ru"))
+    })
+    .environment(\.locale, .init(identifier: "ru"))
 }
