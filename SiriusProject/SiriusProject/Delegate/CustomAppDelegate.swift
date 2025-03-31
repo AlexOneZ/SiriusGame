@@ -1,5 +1,5 @@
 //
-//  NotificationsManager.swift
+//  CustomAppDelegate.swift
 //  SiriusProject
 //
 //  Created by Maria Mayorova on 28.03.2025.
