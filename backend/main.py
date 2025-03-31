@@ -5,6 +5,7 @@ from database import create_tables, delete_tables
 
 from events.router import router as events_router
 from teams.router import router as teams_router
+from pushes.router import router as pushes_router
 
 class Settings():
     debug_mode: bool = True
@@ -30,3 +31,4 @@ app = FastAPI(lifespan=lifespan)
 
 app.include_router(teams_router)
 app.include_router(events_router)
+app.include_router(pushes_router)
