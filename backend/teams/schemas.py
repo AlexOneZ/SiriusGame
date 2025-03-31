@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional
 from pydantic import BaseModel
 
 class STeamAdd(BaseModel):
@@ -15,6 +15,8 @@ class STeamEvent(BaseModel):
     id: int
     team_id: int
     event_id: int
+    name: str
+    description: Optional[str]
     order: int
     state: str
     score: int

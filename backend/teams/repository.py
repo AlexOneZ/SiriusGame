@@ -83,14 +83,23 @@ class TeamRepository:
                 .order_by(TeamEventOrm.order)
             )
             result = await session.execute(query)
-            team_event_models = result.scalars().all()
-            return [
-                STeamEvent.model_validate(team_event_model.__dict__)
-                for team_event_model in team_event_models
+            team_events = [
+                STeamEvent(
+                    id=team_event_orm.id,
+                    team_id=team_event_orm.team_id,
+                    event_id=team_event_orm.event_id,
+                    order=team_event_orm.order,
+                    state=team_event_orm.state,
+                    score=team_event_orm.score,
+                    name=event_orm.name,
+                    description=event_orm.description
+                )
+                for team_event_orm, event_orm in result
             ]
+            return team_events
 
     @classmethod
-    async def set_team_event_score(cls, team_id: int, score: int) -> Optional[STeamEvent]:
+    async def set_team_event_score(cls, team_id: int, score: int):
         team_model = await cls.get_by_id(team_id)
         if not team_model:
             return None
@@ -123,11 +132,4 @@ class TeamRepository:
             await session.flush()
             await session.commit()
             
-            query = (
-                select(TeamEventOrm, EventOrm)
-                .join(EventOrm, TeamEventOrm.event_id == EventOrm.id)
-                .where(TeamEventOrm.team_id == team_id, TeamEventOrm.state == "done")
-            )
-            result = await session.execute(query)
-            team_event_model = result.scalars().first()
-            return STeamEvent.model_validate(team_event_model.__dict__)
+            return True

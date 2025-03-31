@@ -47,13 +47,13 @@ async def get_team_events(team_id: int) -> list[STeamEvent]:
     return events
 
 @router.put("/{team_id}/events")
-async def set_team_event_score(team_id: int, score: int) -> STeamEvent:
+async def set_team_event_score(team_id: int, score: int):
     try:
-        event = await TeamRepository.set_team_event_score(team_id, score)
+        success = await TeamRepository.set_team_event_score(team_id, score)
     except RuntimeError as e:
         if str(e) == "No row updated":
             raise HTTPException(status_code=409, detail="Current event does not exist")
         raise
-    if event is None:
+    if not success:
         raise HTTPException(status_code=404, detail="Team not found")
-    return event
+    return {"ok": True}
