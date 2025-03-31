@@ -15,16 +15,23 @@ enum APIError: Error {
 }
 
 protocol Service {
-    func makeRequest<T: Codable>(with request: URLRequest, respModel: T.Type, completion: @escaping (T?, APIError?) -> Void)
+    func makeRequest<T: Codable>(with request: URLRequest, respModel: T.Type, log: (String) -> Void, completion: @escaping (T?, APIError?) -> Void)
 }
 
 class APIService: Service {
+    let urlSession: URLSession
+    
+    init(urlSession: URLSession) {
+        self.urlSession = urlSession
+    }
+    
     func makeRequest<T: Codable>(
         with request: URLRequest,
         respModel: T.Type,
+        log: (String) -> Void = { _ in },
         completion: @escaping (T?, APIError?) -> Void
     ) {
-        URLSession.shared.dataTask(with: request) { data, resp, error in
+        urlSession.dataTask(with: request) { data, resp, error in
             if let error = error {
                 completion(nil, .urlSessionError(error.localizedDescription))
                 return

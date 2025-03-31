@@ -6,7 +6,11 @@
 //
 
 struct NetworkManager: NetworkManagerProtocol {
-    let service = APIService()
+    private let service: APIService
+    
+    init(service: APIService) {
+        self.service = service
+    }
 
     func getTeams(completion: @escaping ([Team]) -> Void) {
         let request = Endpoint.getTeams().request!
