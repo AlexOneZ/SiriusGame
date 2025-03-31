@@ -9,18 +9,27 @@ import Foundation
 import UIKit
 import UserNotifications
 
-class CustomAppDelegate: UIResponder, UIApplicationDelegate {
+class CustomAppDelegate: NSObject, UIApplicationDelegate {
     var app: SiriusProjectApp?
-
+    var notificationCenter: UNUserNotificationCenter!
+    
+    override init() {
+        super.init()
+    }
+    
+    func setup(notificationCenter: UNUserNotificationCenter) {
+        self.notificationCenter = notificationCenter
+        notificationCenter.delegate = self
+    }
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, _ in
+        notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { granted, _ in
             if granted {
                 DispatchQueue.main.async {
-                    UIApplication.shared.registerForRemoteNotifications()
+                    application.registerForRemoteNotifications()
                 }
             }
         }
-        UNUserNotificationCenter.current().delegate = self
         return true
     }
 
@@ -29,7 +38,6 @@ class CustomAppDelegate: UIResponder, UIApplicationDelegate {
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
         let stringifiedToken = deviceToken.map { String(format: "%02hhx", $0) }.joined()
-        print("stringifiedToken:", stringifiedToken)
     }
 }
 
