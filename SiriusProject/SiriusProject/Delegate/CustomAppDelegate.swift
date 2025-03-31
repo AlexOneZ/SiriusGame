@@ -12,20 +12,29 @@ import UserNotifications
 class CustomAppDelegate: NSObject, UIApplicationDelegate {
     var app: SiriusProjectApp?
     var notificationCenter: UNUserNotificationCenter!
+    var runner: MainThreadRunner!
 
     override init() {
         super.init()
     }
 
-    func setup(notificationCenter: UNUserNotificationCenter) {
+    func setup(
+        notificationCenter: UNUserNotificationCenter,
+        runner: @escaping MainThreadRunner
+    ) {
         self.notificationCenter = notificationCenter
         notificationCenter.delegate = self
+        self.runner = runner
     }
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { granted, _ in
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+        notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { [weak self] granted, _ in
+            guard let self = self else { return }
             if granted {
-                DispatchQueue.main.async {
+                runner { [application] in
                     application.registerForRemoteNotifications()
                 }
             }

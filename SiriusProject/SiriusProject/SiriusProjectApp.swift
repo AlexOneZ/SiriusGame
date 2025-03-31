@@ -25,7 +25,7 @@ struct SiriusProjectApp: App {
         )
 
         let center = UNUserNotificationCenter.current()
-        appDelegate.setup(notificationCenter: center)
+        appDelegate.setup(notificationCenter: center, runner: onMainThread)
     }
 
     var body: some Scene {
