@@ -52,7 +52,7 @@ enum Endpoint {
         case let .deleteTeam(url, teamId):
             return "\(url)/\(teamId)"
         case let .getTeamEvents(url, teamId, url1):
-            return "\(url)/\(teamId)/\(url1)"
+            return "\(url)/\(teamId)\(url1)"
         case let .setTeamEventScore(url, teamId, url1, _):
             return "\(url)/\(teamId)/\(url1)"
         case let .getEvents(url):

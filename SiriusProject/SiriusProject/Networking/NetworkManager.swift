@@ -92,14 +92,14 @@ struct NetworkManager: NetworkManagerProtocol {
     func setTeamEventScore(teamId: Int, score: Int, completion: @escaping (Bool) -> Void) {
         let request = Endpoint.getEvents().request!
 
-        service.makeRequest(with: request, respModel: [Event].self) { teamEvent, error in
+        service.makeRequest(with: request, respModel: Bool.self) { success, error in
             if let error = error {
                 print(error)
                 completion(false)
                 return
             }
 
-            completion(teamEvent != nil)
+            completion(success ?? false)
         }
     }
 

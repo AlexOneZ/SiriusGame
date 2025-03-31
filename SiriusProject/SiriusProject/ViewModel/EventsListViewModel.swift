@@ -14,7 +14,7 @@ final class EventsListViewModel: ObservableObject {
 
     init(networkManager: NetworkManagerProtocol) {
         self.networkManager = networkManager
-        self.fetchEvents()
+        fetchEvents()
     }
 
     func fetchEvents() {
