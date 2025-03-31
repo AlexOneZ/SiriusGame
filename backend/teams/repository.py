@@ -64,8 +64,14 @@ class TeamRepository:
             return False
 
         async with new_session() as session:
+            query = delete(TeamEventOrm).where(TeamEventOrm.team_id == team_id)
+            await session.execute(query)
+            await session.flush()
+
             query = delete(TeamOrm).where(TeamOrm.id == team_id)
             await session.execute(query)
+            await session.flush()
+
             await session.commit()
             return True
 
