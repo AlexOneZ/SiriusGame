@@ -15,7 +15,7 @@ struct SiriusProjectApp: App {
     @UIApplicationDelegateAdaptor private var appDelegate: CustomAppDelegate
 
     init() {
-        networkManager = FakeNetworkManager()
+        networkManager = NetworkManager()
         appViewModel = AppViewModel(
             eventsListViewModel: EventsListViewModel(networkManager: networkManager),
             settingsViewModel: SettingsViewModel(networkManager: networkManager),
