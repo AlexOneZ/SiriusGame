@@ -53,7 +53,6 @@ struct SettingsView: View {
                 TextField("newteamname", text: $changedName)
 
                 Button("accept", action: {
-                    print("\(changedName)")
                     viewModel.changeName(newName: changedName)
                 })
                 Button("cancel", role: .cancel, action: {})

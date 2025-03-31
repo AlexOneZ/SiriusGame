@@ -10,10 +10,12 @@ import SwiftUI
 
 final class LeaderboardViewModel: ObservableObject {
     let networkManager: NetworkManagerProtocol
-    var sortedTeams: [Team]
+    var sortedTeams: [Team] = []
 
     init(networkManager: NetworkManagerProtocol) {
         self.networkManager = networkManager
-        sortedTeams = networkManager.getTeams().sorted(by: { $0.score > $1.score })
+        networkManager.getTeams(completion: { [weak self] teams in
+            self?.sortedTeams = teams.sorted(by: { $0.score > $1.score })
+        })
     }
 }
