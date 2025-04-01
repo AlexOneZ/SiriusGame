@@ -9,12 +9,22 @@ import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject var viewModel: SettingsViewModel
+    private let log: (String) -> Void
 
     @State var isPresented: Bool = false
     @State var changedName: String = ""
 
-    init(settingsViewModel: SettingsViewModel) {
+    let event = Event(
+        id: 1,
+        title: "Title",
+        description: "Description",
+        state: .done,
+        score: 1
+    )
+
+    init(settingsViewModel: SettingsViewModel, log: @escaping (String) -> Void = { _ in }) {
         viewModel = settingsViewModel
+        self.log = log
     }
 
     var body: some View {
@@ -24,6 +34,17 @@ struct SettingsView: View {
                 .font(.title)
 
             Spacer()
+
+            if let urlSceme = getSendInfoURL(event: event) {
+                ShareLink(
+                    item: urlSceme,
+                    preview:
+                    SharePreview("send_url_info")
+                ) {
+                    Label("", systemImage: "square.and.arrow.up")
+                }
+                .padding()
+            }
 
             Button("changename") {
                 isPresented = true
@@ -45,6 +66,13 @@ struct SettingsView: View {
             }
             .padding(.bottom)
         }
+    }
+
+    private func getSendInfoURL(event: Event) -> URL? {
+        let logMessage = "String to url: siriusgameurl://*\(event.id)*\(event.title)*\(event.description)*\(event.state)*\(event.score)"
+        log(logMessage)
+
+        return URL(string: "siriusgameurl://*\(event.id)*\(event.title)*\(event.description)*\(event.state)*\(event.score)")
     }
 }
 

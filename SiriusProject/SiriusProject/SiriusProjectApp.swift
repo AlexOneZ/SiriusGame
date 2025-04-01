@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
+import UserNotifications
 
 @main
 struct SiriusProjectApp: App {
     let networkManager: NetworkManagerProtocol
     var appViewModel: AppViewModel
+    @UIApplicationDelegateAdaptor private var appDelegate: CustomAppDelegate
 
     init() {
         networkManager = FakeNetworkManager()
@@ -18,8 +20,14 @@ struct SiriusProjectApp: App {
             eventsListViewModel: EventsListViewModel(networkManager: networkManager),
             settingsViewModel: SettingsViewModel(networkManager: networkManager),
             loginViewModel: LoginViewModel(networkManager: networkManager),
-            pointsViewModel: PointsViewModel(networkManager: networkManager)
+            pointsViewModel: PointsViewModel(networkManager: networkManager),
+            leaderboardViewModel: LeaderboardViewModel(networkManager: networkManager),
+            mapViewModel: MapViewModel(),
+            notificationsViewModel: NotificationsViewModel(networkManager: networkManager)
         )
+
+        let center = UNUserNotificationCenter.current()
+        appDelegate.setup(notificationCenter: center, runner: onMainThread)
     }
 
     var body: some Scene {
@@ -34,4 +42,7 @@ struct AppViewModel {
     var settingsViewModel: SettingsViewModel
     var loginViewModel: LoginViewModel
     var pointsViewModel: PointsViewModel
+    var leaderboardViewModel: LeaderboardViewModel
+    var mapViewModel: MapViewModel
+    var notificationsViewModel: NotificationsViewModel
 }

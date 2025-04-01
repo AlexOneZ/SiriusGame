@@ -30,4 +30,17 @@ struct FakeNetworkManager: NetworkManagerProtocol {
     func changeName(_ newName: String) {}
 
     func logOut() {}
+
+    // MARK: Teams
+
+    func getTeams() -> [Team] {
+        return [Team(id: 0, name: "HSE FCS", score: 100),
+                Team(id: 1, name: "team 1", score: 55),
+                Team(id: 2, name: "team 2", score: 99),
+                Team(id: 3, name: "team 3", score: 76),
+                Team(id: 4, name: "team 4", score: 54),
+                Team(id: 5, name: "team 5", score: 21),
+                Team(id: 6, name: "team 6", score: 65),
+                Team(id: 7, name: "team 7", score: 43)]
+    }
 }
