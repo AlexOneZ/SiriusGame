@@ -109,7 +109,7 @@ private extension URL {
             leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager(), logging: printLogging),
             mapViewModel: MapViewModel(),
             notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager())
-        ),
+        )
     )
     .environment(\.locale, .init(identifier: "ru"))
 }
