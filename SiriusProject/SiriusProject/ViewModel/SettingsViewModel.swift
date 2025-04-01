@@ -31,8 +31,6 @@ final class SettingsViewModel: ObservableObject {
             onMainThread {
                 if hasCompleted {
                     self?.teamName = newName
-                } else {
-                    print("Ошибка при смене имени")
                 }
             }
         })

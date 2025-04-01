@@ -15,7 +15,7 @@ enum APIError: Error {
 }
 
 protocol Service {
-    func makeRequest<T: Codable>(with request: URLRequest, respModel: T.Type, log: (String) -> Void, completion: @escaping (T?, APIError?) -> Void)
+    func makeRequest<T: Codable>(with request: URLRequest, respModel: T.Type, log: @escaping Logging, completion: @escaping (T?, APIError?) -> Void)
 }
 
 class APIService: Service {
@@ -28,7 +28,7 @@ class APIService: Service {
     func makeRequest<T: Codable>(
         with request: URLRequest,
         respModel: T.Type,
-        log: (String) -> Void = { _ in },
+        log: @escaping Logging = emptyLogging,
         completion: @escaping (T?, APIError?) -> Void
     ) {
         urlSession.dataTask(with: request) { data, resp, error in
@@ -52,7 +52,7 @@ class APIService: Service {
                 completion(result, nil)
 
             } catch let err {
-                print(err)
+                log(err.localizedDescription)
                 completion(nil, .decodingError())
                 return
             }
