@@ -38,12 +38,8 @@ final class SettingsViewModel: ObservableObject {
         })
     }
 
-    func logOutAction() {}
-
-    func getSendInfoURL(event: Event) -> URL? {
-        let logMessage = "String to url: siriusgameurl://*\(event.id)*\(event.title)*\(String(describing: event.description))*\(event.state)*\(event.score)"
-        logging(logMessage)
-
-        return URL(string: "siriusgameurl://*\(event.id)*\(event.title)*\(String(describing: event.description))*\(event.state)*\(event.score)")
+    func logOutAction() {
+        UserDefaults.standard.set(false, forKey: "isLogin")
+        UserDefaults.standard.set(false, forKey: "isJudge")
     }
 }

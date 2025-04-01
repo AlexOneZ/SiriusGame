@@ -43,22 +43,12 @@ struct ContentView: View {
                     Image(systemName: "chart.bar.xaxis.ascending")
                     Text("leaderboard")
                 }
+                
             SettingsView(settingsViewModel: appViewModel.settingsViewModel)
                 .tabItem {
                     Image(systemName: "gear")
                     Text("settings")
                 }
-        }
-        .onOpenURL { url in
-            let event = url.recieveDeeplinkURL(logging: logging)
-            let logMessage = """
-                \(event?.id ?? -1),
-                \(event?.title ?? "no title"),
-                \(event?.description ?? "no description"),
-                \(event?.state ?? EventState.now),
-                \(event?.score ?? -100)
-            """
-            logging(logMessage)
         }
         .sheet(isPresented: $notificationsManager.isNotificationViewShowing) {
             NotificationsView(
@@ -96,6 +86,17 @@ private extension URL {
             state: eventState,
             score: score
         )
+//        .onOpenURL { url in
+//            let event = url.recieveDeeplinkURL(log: log)
+//            let logMessage = """
+//                \(event?.id ?? -1),
+//                \(event?.title ?? "no title"),
+//                \(event?.description ?? "no description"),
+//                \(event?.state ?? EventState.now),
+//                \(event?.score ?? -100)
+//            """
+//            log(logMessage)
+//        }
     }
 }
 

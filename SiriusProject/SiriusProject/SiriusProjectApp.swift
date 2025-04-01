@@ -19,6 +19,9 @@ struct SiriusProjectApp: App {
     let errorPublisher: ErrorPublisher
 
     @UIApplicationDelegateAdaptor private var appDelegate: CustomAppDelegate
+    
+    @AppStorage("isJudge") var isJudge: Bool = false
+    @AppStorage("isLogin") var isLogin: Bool = false
 
     init() {
         errorPublisher = ErrorPublisher()
@@ -49,10 +52,19 @@ struct SiriusProjectApp: App {
     var body: some Scene {
         WindowGroup {
             ErrorHandlerView(errorPublisher: errorPublisher) {
-                ContentView(
-                    appViewModel: appViewModel,
-                    notificationsManager: notificationsManager
-                )
+                if isLogin {
+                    if isJudge {
+                        JudgeContentView(appViewModel: appViewModel)
+                    }
+                    else {
+                        ContentView(appViewModel: appViewModel,
+                                    notificationsManager: notificationsManager)
+                    }
+                }
+                else {
+                    LoginView(viewModel: appViewModel.loginViewModel)
+                    
+                }
             }
         }
     }

@@ -34,3 +34,7 @@
 "rules" = "Game rules:";
 "location" = "Address:";
 "getscore" = "Get score";
+"login_as_judge" = "Login as judge";
+"role" = "Role";
+"judge" = "Judge";
+"participant" = "Participant";
