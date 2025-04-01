@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     var appViewModel: AppViewModel
+    @AppStorage("isTeamLoggedIn") var isTeamLoggedIn: Bool = false
+    @State var isNotificationViewShowing: Bool = false
     private let log: (String) -> Void
 
     init(appViewModel: AppViewModel, log: @escaping (String) -> Void = { message in
@@ -22,16 +24,22 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
-            EventsListView(eventsListViewModel: appViewModel.eventsListViewModel)
-                .tabItem {
-                    Image(systemName: "rectangle.on.rectangle")
-                    Text("events")
-                }
-            MapView(mapViewModel: appViewModel.mapViewModel)
-                .tabItem {
-                    Image(systemName: "mappin.circle")
-                    Text("map")
-                }
+            EventsListView(
+                eventsListViewModel: appViewModel.eventsListViewModel,
+                isNotificationViewShowing: $isNotificationViewShowing
+            )
+            .tabItem {
+                Image(systemName: "rectangle.on.rectangle")
+                Text("events")
+            }
+            MapView(
+                mapViewModel: appViewModel.mapViewModel,
+                isNotificationViewShowing: $isNotificationViewShowing
+            )
+            .tabItem {
+                Image(systemName: "mappin.circle")
+                Text("map")
+            }
             LeaderboardView(liderboardViewModel: appViewModel.leaderboardViewModel)
                 .tabItem {
                     Image(systemName: "chart.bar.xaxis.ascending")
@@ -53,6 +61,12 @@ struct ContentView: View {
                 \(event?.score ?? -100)
             """
             log(logMessage)
+        }
+        .sheet(isPresented: $isNotificationViewShowing) {
+            NotificationsView(
+                isNotificationViewShowing: $isNotificationViewShowing,
+                viewModel: appViewModel.notificationsViewModel
+            )
         }
     }
 }

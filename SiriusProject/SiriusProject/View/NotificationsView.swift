@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct NotificationsView: View {
+    @Binding var isNotificationViewShowing: Bool
     @ObservedObject var viewModel: NotificationsViewModel
     var header: LocalizedStringKey = "notifications"
 
@@ -20,12 +21,11 @@ struct NotificationsView: View {
                             NotificationCell(notification: viewModel.notifications[index])
                         }
                     }
-                    .padding(.leading, 20)
-                    .padding(.trailing, 20)
-                    .padding(.top, 15)
+                    .padding(.top, 13)
                 }
             }
             .navigationTitle(header)
+            .navigationBarTitleDisplayMode(.inline)
             .background(
                 LinearGradient(
                     gradient: Gradient(colors: [
@@ -47,5 +47,8 @@ struct NotificationsView: View {
 }
 
 #Preview {
-    NotificationsView(viewModel: NotificationsViewModel(networkManager: FakeNetworkManager()))
+    NotificationsView(
+        isNotificationViewShowing: .constant(true),
+        viewModel: NotificationsViewModel(networkManager: FakeNetworkManager())
+    )
 }

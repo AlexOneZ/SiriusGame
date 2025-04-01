@@ -9,9 +9,14 @@ import SwiftUI
 
 struct EventsListView: View {
     @ObservedObject var viewModel: EventsListViewModel
+    @Binding var isNotificationViewShowing: Bool
 
-    init(eventsListViewModel: EventsListViewModel) {
+    init(
+        eventsListViewModel: EventsListViewModel,
+        isNotificationViewShowing: Binding<Bool>
+    ) {
         viewModel = eventsListViewModel
+        _isNotificationViewShowing = isNotificationViewShowing
     }
 
     var body: some View {
@@ -22,10 +27,20 @@ struct EventsListView: View {
                 }
             }
         }
+        .overlay(alignment: .bottomTrailing) {
+            NotificationsButton(
+                action: { isNotificationViewShowing = true }
+            )
+            .padding(.trailing, 30)
+            .padding(.bottom, 40)
+        }
     }
 }
 
 #Preview {
-    EventsListView(eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()))
-        .environment(\.locale, .init(identifier: "ru"))
+    EventsListView(
+        eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()),
+        isNotificationViewShowing: .constant(false)
+    )
+    .environment(\.locale, .init(identifier: "ru"))
 }

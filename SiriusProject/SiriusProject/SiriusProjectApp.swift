@@ -25,7 +25,6 @@ struct SiriusProjectApp: App {
             mapViewModel: MapViewModel(),
             notificationsViewModel: NotificationsViewModel(networkManager: networkManager)
         )
-
         let center = UNUserNotificationCenter.current()
         appDelegate.setup(notificationCenter: center, runner: onMainThread)
     }
