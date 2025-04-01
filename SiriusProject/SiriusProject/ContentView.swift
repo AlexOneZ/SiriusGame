@@ -14,9 +14,9 @@ struct ContentView: View {
     @State var isNotificationViewShowing: Bool = false
     private let logging: Logging
 
-    init(appViewModel: AppViewModel){
+    init(appViewModel: AppViewModel) {
         self.appViewModel = appViewModel
-        self.logging = appViewModel.logging
+        logging = appViewModel.logging
     }
 
     var body: some View {
