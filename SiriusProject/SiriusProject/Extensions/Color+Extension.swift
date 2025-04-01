@@ -9,6 +9,6 @@ import SwiftUI
 
 extension Color {
     static let siriusBlue = Color("siriusBlue")
-    
+
     static let siriusGray = Color("siriusGray")
 }
