@@ -43,8 +43,10 @@ struct EventsListView: View {
 
 #Preview {
     EventsListView(
-        eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager(),
-                                                 logging: printLogging),
+        eventsListViewModel: EventsListViewModel(
+            networkManager: FakeNetworkManager(),
+            logging: printLogging
+        ),
         isNotificationViewShowing: .constant(false)
     )
 }
