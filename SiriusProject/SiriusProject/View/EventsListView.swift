@@ -22,10 +22,13 @@ struct EventsListView: View {
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading) {
-                ForEach(viewModel.getEvents(), id: \.id) { event in
+                ForEach(viewModel.events, id: \.id) { event in
                     EventCard(show: $viewModel.showRateView, event: event)
                 }
             }
+        }
+        .refreshable {
+            viewModel.fetchEvents()
         }
         .sheet(isPresented: $viewModel.showRateView, content: { GetRateView() })
         .overlay(alignment: .bottomTrailing) {
@@ -40,8 +43,10 @@ struct EventsListView: View {
 
 #Preview {
     EventsListView(
-        eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()),
+        eventsListViewModel: EventsListViewModel(
+            networkManager: FakeNetworkManager(),
+            logging: printLogging
+        ),
         isNotificationViewShowing: .constant(false)
     )
-    .environment(\.locale, .init(identifier: "ru"))
 }

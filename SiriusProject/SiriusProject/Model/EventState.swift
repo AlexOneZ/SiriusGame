@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum EventState: String {
+enum EventState: String, Codable {
     case done
     case now
     case next

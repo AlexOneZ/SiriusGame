@@ -9,18 +9,41 @@ import SwiftUI
 
 final class SettingsViewModel: ObservableObject {
     let networkManager: NetworkManagerProtocol
+    let logging: Logging
+    @Published var teamName: String = ""
 
-    init(networkManager: NetworkManagerProtocol) {
+    init(networkManager: NetworkManagerProtocol, logging: @escaping Logging) {
         self.networkManager = networkManager
-        teamName = networkManager.getTeamName()
+        self.logging = logging
+        fetchTeamName()
     }
 
-    @Published var teamName: String
+    func fetchTeamName() {
+        networkManager.getTeam(teamId: 1, logging: logging, completion: { [weak self] team in
+            onMainThread {
+                if let team = team {
+                    self?.teamName = team.name
+                }
+            }
+        })
+    }
 
     func changeName(newName: String) {
-        networkManager.changeName(newName)
-        teamName = newName
+        networkManager.updateTeamName(teamId: 1, name: newName, logging: logging, completion: { [weak self] hasCompleted in
+            onMainThread {
+                if hasCompleted {
+                    self?.teamName = newName
+                }
+            }
+        })
     }
 
     func logOutAction() {}
+
+    func getSendInfoURL(event: Event) -> URL? {
+        let logMessage = "String to url: siriusgameurl://*\(event.id)*\(event.title)*\(String(describing: event.description))*\(event.state)*\(event.score)"
+        logging(logMessage)
+
+        return URL(string: "siriusgameurl://*\(event.id)*\(event.title)*\(String(describing: event.description))*\(event.state)*\(event.score)")
+    }
 }

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject var viewModel: SettingsViewModel
-    private let log: (String) -> Void
 
     @State var isPresented: Bool = false
     @State var changedName: String = ""
@@ -22,9 +21,8 @@ struct SettingsView: View {
         score: 1
     )
 
-    init(settingsViewModel: SettingsViewModel, log: @escaping (String) -> Void = { _ in }) {
+    init(settingsViewModel: SettingsViewModel) {
         viewModel = settingsViewModel
-        self.log = log
     }
 
     var body: some View {
@@ -35,7 +33,7 @@ struct SettingsView: View {
 
             Spacer()
 
-            if let urlSceme = getSendInfoURL(event: event) {
+            if let urlSceme = viewModel.getSendInfoURL(event: event) {
                 ShareLink(
                     item: urlSceme,
                     preview:
@@ -53,7 +51,6 @@ struct SettingsView: View {
                 TextField("newteamname", text: $changedName)
 
                 Button("accept", action: {
-                    print("\(changedName)")
                     viewModel.changeName(newName: changedName)
                 })
                 Button("cancel", role: .cancel, action: {})
@@ -67,15 +64,8 @@ struct SettingsView: View {
             .padding(.bottom)
         }
     }
-
-    private func getSendInfoURL(event: Event) -> URL? {
-        let logMessage = "String to url: siriusgameurl://*\(event.id)*\(event.title)*\(event.description)*\(event.state)*\(event.score)"
-        log(logMessage)
-
-        return URL(string: "siriusgameurl://*\(event.id)*\(event.title)*\(event.description)*\(event.state)*\(event.score)")
-    }
 }
 
 #Preview {
-    SettingsView(settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager()))
+    SettingsView(settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager(), logging: printLogging))
 }
