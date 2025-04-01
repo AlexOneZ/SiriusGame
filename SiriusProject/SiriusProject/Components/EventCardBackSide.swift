@@ -21,13 +21,7 @@ struct EventCardBackSide: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
-                Text("\(event.id)")
-                    .padding()
-                    .background {
-                        Circle()
-                            .foregroundStyle(Color(.systemGray5))
-                    }
-                Text(event.title)
+                EventOrderTitle(orderNumber: event.id, title: event.title)
 
                 Spacer()
 
@@ -44,13 +38,13 @@ struct EventCardBackSide: View {
             if show {
                 VStack(alignment: .leading) {
                     EventInfoBlockViewComponent(
-                        title: "Адрес",
+                        title:NSLocalizedString("location", comment: "Местоположение"),
                         description: event.adress ?? "",
                         hide: $show
                     )
 
                     EventInfoBlockViewComponent(
-                        title: "Правила игры",
+                        title: NSLocalizedString("rules", comment: "Правила игры"),
                         description: event.rules ?? "",
                         hide: $show
                     )
@@ -59,7 +53,7 @@ struct EventCardBackSide: View {
                         Button {
                             showRate.toggle()
                         } label: {
-                            Text("Get score")
+                            Text("getscore")
                                 .foregroundStyle(.white)
                                 .font(.headline)
                                 .padding()

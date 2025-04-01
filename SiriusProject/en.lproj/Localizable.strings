@@ -31,3 +31,6 @@
 "teamPlace" = "Place";
 "team" = "Team";
 "leaderboard" = "Leaderboard";
+"rules" = "Game rules:";
+"location" = "Address:";
+"getscore" = "Get score";
