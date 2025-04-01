@@ -1,7 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
+from typing import List
+
 from .schemas import Device, Message
 from .repository import DeviceRepository
-from .services import PushService
+from .handler import PushHandler
 
 router = APIRouter(
     prefix="/pushes",
@@ -11,57 +13,72 @@ router = APIRouter(
 
 
 @router.post("/send")
-def send_push(message: Message, pushService: PushService = Depends()):
+async def send_push(message: Message, handler: PushHandler = Depends()):  # Используем async def и Depends для handler
     """
-    Sends a push notification using the specified push service.
-
-    Args:
-        message (Message): The message to send.
-        pushService (PushService): The push service to use. Injected by FastAPI.
-
-    Returns:
-        The result of sending the push notification.
+    Sends a push notification to specified recipients.
     """
-    return pushService.send_push(message)
+    if not message.recipients:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Recipient list cannot be empty")
+
+    results = await handler.send_multiple_push(
+        to_device_tokens=message.recipients,
+        body=message.body
+    )
+    return {"results": results}
 
 
 @router.post("/register", response_model=Device)
-def register_device(device: Device, deviceService: DeviceRepository = Depends()):
+async def register_device(device: Device):
     """
-    Registers a new device with the push notification framework.
-
-    Args:
-        device (Device): The device to register.
-        deviceService (DeviceRepository): An instance of the DeviceService class. Injected by FastAPI.
-
-    Returns:
-        Device: The registered device.
+    Registers a new device or updates existing one based on the token.
     """
-    return deviceService.register_device(device)
+    registered_device = await DeviceRepository.register_device(device)
+    return registered_device
 
 
-@router.get("/all", response_model=list[Device])
-def get_registered_devices(
-        deviceService: DeviceRepository = Depends(),
-):
+@router.get("/all", response_model=List[Device])
+async def get_registered_devices():
     """
     Retrieve a list of all registered devices.
-
-    Args:
-        deviceService (DeviceRepository): An instance of the DeviceService class. Injected by FastAPI.
-
-    Returns:
-        list[Device]: A list of Device objects representing all registered devices.
     """
-    return deviceService.get_registered_devices()
+    devices = await DeviceRepository.get_registered_devices()
+    return devices
 
 
 # FOR TESTING PURPOSES ONLY
-@router.get("/clear", response_model=None)
-def clear_registered_devices(
-        deviceService: DeviceRepository = Depends(),
-):
+@router.delete("/clear", status_code=status.HTTP_200_OK)
+async def clear_registered_devices():
     """
-    Clears all registered devices from the device service.
+    Clears all registered devices from the database.
     """
-    return deviceService.clear_registered_devices()
+    deleted_count = await DeviceRepository.clear_registered_devices()
+    return {"ok": True, "deleted_count": deleted_count}
+
+
+@router.delete("/token/{token}", status_code=status.HTTP_200_OK)
+async def delete_device(token: str):
+    """
+    Deletes a specific device by its token.
+    """
+    success = await DeviceRepository.delete_device_by_token(token)
+    if not success:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Device token not found")
+    return {"ok": True, "detail": f"Device with token {token} deleted."}
+
+
+@router.post("/send_to_all")
+async def send_push_to_all(message: Message, handler: PushHandler = Depends()):
+    """
+    Sends a push notification to ALL registered devices.
+    Ignores recipients in the message body, uses the message body/title.
+    """
+    all_tokens = await DeviceRepository.get_device_tokens()
+    if not all_tokens:
+        return {"message": "No registered devices to send to."}
+
+    results = await handler.send_multiple_push(
+        to_device_tokens=all_tokens,
+        body=message.body
+        # Можно добавить title и т.д.
+    )
+    return {"results": results}

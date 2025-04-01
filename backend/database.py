@@ -4,8 +4,6 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from typing import Optional
 
-from pushes.schemas import Device
-
 engine = create_async_engine('sqlite+aiosqlite:///database.db')
 new_session = async_sessionmaker(engine, expire_on_commit=False)
 
@@ -41,7 +39,9 @@ class DeviceEntity(Model):
         onupdate=func.now()
     )
 
-    def to_model(self) -> "Device":
+    # Используем СТРОКОВЫЙ ЛИТЕРАЛ для аннотации типа
+    def to_model(self) -> "pushes.schemas.Device":
+        from pushes.schemas import Device
         return Device(
             id=self.id,
             token=self.token,
@@ -55,9 +55,12 @@ class DeviceEntity(Model):
         )
 
     @classmethod
-    def from_model(cls, model: "Device") -> "DeviceEntity":
+    def from_model(cls, model: "pushes.schemas.Device") -> "DeviceEntity":
+        from pushes.schemas import Device
+        if not isinstance(model, Device):
+            raise TypeError("Input must be a pushes.schemas.Device instance")
+
         return cls(
-            id=model.id,
             token=model.token,
             name=model.name,
             systemName=model.systemName,
