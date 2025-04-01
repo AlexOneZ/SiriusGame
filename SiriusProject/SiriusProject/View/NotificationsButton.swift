@@ -8,18 +8,21 @@
 import SwiftUI
 
 struct NotificationsButton: View {
-    var body: some View {
-        Circle()
-            .fill(Color("NotificationColor"))
-            .frame(width: 75, height: 75)
-            .overlay(
-                Image(systemName: "ellipsis.message")
-                    .font(.system(size: 35))
-                    .foregroundColor(.white)
-            )
-    }
-}
+    var action: () -> Void
 
-#Preview {
-    NotificationsButton()
+    var body: some View {
+        Button(
+            action: { action() },
+            label: {
+                Circle()
+                    .fill(Color("NotificationColor"))
+                    .frame(width: 75, height: 75)
+                    .overlay(
+                        Image(systemName: "ellipsis.message")
+                            .font(.system(size: 35))
+                            .foregroundColor(.white)
+                    )
+            }
+        )
+    }
 }

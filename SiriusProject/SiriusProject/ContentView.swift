@@ -23,9 +23,6 @@ struct ContentView: View {
     }
 
     var body: some View {
-        //        if !isTeamLoggedIn {
-        //            LoginView(viewModel: appViewModel.loginViewModel)
-        //        } else {
         TabView {
             EventsListView(
                 eventsListViewModel: appViewModel.eventsListViewModel,

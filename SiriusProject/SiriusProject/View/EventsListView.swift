@@ -27,21 +27,13 @@ struct EventsListView: View {
                 }
             }
         }
-        .overlay(
-            VStack {
-                Spacer()
-                HStack {
-                    Spacer()
-                    Button {
-                        isNotificationViewShowing = true
-                    } label: {
-                        NotificationsButton()
-                    }
-                    .padding(.trailing, 30)
-                    .padding(.bottom, 40)
-                }
-            }
-        )
+        .overlay(alignment: .bottomTrailing) {
+            NotificationsButton(
+                action: { isNotificationViewShowing = true }
+            )
+            .padding(.trailing, 30)
+            .padding(.bottom, 40)
+        }
     }
 }
 

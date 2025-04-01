@@ -21,7 +21,7 @@ struct NotificationCell: View {
         }
         .padding()
         .foregroundColor(.white)
-        .frame(width: 370)
+        .containerRelativeFrame(.horizontal) { width, _ in width * 0.8 }
         .background(.white)
         .cornerRadius(15)
     }

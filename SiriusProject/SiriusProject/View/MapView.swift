@@ -25,20 +25,12 @@ struct MapView: View {
         Map(position: $viewModel.region) {
             Marker("Football", coordinate: point)
         }
-        .overlay(
-            VStack {
-                Spacer()
-                HStack {
-                    Spacer()
-                    Button {
-                        isNotificationViewShowing = true
-                    } label: {
-                        NotificationsButton()
-                    }
-                    .padding(.trailing, 30)
-                    .padding(.bottom, 40)
-                }
-            }
-        )
+        .overlay(alignment: .bottomTrailing) {
+            NotificationsButton(
+                action: { isNotificationViewShowing = true }
+            )
+            .padding(.trailing, 30)
+            .padding(.bottom, 40)
+        }
     }
 }
