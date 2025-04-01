@@ -27,6 +27,16 @@ struct ContentView: View {
                     Image(systemName: "rectangle.on.rectangle")
                     Text("events")
                 }
+            MapView(mapViewModel: appViewModel.mapViewModel)
+                .tabItem {
+                    Image(systemName: "mappin.circle")
+                    Text("map")
+                }
+            LeaderboardView(liderboardViewModel: appViewModel.leaderboardViewModel)
+                .tabItem {
+                    Image(systemName: "chart.bar.xaxis.ascending")
+                    Text("leaderboard")
+                }
             SettingsView(settingsViewModel: appViewModel.settingsViewModel, log: log)
                 .tabItem {
                     Image(systemName: "gear")
@@ -78,10 +88,21 @@ private extension URL {
 }
 
 #Preview {
-    ContentView(appViewModel: AppViewModel(eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()), settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager()), loginViewModel: LoginViewModel(networkManager: FakeNetworkManager()), pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager()), notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager())), log: { message in
-        #if DEBUG
-            print(message)
-        #endif
-    })
+    ContentView(
+        appViewModel: AppViewModel(
+            eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()),
+            settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager()),
+            loginViewModel: LoginViewModel(networkManager: FakeNetworkManager()),
+            pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager()),
+            leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager()),
+            mapViewModel: MapViewModel(),
+            notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager())
+        ),
+        log: { message in
+            #if DEBUG
+                print(message)
+            #endif
+        }
+    )
     .environment(\.locale, .init(identifier: "ru"))
 }
