@@ -18,6 +18,8 @@ Dev.xcconfig
 # Icon must end with two \r
 Icon
 
+# PyCharm
+.idea
 
 # Thumbnails
 ._*
