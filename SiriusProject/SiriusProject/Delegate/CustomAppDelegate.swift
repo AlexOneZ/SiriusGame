@@ -46,8 +46,15 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate {
         _ application: UIApplication,
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
-        let stringifiedToken = deviceToken.map { String(format: "%02hhx", $0) }.joined()
-        // send token to server
+        let stringifiedToken = deviceToken.map { data in String(format: "%02.2hhx", data) }.joined()
+        print("\(stringifiedToken)")
+    }
+    
+    func application(
+        _ application: UIApplication,
+        didFailToRegisterForRemoteNotificationsWithError error: Error
+    ) {
+        print("\(error.localizedDescription)")
     }
 }
 
@@ -55,7 +62,15 @@ extension CustomAppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse
-    ) async {}
+    ) async {
+        let userInfo = response.notification.request.content.userInfo
+        if let aps = userInfo["aps"] as? [String: Any],
+            let alert = aps["alert"] as? [String: Any],
+            let destination = alert["destination"] as? String,
+            destination == "notifications" {
+            // toggle()
+        }
+    }
 
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
