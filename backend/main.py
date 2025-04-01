@@ -27,7 +27,7 @@ else:
         print("Tables created")
         yield
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan, debug=True)
 
 app.include_router(teams_router)
 app.include_router(events_router)

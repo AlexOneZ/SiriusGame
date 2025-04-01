@@ -1,5 +1,6 @@
 import ssl
 import time
+import traceback
 from typing import Optional, Tuple
 
 import jwt
@@ -8,7 +9,6 @@ DEFAULT_TOKEN_LIFETIME = 2700
 DEFAULT_TOKEN_ENCRYPTION_ALGORITHM = "ES256"
 
 
-# Abstract Base class. This should not be instantiated directly.
 class Credentials(object):
     def __init__(self, ssl_context: Optional[ssl.SSLContext] = None) -> None:
         super().__init__()
@@ -18,7 +18,6 @@ class Credentials(object):
         return None
 
 
-# Credentials subclass for certificate authentication
 class CertificateCredentials(Credentials):
     def __init__(
             self, cert_file: Optional[str] = None, password: Optional[str] = None
@@ -28,7 +27,6 @@ class CertificateCredentials(Credentials):
         super(CertificateCredentials, self).__init__(ssl_context)
 
 
-# Credentials subclass for JWT token based authentication
 class TokenCredentials(Credentials):
     def __init__(
             self,
@@ -46,12 +44,11 @@ class TokenCredentials(Credentials):
 
         self.__jwt_token = None  # type: Optional[Tuple[float, str]]
 
-        # Use the default constructor because we don't have an SSL context
         super(TokenCredentials, self).__init__()
 
     def get_authorization_header(self, topic: Optional[str]) -> str:
         token = self._get_or_create_topic_token()
-        return "bearer %s" % token
+        return f"Bearer {token}"
 
     def _is_expired_token(self, issue_date: float) -> bool:
         return time.time() > issue_date + self.__token_lifetime
@@ -60,15 +57,29 @@ class TokenCredentials(Credentials):
     def _get_signing_key(key_path: str) -> str:
         secret = ""
         if key_path:
-            with open(key_path) as f:
-                secret = f.read()
+            try:
+                with open(key_path, 'r') as f:
+                    secret = f.read()
+            except FileNotFoundError:
+                print(f"ERROR: APNs Auth Key file not found at path: {key_path}")
+                raise
+            except Exception as e:
+                print(f"ERROR: Failed to read APNs Auth Key file: {e}")
+                traceback.print_exc()
+                raise
+        else:
+            print("ERROR: APNs Auth Key path is not configured (key_path is empty).")
+            raise ValueError("APNs Auth Key path cannot be empty for TokenCredentials")
+
+        if not secret:
+            print(f"ERROR: APNs Auth Key file at {key_path} seems to be empty.")
+            raise ValueError("APNs Auth Key content is empty")
+
         return secret
 
     def _get_or_create_topic_token(self) -> str:
-        # dict of topic to issue date and JWT token
         token_pair = self.__jwt_token
         if token_pair is None or self._is_expired_token(token_pair[0]):
-            # Create a new token
             issued_at = time.time()
             token_dict = {
                 "iss": self.__team_id,
@@ -78,16 +89,22 @@ class TokenCredentials(Credentials):
                 "alg": self.__encryption_algorithm,
                 "kid": self.__auth_key_id,
             }
-            jwt_token = jwt.encode(
+
+            jwt_bytes = jwt.encode(
                 token_dict,
                 self.__auth_key,
                 algorithm=self.__encryption_algorithm,
                 headers=headers,
             )
 
-            # Cache JWT token for later use. One JWT token per connection.
-            # https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/establishing_a_token-based_connection_to_apns
-            self.__jwt_token = (issued_at, jwt_token)
-            return jwt_token
+            if isinstance(jwt_bytes, bytes):
+                jwt_string = jwt_bytes.decode('utf-8')
+            else:
+                jwt_string = jwt_bytes
+
+            print(f"DEBUG: Generated new APNs JWT token (expiring in {self.__token_lifetime}s).")
+            self.__jwt_token = (issued_at, jwt_string)
+            return jwt_string
         else:
+            print("DEBUG: Using cached APNs JWT token.")
             return token_pair[1]
