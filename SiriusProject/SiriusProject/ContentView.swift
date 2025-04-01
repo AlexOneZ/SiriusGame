@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     var appViewModel: AppViewModel
+    @AppStorage("isTeamLoggedIn") var isTeamLoggedIn: Bool = false
+    @State var isNotificationViewShowing: Bool = false
     private let log: (String) -> Void
 
     init(appViewModel: AppViewModel, log: @escaping (String) -> Void = { message in
@@ -21,12 +23,16 @@ struct ContentView: View {
     }
 
     var body: some View {
+        //        if !isTeamLoggedIn {
+        //            LoginView(viewModel: appViewModel.loginViewModel)
+        //        } else {
         TabView {
-            EventsListView(eventsListViewModel: appViewModel.eventsListViewModel)
-                .tabItem {
-                    Image(systemName: "rectangle.on.rectangle")
-                    Text("events")
-                }
+            EventsListView(eventsListViewModel: appViewModel.eventsListViewModel,
+                           isNotificationViewShowing: $isNotificationViewShowing)
+            .tabItem {
+                Image(systemName: "rectangle.on.rectangle")
+                Text("events")
+            }
             MapView(mapViewModel: appViewModel.mapViewModel)
                 .tabItem {
                     Image(systemName: "mappin.circle")
@@ -53,6 +59,10 @@ struct ContentView: View {
                 \(event?.score ?? -100)
             """
             log(logMessage)
+        }
+        .sheet(isPresented: $isNotificationViewShowing) {
+            NotificationsView(isNotificationViewShowing: $isNotificationViewShowing,
+                              viewModel: appViewModel.notificationsViewModel)
         }
     }
 }

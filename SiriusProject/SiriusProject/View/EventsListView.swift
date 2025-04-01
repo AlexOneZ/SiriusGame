@@ -9,11 +9,14 @@ import SwiftUI
 
 struct EventsListView: View {
     @ObservedObject var viewModel: EventsListViewModel
-
-    init(eventsListViewModel: EventsListViewModel) {
+    @Binding var isNotificationViewShowing: Bool
+   
+    init(eventsListViewModel: EventsListViewModel,
+         isNotificationViewShowing: Binding<Bool>) {
         viewModel = eventsListViewModel
+        self._isNotificationViewShowing = isNotificationViewShowing
     }
-
+    
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading) {
@@ -22,10 +25,27 @@ struct EventsListView: View {
                 }
             }
         }
+        .overlay(
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Button {
+                        isNotificationViewShowing = true
+                    } label: {
+                        NotificationsButton()
+                    }
+                    .padding(.trailing, 40)
+                    .padding(.bottom, 50)
+                }
+            }
+        )
     }
 }
 
 #Preview {
-    EventsListView(eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()))
+    EventsListView(eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()),
+                   isNotificationViewShowing: .constant(false)
+    )
         .environment(\.locale, .init(identifier: "ru"))
 }
