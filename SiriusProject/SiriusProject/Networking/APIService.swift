@@ -7,11 +7,21 @@
 
 import Foundation
 
-enum APIError: Error {
+enum APIError: Error, LocalizedError {
     case urlSessionError(String)
     case serverError(String = "Server error")
     case invalidResponse(String = "Invalid response from server.")
     case decodingError(String = "Error parsing server response.")
+
+    var errorDescription: String? {
+        switch self {
+        case .urlSessionError(let message),
+             .serverError(let message),
+             .invalidResponse(let message),
+             .decodingError(let message):
+            return message
+        }
+    }
 }
 
 protocol Service {
@@ -48,12 +58,16 @@ class APIService: Service {
             }
 
             do {
+                if let errorResponse = try? JSONDecoder().decode([String: String].self, from: data),
+                   let detail = errorResponse["detail"] {
+                    completion(nil, .serverError(detail))
+                    return
+                }
+                
                 let result = try JSONDecoder().decode(T.self, from: data)
                 completion(result, nil)
-            } catch let err {
-                logging(err.localizedDescription)
+            } catch {
                 completion(nil, .decodingError())
-                return
             }
         }.resume()
     }
