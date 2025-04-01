@@ -20,11 +20,11 @@ protocol Service {
 
 class APIService: Service {
     let urlSession: URLSession
-    
+
     init(urlSession: URLSession) {
         self.urlSession = urlSession
     }
-    
+
     func makeRequest<T: Codable>(
         with request: URLRequest,
         respModel: T.Type,

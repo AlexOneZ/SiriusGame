@@ -13,7 +13,7 @@ protocol NetworkManagerProtocol {
     func deleteTeam(teamId: Int, logging: @escaping Logging, completion: @escaping (Bool) -> Void)
     func getTeamEvents(teamId: Int, logging: @escaping Logging, completion: @escaping ([Event]) -> Void)
     func setTeamEventScore(teamId: Int, score: Int, logging: @escaping Logging, completion: @escaping (Bool) -> Void)
-    
+
     func addEvent(name: String, description: String?, logging: @escaping Logging, completion: @escaping (Bool) -> Void)
     func deleteEvent(eventId: Int, logging: @escaping Logging, completion: @escaping (Bool) -> Void)
 }

@@ -7,7 +7,7 @@
 
 struct NetworkManager: NetworkManagerProtocol {
     private let service: APIService
-    
+
     init(service: APIService) {
         self.service = service
     }
@@ -83,7 +83,7 @@ struct NetworkManager: NetworkManagerProtocol {
     }
 
     func deleteTeam(teamId: Int, logging: @escaping Logging = emptyLogging, completion: @escaping (Bool) -> Void) {
-        guard let request = Endpoint.deleteTeam(teamId: teamId).request  else {
+        guard let request = Endpoint.deleteTeam(teamId: teamId).request else {
             logging("Error: Failed to create request")
             completion(false)
             return
