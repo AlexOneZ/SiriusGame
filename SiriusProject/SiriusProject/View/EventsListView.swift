@@ -37,8 +37,8 @@ struct EventsListView: View {
                     } label: {
                         NotificationsButton()
                     }
-                    .padding(.trailing, 40)
-                    .padding(.bottom, 50)
+                    .padding(.trailing, 30)
+                    .padding(.bottom, 40)
                 }
             }
         )

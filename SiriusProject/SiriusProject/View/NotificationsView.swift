@@ -25,6 +25,7 @@ struct NotificationsView: View {
                 }
             }
             .navigationTitle(header)
+            .navigationBarTitleDisplayMode(.inline)
             .background(
                 LinearGradient(
                     gradient: Gradient(colors: [
