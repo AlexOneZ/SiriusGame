@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject var viewModel: SettingsViewModel
-    private let log: Logging
 
     @State var isPresented: Bool = false
     @State var changedName: String = ""
@@ -22,9 +21,8 @@ struct SettingsView: View {
         score: 1
     )
 
-    init(settingsViewModel: SettingsViewModel, log: @escaping Logging = emptyLogging) {
+    init(settingsViewModel: SettingsViewModel) {
         viewModel = settingsViewModel
-        self.log = log
     }
 
     var body: some View {
@@ -35,7 +33,7 @@ struct SettingsView: View {
 
             Spacer()
 
-            if let urlSceme = getSendInfoURL(event: event) {
+            if let urlSceme = viewModel.getSendInfoURL(event: event) {
                 ShareLink(
                     item: urlSceme,
                     preview:
@@ -66,15 +64,8 @@ struct SettingsView: View {
             .padding(.bottom)
         }
     }
-
-    private func getSendInfoURL(event: Event) -> URL? {
-        let logMessage = "String to url: siriusgameurl://*\(event.id)*\(event.title)*\(String(describing: event.description))*\(event.state)*\(event.score)"
-        log(logMessage)
-
-        return URL(string: "siriusgameurl://*\(event.id)*\(event.title)*\(String(describing: event.description))*\(event.state)*\(event.score)")
-    }
 }
 
 #Preview {
-    SettingsView(settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager()))
+    SettingsView(settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager(), logging: printLogging))
 }

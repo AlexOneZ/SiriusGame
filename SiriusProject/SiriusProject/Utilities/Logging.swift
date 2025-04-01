@@ -12,5 +12,7 @@ let emptyLogging: Logging = { _ in }
 
 // Реализация логирования через print
 let printLogging: Logging = { message in
-    print(message)
+    #if DEBUG
+        print(message)
+    #endif
 }

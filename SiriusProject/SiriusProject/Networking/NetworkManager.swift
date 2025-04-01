@@ -7,19 +7,21 @@
 
 struct NetworkManager: NetworkManagerProtocol {
     private let service: APIService
+    let logging: Logging
 
-    init(service: APIService) {
+    init(service: APIService, logging: @escaping Logging) {
         self.service = service
+        self.logging = logging
     }
 
-    func getTeams(logging: @escaping Logging = emptyLogging, completion: @escaping ([Team]) -> Void) {
+    func getTeams(logging: @escaping Logging, completion: @escaping ([Team]) -> Void) {
         guard let request = Endpoint.getTeams().request else {
             logging("Error: Failed to create request")
             completion([])
             return
         }
 
-        service.makeRequest(with: request, respModel: [Team].self) { teams, error in
+        service.makeRequest(with: request, respModel: [Team].self, logging: logging) { teams, error in
             if let error = error {
                 logging(error.localizedDescription)
                 completion([])
@@ -30,14 +32,14 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func enterTeam(name: String, logging: @escaping Logging = emptyLogging, completion: @escaping (Bool) -> Void) {
+    func enterTeam(name: String, logging: @escaping Logging, completion: @escaping (Bool) -> Void) {
         guard let request = Endpoint.enterTeam(name: name).request else {
             logging("Error: Failed to create request")
             completion(false)
             return
         }
 
-        service.makeRequest(with: request, respModel: [Team].self) { _, error in
+        service.makeRequest(with: request, respModel: [Team].self, logging: logging) { _, error in
             if let error = error {
                 logging(error.localizedDescription)
                 completion(false)
@@ -47,14 +49,14 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func getTeam(teamId: Int, logging: @escaping Logging = emptyLogging, completion: @escaping (Team?) -> Void) {
+    func getTeam(teamId: Int, logging: @escaping Logging, completion: @escaping (Team?) -> Void) {
         guard let request = Endpoint.getTeam(teamId: teamId).request else {
             logging("Error: Failed to create request")
             completion(nil)
             return
         }
 
-        service.makeRequest(with: request, respModel: Team.self) { team, error in
+        service.makeRequest(with: request, respModel: Team.self, logging: logging) { team, error in
             if let error = error {
                 logging(error.localizedDescription)
                 completion(nil)
@@ -65,14 +67,14 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func updateTeamName(teamId: Int, name: String, logging: @escaping Logging = emptyLogging, completion: @escaping (Bool) -> Void) {
+    func updateTeamName(teamId: Int, name: String, logging: @escaping Logging, completion: @escaping (Bool) -> Void) {
         guard let request = Endpoint.updateTeamName(teamId: teamId, name: name).request else {
             logging("Error: Failed to create request")
             completion(false)
             return
         }
 
-        service.makeRequest(with: request, respModel: Team.self) { team, error in
+        service.makeRequest(with: request, respModel: Team.self, logging: logging) { team, error in
             if let error = error {
                 logging(error.localizedDescription)
                 completion(false)
@@ -82,14 +84,14 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func deleteTeam(teamId: Int, logging: @escaping Logging = emptyLogging, completion: @escaping (Bool) -> Void) {
+    func deleteTeam(teamId: Int, logging: @escaping Logging, completion: @escaping (Bool) -> Void) {
         guard let request = Endpoint.deleteTeam(teamId: teamId).request else {
             logging("Error: Failed to create request")
             completion(false)
             return
         }
 
-        service.makeRequest(with: request, respModel: Bool.self) { success, error in
+        service.makeRequest(with: request, respModel: Bool.self, logging: logging) { success, error in
             if let error = error {
                 logging(error.localizedDescription)
                 completion(false)
@@ -99,14 +101,14 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func getTeamEvents(teamId: Int, logging: @escaping Logging = emptyLogging, completion: @escaping ([Event]) -> Void) {
+    func getTeamEvents(teamId: Int, logging: @escaping Logging, completion: @escaping ([Event]) -> Void) {
         guard let request = Endpoint.getTeamEvents(teamId: teamId).request else {
             logging("Error: Failed to create request")
             completion([])
             return
         }
 
-        service.makeRequest(with: request, respModel: [Event].self) { events, error in
+        service.makeRequest(with: request, respModel: [Event].self, logging: logging) { events, error in
             if let error = error {
                 logging(error.localizedDescription)
                 completion([])
@@ -117,14 +119,14 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func setTeamEventScore(teamId: Int, score: Int, logging: @escaping Logging = emptyLogging, completion: @escaping (Bool) -> Void) {
+    func setTeamEventScore(teamId: Int, score: Int, logging: @escaping Logging, completion: @escaping (Bool) -> Void) {
         guard let request = Endpoint.getEvents().request else {
             logging("Error: Failed to create request")
             completion(false)
             return
         }
 
-        service.makeRequest(with: request, respModel: Bool.self) { success, error in
+        service.makeRequest(with: request, respModel: Bool.self, logging: logging) { success, error in
             if let error = error {
                 logging(error.localizedDescription)
                 completion(false)
@@ -135,14 +137,14 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func getEvents(logging: @escaping Logging = emptyLogging, completion: @escaping ([Event]) -> Void) {
+    func getEvents(logging: @escaping Logging, completion: @escaping ([Event]) -> Void) {
         guard let request = Endpoint.getEvents().request else {
             logging("Error: Failed to create request")
             completion([])
             return
         }
 
-        service.makeRequest(with: request, respModel: [Event].self) { events, error in
+        service.makeRequest(with: request, respModel: [Event].self, logging: logging) { events, error in
             if let error = error {
                 logging(error.localizedDescription)
                 completion([])
@@ -153,14 +155,14 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func addEvent(name: String, description: String?, logging: @escaping Logging = emptyLogging, completion: @escaping (Bool) -> Void) {
+    func addEvent(name: String, description: String?, logging: @escaping Logging, completion: @escaping (Bool) -> Void) {
         guard let request = Endpoint.addEvent(name: name, description: description).request else {
             logging("Error: Failed to create request")
             completion(false)
             return
         }
 
-        service.makeRequest(with: request, respModel: Bool.self) { success, error in
+        service.makeRequest(with: request, respModel: Bool.self, logging: logging) { success, error in
             if let error = error {
                 logging(error.localizedDescription)
                 completion(false)
@@ -170,14 +172,14 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func deleteEvent(eventId: Int, logging: @escaping Logging = emptyLogging, completion: @escaping (Bool) -> Void) {
+    func deleteEvent(eventId: Int, logging: @escaping Logging, completion: @escaping (Bool) -> Void) {
         guard let request = Endpoint.deleteEvent(eventId: eventId).request else {
             logging("Error: Failed to create request")
             completion(false)
             return
         }
 
-        service.makeRequest(with: request, respModel: Bool.self) { success, error in
+        service.makeRequest(with: request, respModel: Bool.self, logging: logging) { success, error in
             if let error = error {
                 logging(error.localizedDescription)
                 completion(false)
