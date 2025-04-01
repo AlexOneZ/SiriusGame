@@ -23,7 +23,18 @@ class TeamOrm(Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column()
+    score: Mapped[int] = mapped_column(default=0)
 
+class TeamEventOrm(Model):
+    __tablename__ = "teams_events"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"))
+    event_id: Mapped[int] = mapped_column(ForeignKey("events.id"))
+    order: Mapped[int]
+    score: Mapped[int]
+    state: Mapped[str]
+    
 class DeviceEntity(Model):
     __tablename__ = "devices"
 
@@ -69,15 +80,6 @@ class DeviceEntity(Model):
             model=model.model,
             localizedModel=model.localizedModel,
         )
-class TeamEventOrm(Model):
-    __tablename__ = "teams_events"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"))
-    event_id: Mapped[int] = mapped_column(ForeignKey("events.id"))
-    order: Mapped[int]
-    score: Mapped[int]
-    state: Mapped[str]
 
 async def create_tables():
     async with engine.begin() as conn:

@@ -124,6 +124,12 @@ class TeamRepository:
             if not result.rowcount:
                 raise NoResultFound("No current event")
 
+            await session.execute(
+                update(TeamOrm)
+                .where(TeamOrm.id == team_id)
+                .values(score=TeamOrm.score + score)
+            )
+
             new_event_query = (
                 select(TeamEventOrm.id)
                 .where(TeamEventOrm.team_id == team_id, TeamEventOrm.state == "next")
