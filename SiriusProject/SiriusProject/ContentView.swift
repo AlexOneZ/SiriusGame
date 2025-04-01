@@ -27,8 +27,10 @@ struct ContentView: View {
         //            LoginView(viewModel: appViewModel.loginViewModel)
         //        } else {
         TabView {
-            EventsListView(eventsListViewModel: appViewModel.eventsListViewModel,
-                           isNotificationViewShowing: $isNotificationViewShowing)
+            EventsListView(
+                eventsListViewModel: appViewModel.eventsListViewModel,
+                isNotificationViewShowing: $isNotificationViewShowing
+            )
             .tabItem {
                 Image(systemName: "rectangle.on.rectangle")
                 Text("events")
@@ -61,8 +63,10 @@ struct ContentView: View {
             log(logMessage)
         }
         .sheet(isPresented: $isNotificationViewShowing) {
-            NotificationsView(isNotificationViewShowing: $isNotificationViewShowing,
-                              viewModel: appViewModel.notificationsViewModel)
+            NotificationsView(
+                isNotificationViewShowing: $isNotificationViewShowing,
+                viewModel: appViewModel.notificationsViewModel
+            )
         }
     }
 }

@@ -10,13 +10,15 @@ import SwiftUI
 struct EventsListView: View {
     @ObservedObject var viewModel: EventsListViewModel
     @Binding var isNotificationViewShowing: Bool
-   
-    init(eventsListViewModel: EventsListViewModel,
-         isNotificationViewShowing: Binding<Bool>) {
+
+    init(
+        eventsListViewModel: EventsListViewModel,
+        isNotificationViewShowing: Binding<Bool>
+    ) {
         viewModel = eventsListViewModel
-        self._isNotificationViewShowing = isNotificationViewShowing
+        _isNotificationViewShowing = isNotificationViewShowing
     }
-    
+
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading) {
@@ -44,8 +46,9 @@ struct EventsListView: View {
 }
 
 #Preview {
-    EventsListView(eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()),
-                   isNotificationViewShowing: .constant(false)
+    EventsListView(
+        eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()),
+        isNotificationViewShowing: .constant(false)
     )
-        .environment(\.locale, .init(identifier: "ru"))
+    .environment(\.locale, .init(identifier: "ru"))
 }

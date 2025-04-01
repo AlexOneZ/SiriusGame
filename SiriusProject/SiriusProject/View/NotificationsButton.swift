@@ -16,7 +16,7 @@ struct NotificationsButton: View {
                 Image(systemName: "ellipsis.message")
                     .font(.system(size: 35))
                     .foregroundColor(.white)
-                )
+            )
     }
 }
 
