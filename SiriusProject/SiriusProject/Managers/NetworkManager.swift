@@ -10,10 +10,10 @@ import SwiftUI
 struct FakeNetworkManager: NetworkManagerProtocol {
     func getAllEvents() -> [Event] {
         return [
-            Event(id: 1, title: "Хоккей", description: "Игра в хоккей", state: .done, score: 3),
-            Event(id: 2, title: "Футбол", description: "Игра в футбол", state: .now, score: 0),
-            Event(id: 3, title: "Гольф", description: "Игра в гольф", state: .next, score: 0),
-            Event(id: 4, title: "Шашки", description: "Игра в шашки", state: .next, score: 0)
+            Event(id: 1, title: "Хоккей", description: "Игра в хоккей", state: .done, score: 3, adress: "Ледовая аренда", rules: "матч состоит из трех периодов продолжительностью 20 минут. Между периодами команды уходят на 15-минутный перерыв и меняются воротами период начинается с вбрасывания шайбы на поле. Об окончании периода свидетельствует свисток главного судьи; цель игры – забросить большее количество шайб в ворота соперника. Если по истечении основного времени счет будет равным, игра переходит в овертайм; длительность овертайма составляет 5 минут, команды играют в формате три на три. Если победитель не определится в овертайме, назначаются штрафные послематчевые броски (буллиты)"),
+            Event(id: 2, title: "Футбол", description: "Игра в футбол", state: .now, score: 0, adress: "Футбольное поле", rules: "Игра по стандартным правилам FIFA"),
+            Event(id: 3, title: "Гольф", description: "Игра в гольф", state: .next, score: 0, adress: "Гольф-клуб", rules: "18 лунок, правила R&A"),
+            Event(id: 4, title: "Шашки", description: "Игра в шашки", state: .next, score: 0, adress: "Игровой клуб", rules: "Классические русские шашки")
         ]
     }
 

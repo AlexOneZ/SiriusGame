@@ -17,7 +17,7 @@ struct LeaderboardView: View {
     var body: some View {
         VStack {
             Group {
-                Text("Leaderboard")
+                Text("leaderboard")
                     .font(.title)
                 HStack {
                     Text("teamPlace")

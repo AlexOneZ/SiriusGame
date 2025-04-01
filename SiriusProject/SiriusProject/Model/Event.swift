@@ -13,4 +13,6 @@ struct Event: Identifiable {
     var description: String
     var state: EventState
     var score: Int
+    var adress: String?
+    var rules: String?
 }

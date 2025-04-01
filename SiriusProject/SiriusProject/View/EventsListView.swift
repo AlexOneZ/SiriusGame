@@ -23,10 +23,11 @@ struct EventsListView: View {
         ScrollView {
             LazyVStack(alignment: .leading) {
                 ForEach(viewModel.getEvents(), id: \.id) { event in
-                    EventCard(event: event)
+                    EventCard(show: $viewModel.showRateView, event: event)
                 }
             }
         }
+        .sheet(isPresented: $viewModel.showRateView, content: { GetRateView() })
         .overlay(alignment: .bottomTrailing) {
             NotificationsButton(
                 action: { isNotificationViewShowing = true }
