@@ -30,6 +30,9 @@ async def get_team_by_id(team_id: int) -> STeam:
 
 @router.put("/{team_id}")
 async def update_team_name(team_id: int, new_name: str) -> STeam:
+    if await TeamRepository.get_by_name(new_name):
+        raise HTTPException(status_code=409, detail="Team with this name already exists")
+    
     updated_team = await TeamRepository.update(team_id, new_name)
     if updated_team is None:
         raise HTTPException(status_code=404, detail="Team not found")

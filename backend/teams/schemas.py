@@ -6,6 +6,7 @@ class STeamAdd(BaseModel):
 
 class STeam(STeamAdd):
     id: int
+    score: int = 0
     
 class STeamId(BaseModel):
     ok: bool = True
