@@ -13,4 +13,7 @@ enum Constants {
     static let scheme = "https"
     static let baseURL = "siriusgame.a.pinggy.link"
     static let port: Int? = nil
+    
+    static let teamsPath = "/teams"
+    static let eventsPath = "/events"
 }

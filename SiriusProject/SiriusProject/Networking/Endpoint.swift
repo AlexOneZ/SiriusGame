@@ -8,17 +8,17 @@
 import Foundation
 
 enum Endpoint {
-    case getTeams(url: String = "/teams")
-    case enterTeam(url: String = "/teams", name: String)
-    case getTeam(url: String = "/teams", teamId: Int)
-    case updateTeamName(url: String = "/teams", teamId: Int, name: String)
-    case deleteTeam(url: String = "/teams", teamId: Int)
-    case getTeamEvents(url: String = "/teams", teamId: Int, url1: String = "/events")
-    case setTeamEventScore(url: String = "/teams", teamId: Int, url1: String = "/events", score: Int)
+    case getTeams(url: String = Constants.teamsPath)
+    case enterTeam(url: String = Constants.teamsPath, name: String)
+    case getTeam(url: String = Constants.teamsPath, teamId: Int)
+    case updateTeamName(url: String = Constants.teamsPath, teamId: Int, name: String)
+    case deleteTeam(url: String = Constants.teamsPath, teamId: Int)
+    case getTeamEvents(url: String = Constants.teamsPath, teamId: Int, url1: String = Constants.eventsPath)
+    case setTeamEventScore(url: String = Constants.teamsPath, teamId: Int, url1: String = Constants.eventsPath, score: Int)
 
-    case getEvents(url: String = "/events")
-    case addEvent(url: String = "/events", name: String, description: String?)
-    case deleteEvent(url: String = "/events", eventId: Int)
+    case getEvents(url: String = Constants.eventsPath)
+    case addEvent(url: String = Constants.eventsPath, name: String, description: String?)
+    case deleteEvent(url: String = Constants.eventsPath, eventId: Int)
 
     var request: URLRequest? {
         guard let url = url else { return nil }

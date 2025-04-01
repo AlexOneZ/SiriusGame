@@ -12,12 +12,16 @@ struct NetworkManager: NetworkManagerProtocol {
         self.service = service
     }
 
-    func getTeams(completion: @escaping ([Team]) -> Void) {
-        let request = Endpoint.getTeams().request!
+    func getTeams(logging: @escaping Logging = emptyLogging, completion: @escaping ([Team]) -> Void) {
+        guard let request = Endpoint.getTeams().request else {
+            logging("Error: Failed to create request")
+            completion([])
+            return
+        }
 
         service.makeRequest(with: request, respModel: [Team].self) { teams, error in
             if let error = error {
-                print(error)
+                logging(error.localizedDescription)
                 completion([])
                 return
             }
@@ -26,12 +30,16 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func enterTeam(name: String, completion: @escaping (Bool) -> Void) {
-        let request = Endpoint.enterTeam(name: name).request!
+    func enterTeam(name: String, logging: @escaping Logging = emptyLogging, completion: @escaping (Bool) -> Void) {
+        guard let request = Endpoint.enterTeam(name: name).request else {
+            logging("Error: Failed to create request")
+            completion(false)
+            return
+        }
 
         service.makeRequest(with: request, respModel: [Team].self) { _, error in
             if let error = error {
-                print(error)
+                logging(error.localizedDescription)
                 completion(false)
                 return
             }
@@ -39,12 +47,16 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func getTeam(teamId: Int, completion: @escaping (Team?) -> Void) {
-        let request = Endpoint.getTeam(teamId: teamId).request!
+    func getTeam(teamId: Int, logging: @escaping Logging = emptyLogging, completion: @escaping (Team?) -> Void) {
+        guard let request = Endpoint.getTeam(teamId: teamId).request else {
+            logging("Error: Failed to create request")
+            completion(nil)
+            return
+        }
 
         service.makeRequest(with: request, respModel: Team.self) { team, error in
             if let error = error {
-                print(error)
+                logging(error.localizedDescription)
                 completion(nil)
                 return
             }
@@ -53,12 +65,16 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func updateTeamName(teamId: Int, name: String, completion: @escaping (Bool) -> Void) {
-        let request = Endpoint.updateTeamName(teamId: teamId, name: name).request!
+    func updateTeamName(teamId: Int, name: String, logging: @escaping Logging = emptyLogging, completion: @escaping (Bool) -> Void) {
+        guard let request = Endpoint.updateTeamName(teamId: teamId, name: name).request else {
+            logging("Error: Failed to create request")
+            completion(false)
+            return
+        }
 
         service.makeRequest(with: request, respModel: Team.self) { team, error in
             if let error = error {
-                print(error)
+                logging(error.localizedDescription)
                 completion(false)
                 return
             }
@@ -66,12 +82,16 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func deleteTeam(teamId: Int, completion: @escaping (Bool) -> Void) {
-        let request = Endpoint.deleteTeam(teamId: teamId).request!
+    func deleteTeam(teamId: Int, logging: @escaping Logging = emptyLogging, completion: @escaping (Bool) -> Void) {
+        guard let request = Endpoint.deleteTeam(teamId: teamId).request  else {
+            logging("Error: Failed to create request")
+            completion(false)
+            return
+        }
 
         service.makeRequest(with: request, respModel: Bool.self) { success, error in
             if let error = error {
-                print(error)
+                logging(error.localizedDescription)
                 completion(false)
                 return
             }
@@ -79,12 +99,16 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func getTeamEvents(teamId: Int, completion: @escaping ([Event]) -> Void) {
-        let request = Endpoint.getTeamEvents(teamId: teamId).request!
+    func getTeamEvents(teamId: Int, logging: @escaping Logging = emptyLogging, completion: @escaping ([Event]) -> Void) {
+        guard let request = Endpoint.getTeamEvents(teamId: teamId).request else {
+            logging("Error: Failed to create request")
+            completion([])
+            return
+        }
 
         service.makeRequest(with: request, respModel: [Event].self) { events, error in
             if let error = error {
-                print(error)
+                logging(error.localizedDescription)
                 completion([])
                 return
             }
@@ -93,12 +117,16 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func setTeamEventScore(teamId: Int, score: Int, completion: @escaping (Bool) -> Void) {
-        let request = Endpoint.getEvents().request!
+    func setTeamEventScore(teamId: Int, score: Int, logging: @escaping Logging = emptyLogging, completion: @escaping (Bool) -> Void) {
+        guard let request = Endpoint.getEvents().request else {
+            logging("Error: Failed to create request")
+            completion(false)
+            return
+        }
 
         service.makeRequest(with: request, respModel: Bool.self) { success, error in
             if let error = error {
-                print(error)
+                logging(error.localizedDescription)
                 completion(false)
                 return
             }
@@ -107,12 +135,16 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func getEvents(completion: @escaping ([Event]) -> Void) {
-        let request = Endpoint.getEvents().request!
+    func getEvents(logging: @escaping Logging = emptyLogging, completion: @escaping ([Event]) -> Void) {
+        guard let request = Endpoint.getEvents().request else {
+            logging("Error: Failed to create request")
+            completion([])
+            return
+        }
 
         service.makeRequest(with: request, respModel: [Event].self) { events, error in
             if let error = error {
-                print(error)
+                logging(error.localizedDescription)
                 completion([])
                 return
             }
@@ -121,12 +153,16 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func addEvent(name: String, description: String?, completion: @escaping (Bool) -> Void) {
-        let request = Endpoint.addEvent(name: name, description: description).request!
+    func addEvent(name: String, description: String?, logging: @escaping Logging = emptyLogging, completion: @escaping (Bool) -> Void) {
+        guard let request = Endpoint.addEvent(name: name, description: description).request else {
+            logging("Error: Failed to create request")
+            completion(false)
+            return
+        }
 
         service.makeRequest(with: request, respModel: Bool.self) { success, error in
             if let error = error {
-                print(error)
+                logging(error.localizedDescription)
                 completion(false)
                 return
             }
@@ -134,12 +170,16 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func deleteEvent(eventId: Int, completion: @escaping (Bool) -> Void) {
-        let request = Endpoint.deleteEvent(eventId: eventId).request!
+    func deleteEvent(eventId: Int, logging: @escaping Logging = emptyLogging, completion: @escaping (Bool) -> Void) {
+        guard let request = Endpoint.deleteEvent(eventId: eventId).request else {
+            logging("Error: Failed to create request")
+            completion(false)
+            return
+        }
 
         service.makeRequest(with: request, respModel: Bool.self) { success, error in
             if let error = error {
-                print(error)
+                logging(error.localizedDescription)
                 completion(false)
                 return
             }

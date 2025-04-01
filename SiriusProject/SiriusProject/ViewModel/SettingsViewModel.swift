@@ -17,27 +17,25 @@ final class SettingsViewModel: ObservableObject {
     }
 
     func fetchTeamName() {
-        networkManager.getTeam(teamId: 1) { [weak self] team in
-            DispatchQueue.main.async {
+        networkManager.getTeam(teamId: 1, logging: printLogging, completion:  { [weak self] team in
+            onMainThread {
                 if let team = team {
                     self?.teamName = team.name
-                } else {
-                    print("Ошибка при получении команды")
                 }
             }
-        }
+        })
     }
 
     func changeName(newName: String) {
-        networkManager.updateTeamName(teamId: 1, name: newName) { [weak self] hasCompleted in
-            DispatchQueue.main.async {
+        networkManager.updateTeamName(teamId: 1, name: newName, logging: printLogging, completion:  { [weak self] hasCompleted in
+            onMainThread {
                 if hasCompleted {
                     self?.teamName = newName
                 } else {
                     print("Ошибка при смене имени")
                 }
             }
-        }
+        })
     }
 
     func logOutAction() {}

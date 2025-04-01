@@ -18,10 +18,10 @@ final class EventsListViewModel: ObservableObject {
     }
 
     func fetchEvents() {
-        networkManager.getTeamEvents(teamId: 1) { [weak self] events in
-            DispatchQueue.main.async {
+        networkManager.getTeamEvents(teamId: 1, logging: printLogging, completion: { [weak self] events in
+            onMainThread {
                 self?.events = events
             }
-        }
+        })
     }
 }
