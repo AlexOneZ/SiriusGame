@@ -49,5 +49,5 @@ struct PointsView: View {
 }
 
 #Preview {
-    PointsView(viewModel: PointsViewModel(networkManager: FakeNetworkManager()))
+    PointsView(viewModel: PointsViewModel(networkManager: FakeNetworkManager(logging: printLogging)))
 }

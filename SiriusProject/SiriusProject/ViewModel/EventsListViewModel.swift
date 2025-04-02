@@ -20,7 +20,7 @@ final class EventsListViewModel: ObservableObject {
     }
 
     func fetchEvents() {
-        networkManager.getTeamEvents(teamId: 1, logging: logging, completion: { [weak self] events in
+        networkManager.getTeamEvents(teamId: 1, completion: { [weak self] events in
             onMainThread {
                 self?.events = events
             }

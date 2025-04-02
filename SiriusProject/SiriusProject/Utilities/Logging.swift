@@ -16,3 +16,11 @@ let printLogging: Logging = { message in
         print(message)
     #endif
 }
+
+func errorPublisherLogging(_ errorPublisher: ErrorPublisher) -> Logging {
+    return { message in
+        onMainThread {
+            errorPublisher.reportError(message)
+        }
+    }
+}
