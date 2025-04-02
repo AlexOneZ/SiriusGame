@@ -24,8 +24,8 @@ async def send_push(message: Message, handler: PushHandler = Depends()):  # Ис
         to_device_tokens=message.recipients,
         title=message.title,
         body=message.body,
-        destination=message.destination,
-        sound=message.sound
+        sound=message.sound,
+        destination=message.destination
     )
     return {"results": results}
 
@@ -83,7 +83,7 @@ async def send_push_to_all(message: Message, handler: PushHandler = Depends()):
         to_device_tokens=all_tokens,
         title=message.title,
         body=message.body,
-        destination=message.destination,
-        sound=message.sound
+        sound=message.sound,
+        destination=message.destination
     )
     return {"results": results}
