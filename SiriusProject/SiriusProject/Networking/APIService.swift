@@ -15,10 +15,10 @@ enum APIError: Error, LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .urlSessionError(let message),
-             .serverError(let message),
-             .invalidResponse(let message),
-             .decodingError(let message):
+        case let .urlSessionError(message),
+             let .serverError(message),
+             let .invalidResponse(message),
+             let .decodingError(message):
             return message
         }
     }
@@ -47,7 +47,7 @@ class APIService: Service {
                 return
             }
 
-            if let resp = resp as? HTTPURLResponse, 500..<600 ~= resp.statusCode {
+            if let resp = resp as? HTTPURLResponse, 500 ..< 600 ~= resp.statusCode {
                 completion(nil, .serverError())
                 return
             }
@@ -59,11 +59,12 @@ class APIService: Service {
 
             do {
                 if let errorResponse = try? JSONDecoder().decode([String: String].self, from: data),
-                   let detail = errorResponse["detail"] {
+                   let detail = errorResponse["detail"]
+                {
                     completion(nil, .serverError(detail))
                     return
                 }
-                
+
                 let result = try JSONDecoder().decode(T.self, from: data)
                 completion(result, nil)
             } catch {

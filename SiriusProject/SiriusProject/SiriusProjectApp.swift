@@ -22,13 +22,13 @@ struct SiriusProjectApp: App {
 
     init() {
         errorPublisher = ErrorPublisher()
-        
+
         logging = { message in
             printLogging(message)
         }
-        
+
         errorLogging = errorPublisherLogging(errorPublisher)
-        
+
         networkManager = NetworkManager(service: APIService(urlSession: URLSession.shared), logging: errorLogging)
         notificationsManager = NotificationsManager()
 
@@ -49,8 +49,10 @@ struct SiriusProjectApp: App {
     var body: some Scene {
         WindowGroup {
             ErrorHandlerView(errorPublisher: errorPublisher) {
-                ContentView(appViewModel: appViewModel,
-                            notificationsManager: notificationsManager)
+                ContentView(
+                    appViewModel: appViewModel,
+                    notificationsManager: notificationsManager
+                )
             }
         }
     }

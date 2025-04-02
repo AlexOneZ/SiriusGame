@@ -7,11 +7,11 @@
 
 struct FakeNetworkManager: NetworkManagerProtocol {
     let logging: Logging
-    
+
     init(logging: @escaping Logging) {
         self.logging = logging
     }
-    
+
     func getTeams(completion: @escaping ([Team]) -> Void) {
         logging("Fetching teams")
         completion([Team(id: 0, name: "HSE FCS", score: 100),
