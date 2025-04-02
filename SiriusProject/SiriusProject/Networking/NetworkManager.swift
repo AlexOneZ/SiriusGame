@@ -34,20 +34,20 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func enterTeam(name: String, completion: @escaping (Bool) -> Void) {
+    func enterTeam(name: String, completion: @escaping (Int) -> Void) {
         guard let request = Endpoint.enterTeam(name: name).request else {
             logging("Error: Failed to create request")
-            completion(false)
+            completion(0)
             return
         }
 
-        service.makeRequest(with: request, respModel: [Team].self, logging: logging) { _, error in
+        service.makeRequest(with: request, respModel: EnterTeamResponse.self, logging: logging) { enterTeamResponse, error in
             if let error = error {
                 logging(error.localizedDescription)
-                completion(false)
+                completion(0)
                 return
             }
-            completion(true)
+            completion(enterTeamResponse?.team_id ?? 0)
         }
     }
 
