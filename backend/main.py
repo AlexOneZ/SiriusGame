@@ -8,7 +8,7 @@ from teams.router import router as teams_router
 from pushes.router import router as pushes_router
 
 class Settings():
-    debug_mode: bool = False
+    debug_mode: bool = True
 
 settings = Settings()
 

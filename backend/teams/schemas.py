@@ -1,4 +1,3 @@
-from typing import Optional
 from pydantic import BaseModel
 
 class STeamAdd(BaseModel):
@@ -17,7 +16,7 @@ class STeamEvent(BaseModel):
     team_id: int
     event_id: int
     name: str
-    description: Optional[str]
+    description: str | None
     order: int
     state: str
     score: int

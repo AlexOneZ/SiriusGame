@@ -3,7 +3,6 @@ from sqlalchemy import func
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import ForeignKey
-from typing import Optional
 
 engine = create_async_engine('sqlite+aiosqlite:///database.db')
 new_session = async_sessionmaker(engine, expire_on_commit=False)
@@ -16,7 +15,7 @@ class EventOrm(Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column()
-    description: Mapped[Optional[str]] = mapped_column()
+    description: Mapped[str | None] = mapped_column()
 
 class TeamOrm(Model):
     __tablename__ = "teams"
