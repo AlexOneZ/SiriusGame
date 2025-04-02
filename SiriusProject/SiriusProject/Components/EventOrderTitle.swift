@@ -16,7 +16,7 @@ struct EventOrderTitle: View {
                 .padding()
                 .background {
                     Circle()
-                        .foregroundStyle(Color(.systemGray5))
+                        .foregroundColor(Color("SiriusBlue2"))
                 }
             Text(title)
         }

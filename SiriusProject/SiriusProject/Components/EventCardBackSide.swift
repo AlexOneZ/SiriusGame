@@ -72,7 +72,9 @@ struct EventCardBackSide: View {
         .padding()
         .background {
             RoundedRectangle(cornerRadius: 20)
-                .foregroundStyle(Color(.systemGray3))
+                .fill(
+                    LinearGradient(gradient: Gradient(colors: [.siriusBlue, .siriusBlue]), startPoint: .topLeading, endPoint: .topLeading)
+                )
         }
         .padding(.horizontal)
         .onChange(of: flip) {

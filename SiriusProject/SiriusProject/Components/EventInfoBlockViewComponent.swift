@@ -26,7 +26,9 @@ struct EventInfoBlockViewComponent: View {
         .padding()
         .background {
             RoundedRectangle(cornerRadius: 15)
-                .foregroundStyle(Color(.systemGray5))
+                .fill(
+                    LinearGradient(gradient: Gradient(colors: [.siriusBlue2, .siriusBlue2]), startPoint: .topLeading, endPoint: .topLeading)
+                )
         }
         .transition(.slide)
     }
