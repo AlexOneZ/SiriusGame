@@ -10,6 +10,7 @@ import SwiftUI
 struct GetRateView: View {
     @ObservedObject var viewModel = GetRateViewModel()
     @Environment(\.dismiss) var dismiss
+    @Binding var score: Int?
 
     var body: some View {
         VStack(alignment: .center) {
@@ -20,6 +21,10 @@ struct GetRateView: View {
             Group {
                 TextField("Score", text: $viewModel.score.value)
                     .validatedField(validatedField: viewModel.score, placeholder: "Score")
+                    .onChange(of: viewModel.score.value) {
+                        guard let number = Int(viewModel.score.value) else { return }
+                        score = number
+                    }
                 SecureField("Judge password", text: $viewModel.judgePasscode.value)
                     .validatedField(validatedField: viewModel.judgePasscode, placeholder: "Judge password")
             }

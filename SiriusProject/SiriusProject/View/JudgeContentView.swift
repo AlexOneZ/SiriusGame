@@ -37,12 +37,3 @@ struct JudgeContentView: View {
         }
     }
 }
-
-#Preview {
-//    ContentView(appViewModel: AppViewModel(eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()), settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager()), loginViewModel: LoginViewModel(networkManager: FakeNetworkManager()), pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager()), notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager())), log: { message in
-//        #if DEBUG
-//            print(message)
-//        #endif
-//    })
-//    .environment(\.locale, .init(identifier: "ru"))
-}
