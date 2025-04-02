@@ -110,4 +110,3 @@ struct EventCardBackSide: View {
         }
     }
 }
-
