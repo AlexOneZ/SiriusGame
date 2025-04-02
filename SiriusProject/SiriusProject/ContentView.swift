@@ -43,7 +43,7 @@ struct ContentView: View {
                     Image(systemName: "chart.bar.xaxis.ascending")
                     Text("leaderboard")
                 }
-                
+
             SettingsView(settingsViewModel: appViewModel.settingsViewModel)
                 .tabItem {
                     Image(systemName: "gear")

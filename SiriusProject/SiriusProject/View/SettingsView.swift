@@ -12,7 +12,7 @@ struct SettingsView: View {
 
     @State var isPresented: Bool = false
     @State var changedName: String = ""
-    
+
     @AppStorage("isJudge") var isJudge: Bool = false
     @AppStorage("isLogin") var isLogin: Bool = false
 
@@ -26,10 +26,10 @@ struct SettingsView: View {
             Text(viewModel.teamName)
                 .font(.title)
                 .padding()
-            
+
             Text("role") +
-            Text(": ") +
-            Text(isJudge ? LocalizedStringKey("judge") : LocalizedStringKey("participant"))
+                Text(": ") +
+                Text(isJudge ? LocalizedStringKey("judge") : LocalizedStringKey("participant"))
 
             Spacer()
 

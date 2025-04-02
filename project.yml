@@ -41,21 +41,14 @@ targets:
         type: application
         deploymentTarget: "17"
         sources: ["SiriusProject"]
-<<<<<<< HEAD
         capabilities:
             - push-notifications
-=======
->>>>>>> 484e411 (Изменил реализацию Airdrop. Разделил на экран получения и экран отправки (для пользователя/судьи соответственно))
+
         attributes:
             SystemCapabilities:
                 com.apple.Push:
                     enabled: 1
-<<<<<<< HEAD
-
-=======
->>>>>>> 484e411 (Изменил реализацию Airdrop. Разделил на экран получения и экран отправки (для пользователя/судьи соответственно))
         settings:
-          CODE_SIGN_ENTITLEMENTS: SiriusProject/Entitlements.entitlements
           base:
             INFOPLIST_FILE: "SiriusProject/SiriusProject/Info.plist"
             CODE_SIGN_IDENTITY: "Apple Development: Aleksey Kobyakov (2VHQM6CHHB)"

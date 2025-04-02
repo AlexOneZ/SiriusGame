@@ -19,7 +19,7 @@ struct SiriusProjectApp: App {
     let errorPublisher: ErrorPublisher
 
     @UIApplicationDelegateAdaptor private var appDelegate: CustomAppDelegate
-    
+
     @AppStorage("isJudge") var isJudge: Bool = false
     @AppStorage("isLogin") var isLogin: Bool = false
 
@@ -55,15 +55,14 @@ struct SiriusProjectApp: App {
                 if isLogin {
                     if isJudge {
                         JudgeContentView(appViewModel: appViewModel)
+                    } else {
+                        ContentView(
+                            appViewModel: appViewModel,
+                            notificationsManager: notificationsManager
+                        )
                     }
-                    else {
-                        ContentView(appViewModel: appViewModel,
-                                    notificationsManager: notificationsManager)
-                    }
-                }
-                else {
+                } else {
                     LoginView(viewModel: appViewModel.loginViewModel)
-                    
                 }
             }
         }

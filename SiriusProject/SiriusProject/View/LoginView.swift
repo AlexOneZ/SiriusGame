@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LoginView: View {
     @ObservedObject var viewModel: LoginViewModel
-    
+
     @AppStorage("isJudge") var isJudge: Bool = false
     @AppStorage("isLogin") var isLogin: Bool = false
 

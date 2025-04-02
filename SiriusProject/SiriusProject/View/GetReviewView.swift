@@ -13,31 +13,33 @@ struct GetReviewView: View {
     @State private var showAnimation: Bool = false
     @State private var receivedScore: Int? = nil
     @State private var isShowHandReviewView: Bool = false
-    
+
     private let log: (String) -> Void
-    
-    init(event: Event = Event(id: 1, title: "Title", description: "Description", state: .done, score: 10),
-         log: @escaping (String) -> Void = { message in
-        #if DEBUG
-            print(message)
-        #endif
-    }) {
+
+    init(
+        event: Event = Event(id: 1, title: "Title", description: "Description", state: .done, score: 10),
+        log: @escaping (String) -> Void = { message in
+            #if DEBUG
+                print(message)
+            #endif
+        }
+    ) {
         self.event = event
         self.log = log
     }
-    
+
     var body: some View {
         ZStack {
             Color(.systemGroupedBackground)
                 .ignoresSafeArea()
-            
+
             VStack(spacing: 24) {
                 VStack(spacing: 8) {
                     Text("Получить оценку")
                         .font(.system(.title, design: .rounded))
                         .fontWeight(.bold)
                         .foregroundStyle(.primary)
-                    
+
                     if let event = event {
                         Text(event.title)
                             .font(.headline)
@@ -45,7 +47,7 @@ struct GetReviewView: View {
                     }
                 }
                 .padding(.top, 24)
-                
+
                 VStack(spacing: 16) {
                     Image(systemName: "square.and.arrow.down")
                         .font(.system(size: 60))
@@ -57,24 +59,24 @@ struct GetReviewView: View {
                                 .fill(Color.blue.opacity(0.1))
                                 .frame(width: 120, height: 120)
                         )
-                    
+
                     VStack(spacing: 8) {
                         Text("Как получить оценку")
                             .font(.headline)
-                        
+
                         Text("Попросите судью выставить вам оценку за эту дисциплину. Убедитесь, что AirDrop включен на вашем устройстве.")
                             .font(.subheadline)
                             .multilineTextAlignment(.center)
                             .foregroundStyle(.secondary)
                             .padding(.horizontal)
                     }
-                    
+
                     if let score = receivedScore {
                         RatingBadge(score: score)
                             .transition(.scale.combined(with: .opacity))
                     }
                 }
-                
+
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Варитан 1:")
                         .font(.headline)
@@ -88,7 +90,7 @@ struct GetReviewView: View {
                         .fill(Color(.secondarySystemBackground))
                 )
                 .padding(.horizontal)
-                
+
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Вариант 2:")
                         .font(.headline)
@@ -101,8 +103,8 @@ struct GetReviewView: View {
                         .fill(Color(.secondarySystemBackground))
                 )
                 .padding(.horizontal)
-                
-                Button("Ручной ввод", systemImage: "person.fill.questionmark"){
+
+                Button("Ручной ввод", systemImage: "person.fill.questionmark") {
                     isShowHandReviewView.toggle()
                 }
                 .font(.headline)
@@ -122,9 +124,7 @@ struct GetReviewView: View {
         .onOpenURL { url in
             handleIncomingURL(url)
         }
-        .onChange(of: receivedScore) {
-            
-        }
+        .onChange(of: receivedScore) {}
         .alert("Оценка получена!", isPresented: $isPresented) {
             Button("OK", role: .cancel) {
                 withAnimation {
@@ -139,15 +139,14 @@ struct GetReviewView: View {
                 Text("Ваша оценка за \(title): \(score)/10")
             }
         }
-        
     }
-    
+
     private func handleIncomingURL(_ url: URL) {
         guard let idAndScore = url.recieveDeeplinkURL(log: log) else { return }
-        
+
         receivedScore = idAndScore[1]
         isPresented = true
-        
+
         let logMessage = """
         Получены данные:
         ID: \(idAndScore[0]),
@@ -162,7 +161,7 @@ struct GetReviewView: View {
 
 struct RatingBadge: View {
     let score: Int
-    
+
     var body: some View {
         Text("\(score)/10")
             .font(.system(size: 24, weight: .bold, design: .rounded))
@@ -179,16 +178,16 @@ struct RatingBadge: View {
 struct InstructionStep: View {
     let number: Int
     let text: String
-    
+
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             Text("\(number).")
                 .fontWeight(.bold)
                 .foregroundStyle(.blue)
-            
+
             Text(text)
                 .foregroundStyle(.secondary)
-            
+
             Spacer()
         }
         .font(.subheadline)

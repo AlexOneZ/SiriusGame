@@ -11,17 +11,17 @@ struct EventsListView: View {
     private let log: (String) -> Void
     @ObservedObject var viewModel: EventsListViewModel
     @Binding var isNotificationViewShowing: Bool
-    
+
     init(
         eventsListViewModel: EventsListViewModel,
         isNotificationViewShowing: Binding<Bool>,
-        log: @escaping (String) -> Void = { _ in}
+        log: @escaping (String) -> Void = { _ in }
     ) {
         viewModel = eventsListViewModel
         _isNotificationViewShowing = isNotificationViewShowing
         self.log = log
     }
-    
+
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading) {
