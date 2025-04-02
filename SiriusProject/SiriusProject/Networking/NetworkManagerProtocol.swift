@@ -6,6 +6,8 @@
 //
 
 protocol NetworkManagerProtocol {
+    var logging: Logging { get }
+    
     func getTeams(completion: @escaping ([Team]) -> Void)
     func enterTeam(name: String, completion: @escaping (Bool) -> Void)
     func getTeam(teamId: Int, completion: @escaping (Team?) -> Void)
