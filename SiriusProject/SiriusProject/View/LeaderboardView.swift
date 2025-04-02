@@ -36,6 +36,9 @@ struct LeaderboardView: View {
                 }
             }
         }
+        .onAppear {
+            viewModel.fetchTeams()
+        }
         .refreshable {
             viewModel.fetchTeams()
         }
