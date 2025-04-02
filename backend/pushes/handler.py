@@ -30,15 +30,22 @@ class PushHandler:
         self.topic: str = PushConfig.get_apns_app_bundle_id()
 
     async def send_push(
-            self, to_device_token: str, body: str, title: str | None = None,
-            sound: str = "default", badge: int | None = 1,
+            self, to_device_token: str, title: str, body: str,
+            destination: str | None = None, sound: str = "default",
+            badge: int | None = 1,
             priority: NotificationPriority = NotificationPriority.Immediate,
             push_type: NotificationType = NotificationType.Alert,
             custom_payload: dict | None = None,
     ) -> bool:
-        payload = Payload(alert=body, sound=sound, badge=badge, custom=custom_payload)
-        if title:
-            payload.alert = {"title": title, "body": body}
+        # Initialize custom payload dictionary if not provided
+        if custom_payload is None:
+            custom_payload = {}
+
+        # Add destination to custom payload if provided
+        if destination:
+            custom_payload["destination"] = destination
+
+        payload = Payload(alert={"title": title, "body": body}, sound=sound, badge=badge, custom=custom_payload)
 
         try:
             self.connection.send_notification(
@@ -63,15 +70,22 @@ class PushHandler:
             return False
 
     async def send_multiple_push(
-            self, to_device_tokens: List[str], body: str, title: str | None = None,
-            sound: str = "default", badge: int | None = 1,
+            self, to_device_tokens: List[str], title: str, body: str,
+            destination: str | None = None, sound: str = "default",
+            badge: int | None = 1,
             priority: NotificationPriority = NotificationPriority.Immediate,
             push_type: NotificationType = NotificationType.Alert,
             custom_payload: dict | None = None,
     ) -> Dict[str, Union[str, Tuple[str, str]]]:
-        payload = Payload(alert=body, sound=sound, badge=badge, custom=custom_payload)
-        if title:
-            payload.alert = {"title": title, "body": body}
+        # Initialize custom payload dictionary if not provided
+        if custom_payload is None:
+            custom_payload = {}
+
+        # Add destination to custom payload if provided
+        if destination:
+            custom_payload["destination"] = destination
+
+        payload = Payload(alert={"title": title, "body": body}, sound=sound, badge=badge, custom=custom_payload)
 
         notifications = [
             Notification(token=token, payload=payload) for token in to_device_tokens
