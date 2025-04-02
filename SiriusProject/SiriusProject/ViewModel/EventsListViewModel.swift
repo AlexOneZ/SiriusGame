@@ -11,6 +11,7 @@ final class EventsListViewModel: ObservableObject {
     let networkManager: NetworkManagerProtocol
     let logging: Logging
     @AppStorage("teamID") var teamID: Int = 0
+
     @Published var events: [Event] = []
 
     init(networkManager: NetworkManagerProtocol, logging: @escaping Logging) {
