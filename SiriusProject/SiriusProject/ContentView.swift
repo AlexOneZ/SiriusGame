@@ -103,13 +103,13 @@ private extension URL {
     ContentView(
         appViewModel: AppViewModel(
             logging: printLogging,
-            eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager(), logging: printLogging),
-            settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager(), logging: printLogging),
-            loginViewModel: LoginViewModel(networkManager: FakeNetworkManager()),
-            pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager()),
-            leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager(), logging: printLogging),
+            eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            loginViewModel: LoginViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
+            pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
+            leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
             mapViewModel: MapViewModel(),
-            notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager())
+            notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging))
         ),
         notificationsManager: NotificationsManager()
     )

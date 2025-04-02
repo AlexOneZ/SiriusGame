@@ -49,6 +49,6 @@ struct NotificationsView: View {
 #Preview {
     NotificationsView(
         isNotificationViewShowing: .constant(true),
-        viewModel: NotificationsViewModel(networkManager: FakeNetworkManager())
+        viewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging))
     )
 }

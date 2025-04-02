@@ -34,5 +34,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    LoginView(viewModel: LoginViewModel(networkManager: FakeNetworkManager()))
+    LoginView(viewModel: LoginViewModel(networkManager: FakeNetworkManager(logging: printLogging)))
 }
