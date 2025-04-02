@@ -11,7 +11,7 @@ class ErrorPublisher: ObservableObject {
     @Published var errorMessage: ErrorMessage?
 
     func reportError(_ message: String) {
-        DispatchQueue.main.async {
+        onMainThread {
             self.errorMessage = ErrorMessage(message: message)
         }
     }
