@@ -12,6 +12,13 @@ struct EventCardFrontSide: View {
     @Binding var flip: Bool
     @State var height: CGFloat = 90
 
+    let iconsPosition: [CGPointWrapper] = [
+        CGPointWrapper(CGPoint(x: 37, y: 90)),
+        CGPointWrapper(CGPoint(x: 153, y: 70)),
+        CGPointWrapper(CGPoint(x: 226, y: 30)),
+        CGPointWrapper(CGPoint(x: 300, y: 47))
+    ]
+
     var body: some View {
         VStack(alignment: .leading) {
             EventOrderTitle(
@@ -28,7 +35,21 @@ struct EventCardFrontSide: View {
         .padding()
         .background {
             RoundedRectangle(cornerRadius: 20)
-                .foregroundStyle(Color(.systemGray3))
+                .fill(
+                    LinearGradient(gradient: Gradient(colors: [Color("SiriusGreen"), Color("SiriusBlue")]), startPoint: .topLeading, endPoint: .topLeading)
+                )
+                .overlay(
+                    ZStack {
+                        ForEach(iconsPosition, id: \.self) { position in
+                            Image(systemName: SportIconProvider.getSportIcon(for: event.title))
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50, height: 50)
+                                .foregroundColor(Color("SiriusPurple").opacity(0.5))
+                                .position(position.cgPoint)
+                        }
+                    }
+                )
         }
         .padding(.horizontal)
         .onChange(of: flip) {

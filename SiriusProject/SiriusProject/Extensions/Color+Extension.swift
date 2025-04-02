@@ -8,7 +8,15 @@
 import SwiftUI
 
 extension Color {
-    static let siriusBlue = Color("siriusBlue")
+    static let siriusBlue = Color("SiriusBlue")
 
-    static let siriusGray = Color("siriusGray")
+    static let siriusBlue2 = Color("SiriusBlue2")
+
+    static let siriusGray = Color("SiriusGray")
+
+    static let siriusPurple = Color("SiriusPurple")
+
+    static let siriusPurple2 = Color("SiriusPurple2")
+
+    static let siriusGreen = Color("SiriusGreen")
 }
