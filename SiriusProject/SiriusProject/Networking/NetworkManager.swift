@@ -189,7 +189,7 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func sendTokenToServer(token: String, logging: @escaping Logging, completion: @escaping (Bool) -> Void) {
+    func sendTokenToServer(token: String, completion: @escaping (Bool) -> Void) {
         guard let request = Endpoint.sendTokenToServer(token: token).request else {
             logging("Error: Failed to create request")
             completion(false)

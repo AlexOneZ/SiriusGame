@@ -68,7 +68,7 @@ struct FakeNetworkManager: NetworkManagerProtocol {
         completion(true)
     }
 
-    func sendTokenToServer(token: String, logging: @escaping Logging, completion: @escaping (Bool) -> Void) {
+    func sendTokenToServer(token: String, completion: @escaping (Bool) -> Void) {
         logging("Token: \(token)")
         completion(true)
     }

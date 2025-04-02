@@ -19,7 +19,7 @@ enum Endpoint {
     case getEvents(url: String = Constants.eventsPath)
     case addEvent(url: String = Constants.eventsPath, name: String, description: String?)
     case deleteEvent(url: String = Constants.eventsPath, eventId: Int)
-    case sendTokenToServer(url: String = Constants.apiPath, token: String)
+    case sendTokenToServer(url: String = Constants.pushesPath, url1: String = Constants.registerPath, token: String)
 
     var request: URLRequest? {
         guard let url = url else { return nil }
@@ -62,8 +62,8 @@ enum Endpoint {
             return url
         case let .deleteEvent(url, eventId):
             return "\(url)/\(eventId)"
-        case let .sendTokenToServer(url, _):
-            return url
+        case let .sendTokenToServer(url, url1, _):
+            return url + url1
         }
     }
 
@@ -74,7 +74,8 @@ enum Endpoint {
              .getTeamEvents,
              .getEvents,
              .deleteTeam,
-             .deleteEvent:
+             .deleteEvent,
+             .sendTokenToServer:
             return []
         case let .enterTeam(_, name):
             return [.init(name: "name", value: name)]
@@ -85,8 +86,6 @@ enum Endpoint {
             return [.init(name: "new_name", value: name)]
         case let .setTeamEventScore(_, _, _, score):
             return [.init(name: "score", value: "\(score)")]
-        case let .sendTokenToServer(_, token):
-            return [.init(name: "token", value: token)]
         }
     }
 
@@ -111,6 +110,9 @@ enum Endpoint {
 
     private var httpBody: Data? {
         switch self {
+        case let .sendTokenToServer(_, _, token):
+            let jsonPost = try? JSONEncoder().encode(["token": token])
+            return jsonPost
         default:
             return nil
         }
@@ -125,6 +127,7 @@ extension URLRequest {
             setValue("gzip, deflate, br", forHTTPHeaderField: "Accept-Encoding")
             setValue("keep-alive", forHTTPHeaderField: "Connection")
             setValue("YourApp/1.0", forHTTPHeaderField: "User-Agent")
+            setValue("application/json", forHTTPHeaderField: "Content-Type")
         }
     }
 }

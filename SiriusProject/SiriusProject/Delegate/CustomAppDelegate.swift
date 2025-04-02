@@ -53,7 +53,7 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate {
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
         let stringifiedToken = deviceToken.map { data in String(format: "%02.2hhx", data) }.joined()
-        networkManager?.sendTokenToServer(token: stringifiedToken)
+        networkManager?.sendTokenToServer(token: stringifiedToken) { _ in }
     }
 }
 
