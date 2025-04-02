@@ -5,6 +5,7 @@ from fastapi import HTTPException, status
 from database import new_session, DeviceEntity
 from .schemas import Device
 
+
 class DeviceRepository:
     @classmethod
     async def register_device(cls, device: Device) -> Device:
@@ -43,7 +44,6 @@ class DeviceRepository:
                             detail="Could not register device after integrity error."
                         )
 
-
     @classmethod
     async def get_registered_devices(cls) -> list[Device]:
         async with new_session() as session:
@@ -62,7 +62,7 @@ class DeviceRepository:
 
     @classmethod
     async def delete_device_by_token(cls, token: str) -> bool:
-         async with new_session() as session:
+        async with new_session() as session:
             query = delete(DeviceEntity).where(DeviceEntity.token == token)
             result = await session.execute(query)
             await session.commit()

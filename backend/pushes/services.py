@@ -36,5 +36,9 @@ class PushService:
             None
         """
         self.handler.send_multiple_push(
-            to_device_tokens=message.recipients, body=message.body
+            to_device_tokens=message.recipients,
+            title=message.title,
+            body=message.body,
+            destination=message.destination,
+            sound=message.sound
         )

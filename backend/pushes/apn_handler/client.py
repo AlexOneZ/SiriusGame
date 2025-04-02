@@ -1,16 +1,14 @@
 # backend/pushes/apn_handler/client.py
 
 import collections
-import httpx
 import json
-import traceback # Импортируем traceback для вывода стектрейса
+import traceback  # Уже импортирован
 from enum import Enum
 from typing import Dict, Iterable, Optional, Tuple, Union
-import ssl
 
-# Убираем импорт logging
-# import logging
+import httpx
 
+# Убедимся, что все нужные импорты на месте
 from .credentials import Credentials, CertificateCredentials, TokenCredentials
 from .errors import exception_class_for_reason, APNsException, Unregistered, BadDeviceToken, ConnectionFailed
 from .payload import Payload
@@ -37,11 +35,8 @@ DEFAULT_APNS_PRIORITY = NotificationPriority.Immediate
 CONCURRENT_STREAMS_SAFETY_MAXIMUM = 1000
 MAX_CONNECTION_RETRIES = 3
 
-# Убираем получение логгера
-# logger = logging.getLogger(__name__)
 
-
-class APNsClient(object):
+class APNsClient:
     SANDBOX_SERVER = "api.development.push.apple.com"
     LIVE_SERVER = "api.push.apple.com"
     DEFAULT_PORT = 443
@@ -59,22 +54,28 @@ class APNsClient(object):
             proxy_port: Optional[int] = None,
             heartbeat_period: Optional[float] = None,
     ) -> None:
+        print(f"DEBUG: APNsClient.__init__ called")  # DEBUG
+        print(f"DEBUG:   use_sandbox={use_sandbox}")  # DEBUG
+        print(f"DEBUG:   use_alternative_port={use_alternative_port}")  # DEBUG
+        print(f"DEBUG:   credentials type={type(credentials).__name__}")  # DEBUG
+
         if isinstance(credentials, str):
-            print("WARNING: Initializing APNsClient with certificate path (string) - Ensure this is intended.")
+            print("DEBUG:   Credentials are provided as certificate path string.")  # DEBUG
             self.__credentials = CertificateCredentials(credentials, password)
         elif isinstance(credentials, Credentials):
-             self.__credentials = credentials
+            print("DEBUG:   Credentials are provided as Credentials object.")  # DEBUG
+            self.__credentials = credentials
         else:
-            raise TypeError("credentials must be a Credentials instance or a certificate path string")
+            # Эта ошибка должна остановить выполнение
+            raise TypeError("Credentials must be a Credentials instance or certificate path string")
 
-        self._init_connection(
-            use_sandbox, use_alternative_port, proto, proxy_host, proxy_port
-        )
+        self._init_connection(use_sandbox, use_alternative_port, proto, proxy_host, proxy_port)
+        self.__json_encoder = json_encoder
 
         if heartbeat_period:
-            raise NotImplementedError("heartbeat_period is not supported in this HTTPX-based client")
-
-        self.__json_encoder = json_encoder
+            # Это тоже ошибка
+            raise NotImplementedError("Heartbeat period is not supported in HTTPX-based client")
+        print("DEBUG: APNsClient.__init__ finished")  # DEBUG
 
     def _init_connection(
             self,
@@ -84,11 +85,10 @@ class APNsClient(object):
             proxy_host: Optional[str],
             proxy_port: Optional[int],
     ) -> None:
+        print("DEBUG: APNsClient._init_connection called")  # DEBUG
         self.__server = self.SANDBOX_SERVER if use_sandbox else self.LIVE_SERVER
-        self.__port = (
-            self.ALTERNATIVE_PORT if use_alternative_port else self.DEFAULT_PORT
-        )
-        print(f"INFO: APNsClient initialized for server: {self.__server}:{self.__port}")
+        self.__port = self.ALTERNATIVE_PORT if use_alternative_port else self.DEFAULT_PORT
+        print(f"INFO: APNsClient configured for server: {self.__server}:{self.__port}")  # INFO (уже было)
 
     def send_notification(
             self,
@@ -99,70 +99,51 @@ class APNsClient(object):
             expiration: Optional[int] = None,
             collapse_id: Optional[str] = None,
     ) -> None:
+        print(f"\nDEBUG: APNsClient.send_notification called for token: {token_hex[:10]}...")  # DEBUG
         try:
             verify_context = None
             if isinstance(self.__credentials, CertificateCredentials):
+                print("DEBUG:   Using certificate SSL context for HTTPX client.")  # DEBUG
                 verify_context = self.__credentials.ssl_context
-                print("DEBUG: Using certificate SSL context for HTTPX client.")
-            elif isinstance(self.__credentials, TokenCredentials):
-                 print("DEBUG: Using default SSL context for HTTPX client (TokenCredentials).")
-                 # verify_context = ssl.create_default_context()
             else:
-                 print("WARNING: Unknown credentials type, using default SSL context.")
+                print("DEBUG:   Using default SSL context for HTTPX client (Token or unknown credentials).")  # DEBUG
 
-
+            # Создаем клиент прямо здесь
+            print("DEBUG:   Creating httpx.Client...")  # DEBUG
             with httpx.Client(http2=True, verify=verify_context) as client:
+                print("DEBUG:   httpx.Client created.")  # DEBUG
+                print(f"DEBUG:   Calling send_notification_sync for token {token_hex[:10]}...")  # DEBUG
                 status, reason = self.send_notification_sync(
-                    token_hex,
-                    notification,
-                    client,
-                    topic,
-                    priority,
-                    expiration,
-                    collapse_id,
+                    token_hex, notification, client, topic, priority, expiration, collapse_id
                 )
+                print(f"DEBUG:   send_notification_sync returned: status={status}, reason='{reason}'")  # DEBUG
 
+            # Обработка результата
             if status != 200:
-                print(f"WARNING: APNs send failed for {token_hex}. Status: {status}, Reason: {reason}")
-                try:
-                    exception_class = exception_class_for_reason(reason)
-                    # Handle Unregistered needing no args
-                    if exception_class is Unregistered:
-                         # Print before raising
-                         print(f"RAISING: {exception_class.__name__}")
-                         raise exception_class()
-                    else:
-                         # Print before raising
-                         print(f"RAISING: {exception_class.__name__} with reason: {reason}")
-                         raise exception_class(reason)
-                except (KeyError, TypeError):
-                    print(f"ERROR: Unknown APNs error reason: {reason}")
-                    # Print before raising
-                    final_reason = f"APNs error: {reason} (Status: {status})"
-                    print(f"RAISING: APNsException with reason: {final_reason}")
-                    raise APNsException(final_reason)
+                print(f"DEBUG:   Handling error response (status={status}, reason='{reason}')")  # DEBUG
+                self._handle_error_response(token_hex, status, reason)  # Этот метод вызовет исключение
             else:
-                # При УСПЕШНОЙ отправке тоже выводим
-                print(f"INFO: APNs notification sent successfully to {token_hex}")
+                # Это сообщение уже было, оставим его
+                print(f"INFO: Successfully sent notification to {token_hex}")
 
         except httpx.RequestError as e:
-             print(f"EXCEPTION: HTTPX Request Error during single APNs send: {e}")
-             traceback.print_exc()
-             # Print before raising
-             final_reason = f"HTTPX Request Error: {e}"
-             print(f"RAISING: ConnectionFailed with reason: {final_reason}")
-             raise ConnectionFailed(final_reason) from e
-        except APNsException:
-             # Just re-raise known APNs exceptions after they've been printed above
-             raise
+            print(f"EXCEPTION: HTTPX Request Error in send_notification: {e}")  # EXCEPTION
+            error_msg = f"Connection failed: {e}"
+            traceback.print_exc()  # Печатаем traceback
+            print(f"RAISING: ConnectionFailed: {error_msg}")  # RAISING
+            raise ConnectionFailed(error_msg) from e
+        except APNsException as e:
+            # Перехватываем исключения, брошенные из _handle_error_response
+            print(f"EXCEPTION: APNsException caught in send_notification: {type(e).__name__} - {e}")  # EXCEPTION
+            print(f"RAISING: Re-raising APNsException {type(e).__name__}")  # RAISING
+            raise  # Просто перебрасываем дальше
         except Exception as e:
-             print(f"EXCEPTION: Unexpected Error during single APNs send: {e}")
-             traceback.print_exc()
-             # Print before raising
-             final_reason = f"Unexpected error: {e}"
-             print(f"RAISING: APNsException with reason: {final_reason}")
-             raise APNsException(final_reason) from e
-
+            print(f"EXCEPTION: Unexpected Error in send_notification: {e}")  # EXCEPTION
+            error_msg = f"Unexpected error: {e}"
+            traceback.print_exc()  # Печатаем traceback
+            print(f"RAISING: APNsException: {error_msg}")  # RAISING
+            raise APNsException(error_msg) from e
+        print(f"DEBUG: APNsClient.send_notification finished for token: {token_hex[:10]}...")  # DEBUG
 
     def send_notification_sync(
             self,
@@ -173,136 +154,204 @@ class APNsClient(object):
             priority: NotificationPriority = NotificationPriority.Immediate,
             expiration: Optional[int] = None,
             collapse_id: Optional[str] = None,
-            push_type: Optional[NotificationType] = None,
+            push_type: Optional[NotificationType] = None,  # Добавим этот параметр снова
     ) -> Tuple[int, str]:
+        print(f"DEBUG:   APNsClient.send_notification_sync called for token {token_hex[:10]}...")  # DEBUG
         try:
-            json_payload_dict = notification.dict()
-            json_str = json.dumps(
-                json_payload_dict,
-                cls=self.__json_encoder,
-                ensure_ascii=False,
-                separators=(",", ":"),
-            )
-            json_payload_bytes = json_str.encode("utf-8")
-        except Exception as e:
-             print("EXCEPTION: Error encoding APNs payload!")
-             traceback.print_exc()
-             return 400, f"Payload Encoding Error: {e}"
+            print("DEBUG:     Encoding payload...")  # DEBUG
+            json_payload = self._encode_payload(notification)
+            print(f"DEBUG:     Payload encoded ({len(json_payload)} bytes).")  # DEBUG
 
-        headers = {}
-        inferred_push_type = None
+            print("DEBUG:     Building headers...")  # DEBUG
+            headers = self._build_headers(topic, priority, expiration, collapse_id, push_type, notification)
+            print(f"DEBUG:     Headers built: {headers}")  # DEBUG (выводим заголовки)
 
-        if topic is not None:
-            headers["apns-topic"] = topic
-            if push_type is None:
-                if topic.endswith(".voip"): inferred_push_type = NotificationType.VoIP.value
-                elif topic.endswith(".complication"): inferred_push_type = NotificationType.Complication.value
-                elif topic.endswith(".pushkit.fileprovider"): inferred_push_type = NotificationType.FileProvider.value
-                elif any(key in json_payload_dict.get("aps", {}) for key in ["alert", "badge", "sound"]): inferred_push_type = NotificationType.Alert.value
-                elif "content-available" in json_payload_dict.get("aps", {}): inferred_push_type = NotificationType.Background.value
-                else:
-                     # Simplified default logic
-                     inferred_push_type = NotificationType.Alert.value if "aps" in json_payload_dict else NotificationType.Background.value
-                     print(f"DEBUG: Could not strongly infer push type for topic {topic}, defaulting to {inferred_push_type}")
-        elif isinstance(self.__credentials, CertificateCredentials):
-             print("WARNING: APNs topic not provided for CertificateCredentials. APNs might return MissingTopic error.")
-
-        final_push_type = push_type.value if push_type else inferred_push_type
-        if final_push_type:
-            headers["apns-push-type"] = final_push_type
-        else:
-            # Don't add the header if we couldn't determine it
-            print("WARNING: Could not determine apns-push-type. Header will not be added.")
-
-
-        if priority != DEFAULT_APNS_PRIORITY: headers["apns-priority"] = priority.value
-        if expiration is not None: headers["apns-expiration"] = "%d" % expiration
-
-        # --- ВЫВОД ЗАГОЛОВКОВ ДО АУТЕНТИФИКАЦИИ ---
-        print(f"DEBUG: APNs Headers (pre-auth): {headers}")
-        # -------------------------------------------------
-
-        if isinstance(self.__credentials, TokenCredentials):
+            url = f"https://{self.__server}:{self.__port}/3/device/{token_hex}"
+            print(f"INFO:      --> Sending APNs Request to: {url}")  # INFO (уже было, сместим отступ)
+            # Добавим вывод тела запроса перед отправкой
             try:
-                auth_header = self.__credentials.get_authorization_header(topic)
-                if auth_header is not None:
-                    headers["authorization"] = auth_header
-                    # --- ВЫВОД ТОКЕНА (частично) ---
-                    log_auth_header = auth_header[:15] + "..." + auth_header[-5:]
-                    print(f"DEBUG: APNs Authorization Header added: Bearer {log_auth_header}")
-                    # --------------------------------------
-                else:
-                    print("ERROR: Failed to get APNs authorization header (returned None).")
-                    return 403, "MissingProviderToken" # Return error directly
-            except Exception as e:
-                print("EXCEPTION: Error getting APNs authorization header!")
-                traceback.print_exc()
-                return 403, f"ProviderTokenGenerationError: {e}" # Return error directly
+                payload_dict_for_log = json.loads(json_payload.decode('utf-8'))
+                print(
+                    f"DEBUG:     --> APNs Request Payload: {json.dumps(payload_dict_for_log, indent=2, ensure_ascii=False)}")
+            except Exception as log_e:
+                print(f"ERROR: Error formatting payload for logging: {log_e}")
 
-        if collapse_id is not None: headers["apns-collapse-id"] = collapse_id
+            print(f"DEBUG:     Making POST request using httpx client...")  # DEBUG
+            response = client.post(url, headers=headers, content=json_payload)
+            print(f"DEBUG:     POST request completed.")  # DEBUG
 
-        url = f"https://{self.__server}:{self.__port}/3/device/{token_hex}"
-
-        # =========================================================
-        # === ВЫВОД ТОГО, ЧТО ОТПРАВЛЯЕТСЯ, ПРЯМО ПЕРЕД ЗАПРОСОМ ===
-        # =========================================================
-        print(f"INFO: --> Sending APNs Request to: {url}")
-        try:
-            print(f"DEBUG: --> APNs Request Headers: {json.dumps(headers, indent=2)}")
-            # Using json_payload_dict which is already a dictionary
-            print(f"DEBUG: --> APNs Request Payload: {json.dumps(json_payload_dict, indent=2, ensure_ascii=False)}")
-        except Exception as log_e:
-             print(f"ERROR: Error formatting request data for printing: {log_e}")
-        # =========================================================
-
-        try:
-            response = client.post(url, headers=headers, content=json_payload_bytes) # Use content= for bytes
-
-            # =========================================================
-            # === ВЫВОД ТОГО, ЧТО ПОЛУЧЕНО В ОТВЕТ ===
-            # =========================================================
-            response_text = response.text # Get text first
-            print(f"INFO: <-- APNs Response Status: {response.status_code}")
-            print(f"DEBUG: <-- APNs Response Body: {response_text}")
-            # =========================================================
-
-            reason = ""
-            if response.status_code != 200:
-                try:
-                    # Attempt to parse JSON only if there's text
-                    if response_text:
-                         response_json = response.json()
-                         reason = response_json.get("reason", response_text) # Use text as fallback
-                    else:
-                         reason = f"Empty response body (Status: {response.status_code})"
-                except json.JSONDecodeError:
-                    # If JSON parsing fails, use the raw text as the reason
-                    reason = response_text
-            else:
-                # Status is 200, mark as Success
-                 reason = "Success"
-
-
-            return response.status_code, reason
+            print("DEBUG:     Processing response...")  # DEBUG
+            status, reason = self._process_response(response)
+            print(f"DEBUG:     Response processed: status={status}, reason='{reason}'")  # DEBUG
+            return status, reason
 
         except httpx.RequestError as e:
-            print(f"EXCEPTION: HTTPX Request Error sending APNs notification: {e}")
+            # Ошибки сети обрабатываются здесь
+            print(f"EXCEPTION: HTTPX Request Error in send_notification_sync: {e}")  # EXCEPTION
             traceback.print_exc()
-            return 503, f"HTTPX Request Error: {type(e).__name__}" # Service Unavailable suggested
+            return 503, f"HTTPX Request Error: {type(e).__name__}"
         except Exception as e:
-            print(f"EXCEPTION: Unexpected Error sending APNs notification: {e}")
+            # Другие неожиданные ошибки (например, в _encode_payload, _build_headers)
+            print(f"EXCEPTION: Unexpected Error in send_notification_sync: {e}")  # EXCEPTION
             traceback.print_exc()
             return 500, f"Unexpected Error: {type(e).__name__}"
 
+    def _encode_payload(self, notification: Payload) -> bytes:
+        print("DEBUG:       APNsClient._encode_payload called")  # DEBUG
+        try:
+            payload_dict = notification.dict()
+            print(f"DEBUG:         Payload dictionary: {payload_dict}")  # DEBUG
+            encoded_payload = json.dumps(
+                payload_dict,
+                cls=self.__json_encoder,
+                ensure_ascii=False,
+                separators=(",", ":"),
+            ).encode("utf-8")
+            print("DEBUG:       Payload encoded successfully.")  # DEBUG
+            return encoded_payload
+        except Exception as e:
+            # Эта ошибка должна быть перехвачена выше, но лог полезен
+            print(f"EXCEPTION: Error during payload encoding: {e}")  # EXCEPTION
+            traceback.print_exc()
+            raise ValueError(f"Payload encoding error: {e}") from e
 
-    def get_notification_result(
-            self, status: int, reason: str
-    ) -> str: # Simplified return type to string
-        if status == 200:
-            return "Success"
+    def _build_headers(
+            self,
+            topic: Optional[str],
+            priority: NotificationPriority,
+            expiration: Optional[int],
+            collapse_id: Optional[str],
+            push_type: Optional[NotificationType],
+            notification: Payload,
+    ) -> Dict:
+        print("DEBUG:       APNsClient._build_headers called")  # DEBUG
+        headers = {}
+        if topic:
+            print(f"DEBUG:         Adding header apns-topic: {topic}")  # DEBUG
+            headers["apns-topic"] = topic
+            determined_push_type = self._determine_push_type(topic, notification, push_type)
+            print(f"DEBUG:         Adding header apns-push-type: {determined_push_type}")  # DEBUG
+            headers["apns-push-type"] = determined_push_type
         else:
-            # Return the reason string directly (it's already 'Success' or error reason)
-            return reason
+            print("DEBUG:         Topic not provided, skipping apns-topic and apns-push-type headers.")  # DEBUG
+
+        if priority != DEFAULT_APNS_PRIORITY:
+            print(f"DEBUG:         Adding header apns-priority: {priority.value}")  # DEBUG
+            headers["apns-priority"] = priority.value
+        else:
+            print(f"DEBUG:         Using default priority, skipping apns-priority header.")  # DEBUG
+
+        if expiration is not None:
+            exp_str = str(expiration)
+            print(f"DEBUG:         Adding header apns-expiration: {exp_str}")  # DEBUG
+            headers["apns-expiration"] = exp_str
+
+        if collapse_id is not None:
+            print(f"DEBUG:         Adding header apns-collapse-id: {collapse_id}")  # DEBUG
+            headers["apns-collapse-id"] = collapse_id
+
+        # Добавление заголовка аутентификации
+        if isinstance(self.__credentials, TokenCredentials):
+            print("DEBUG:         Credentials are TokenCredentials, getting authorization header...")  # DEBUG
+            try:
+                # Вызов get_authorization_header из credentials.py (там должен быть свой debug print)
+                auth_header = self.__credentials.get_authorization_header(topic)
+                if auth_header:
+                    print(
+                        f"DEBUG:         Adding header authorization: Bearer {auth_header[:15]}...{auth_header[-5:]}")  # DEBUG
+                    headers["authorization"] = auth_header
+                else:
+                    # Это серьезная проблема, если токен не сгенерировался
+                    print("ERROR:         Failed to get authorization header (returned None or empty).")  # ERROR
+                    # Возможно, стоит бросить исключение здесь? Зависит от логики credentials.
+            except Exception as e:
+                print(f"EXCEPTION: Error getting authorization header in _build_headers: {e}")  # EXCEPTION
+                traceback.print_exc()
+                # Решаем, что делать - бросать исключение или возвращать заголовки без auth?
+                # Пока просто выводим ошибку и продолжаем без auth заголовка.
+                # raise APNsException(f"Failed to generate auth token: {e}") from e
+        else:
+            print("DEBUG:         Credentials are not TokenCredentials, skipping authorization header.")  # DEBUG
+
+        print("DEBUG:       Headers building finished.")  # DEBUG
+        return headers
+
+    @staticmethod
+    def _determine_push_type(
+            topic: str,
+            notification: Payload,
+            push_type: Optional[NotificationType]
+    ) -> str:
+        # Здесь нет смысла добавлять print, т.к. логика простая и результат виден в _build_headers
+        if push_type:
+            return push_type.value
+
+        payload_aps = notification.dict().get("aps", {})
+        if topic.endswith(".voip"): return NotificationType.VoIP.value
+        if topic.endswith(".complication"): return NotificationType.Complication.value
+        if topic.endswith(".pushkit.fileprovider"): return NotificationType.FileProvider.value
+        # Проверяем на background только если есть content-available
+        if "content-available" in payload_aps and not any(k in payload_aps for k in ["alert", "badge", "sound"]):
+            return NotificationType.Background.value
+        # Во всех остальных случаях считаем Alert (даже если пустой aps)
+        return NotificationType.Alert.value
+
+    @staticmethod
+    def _process_response(response: httpx.Response) -> Tuple[int, str]:
+        print("DEBUG:         APNsClient._process_response called")  # DEBUG
+        response_text = ""
+        try:
+            response_text = response.text
+            # Эти print уже были, оставим их
+            print(f"INFO: <-- APNs Response Status: {response.status_code}")
+            print(f"DEBUG: <-- APNs Response Body: {response_text}")
+
+            # Пытаемся распарсить JSON только если есть тело ответа
+            if response_text:
+                response_data = response.json()
+                reason = response_data.get("reason",
+                                           "Success" if response.status_code == 200 else response_text)  # Используем текст как fallback если reason нет
+                print(f"DEBUG:         Parsed JSON reason: '{reason}'")  # DEBUG
+                return response.status_code, reason
+            else:
+                # Нет тела ответа
+                reason = "Success" if response.status_code == 200 else "Empty response body"
+                print(f"DEBUG:         Empty response body. Reason: '{reason}'")  # DEBUG
+                return response.status_code, reason
+
+        except json.JSONDecodeError:
+            # Тело ответа не JSON
+            print("DEBUG:         Response body is not valid JSON.")  # DEBUG
+            reason = response_text if response_text else f"Non-JSON empty body (Status: {response.status_code})"
+            print(f"DEBUG:         Using raw text as reason: '{reason}'")  # DEBUG
+            return response.status_code, reason
+        except Exception as e:
+            print(f"EXCEPTION: Unexpected error processing response: {e}")  # EXCEPTION
+            traceback.print_exc()
+            # Возвращаем статус и текст ошибки как reason
+            return response.status_code, f"Response processing error: {type(e).__name__}"
+
+    @staticmethod
+    def _handle_error_response(token_hex: str, status: int, reason: str) -> None:
+        print(f"DEBUG:     APNsClient._handle_error_response called for token {token_hex[:10]}...")  # DEBUG
+        print(f"DEBUG:       Status: {status}, Reason: '{reason}'")  # DEBUG
+        try:
+            print("DEBUG:       Looking up exception class for reason...")  # DEBUG
+            exception_class = exception_class_for_reason(reason)
+            print(f"DEBUG:       Found exception class: {exception_class.__name__}")  # DEBUG
+            # Создаем и выбрасываем исключение
+            if exception_class is Unregistered:
+                print(f"RAISING:   Raising {exception_class.__name__}()")  # RAISING
+                raise exception_class()
+            else:
+                print(f"RAISING:   Raising {exception_class.__name__}('{reason}')")  # RAISING
+                raise exception_class(reason)  # Передаем reason в конструктор
+        except (KeyError, TypeError):
+            # Если причина не найдена в словаре errors.py
+            print(f"DEBUG:       Reason '{reason}' not found in known APNs errors.")  # DEBUG
+            final_reason = f"APNs error: {reason} (Status: {status})"
+            print(f"RAISING:   Raising generic APNsException('{final_reason}')")  # RAISING
+            raise APNsException(final_reason)
 
     def send_notification_batch(
             self,
@@ -312,27 +361,31 @@ class APNsClient(object):
             expiration: Optional[int] = None,
             collapse_id: Optional[str] = None,
             push_type: Optional[NotificationType] = None,
-    ) -> Dict[str, str]: # Return dict mapping token to result string
+    ) -> Dict[str, str]:
+        print(
+            f"\nDEBUG: APNsClient.send_notification_batch called for {len(list(notifications))} notifications")  # DEBUG
         results = {}
-
         verify_context = None
         if isinstance(self.__credentials, CertificateCredentials):
+            print("DEBUG:   Using certificate SSL context for batch HTTPX client.")  # DEBUG
             verify_context = self.__credentials.ssl_context
-            print("DEBUG: Using certificate SSL context for batch HTTPX client.")
         else:
-             print("DEBUG: Using default SSL context for batch HTTPX client.")
+            print("DEBUG:   Using default SSL context for batch HTTPX client.")  # DEBUG
 
         try:
-            # Use a single client for the whole batch
+            print("DEBUG:   Creating httpx.Client for batch...")  # DEBUG
             with httpx.Client(http2=True, verify=verify_context) as client:
-                for next_notification in notifications:
-                    token = next_notification.token
-                    payload = next_notification.payload
-                    # Вывод перед отправкой будет внутри send_notification_sync
-                    print(f"INFO: Processing batch notification for token {token[:10]}...")
+                print("DEBUG:   httpx.Client created. Starting batch processing loop...")  # DEBUG
+                # Преобразуем Iterable в список, чтобы можно было вывести количество
+                notification_list = list(notifications)
+                total_count = len(notification_list)
+                for i, notification in enumerate(notification_list):
+                    token_short = notification.token[:10]
+                    print(f"\nDEBUG:   Processing batch item {i + 1}/{total_count} for token {token_short}...")  # DEBUG
+                    # Вызовы sync и обработка ответа будут выводить свои DEBUG сообщения
                     status, reason = self.send_notification_sync(
-                        token,
-                        payload,
+                        notification.token,
+                        notification.payload,
                         client,
                         topic,
                         priority,
@@ -340,26 +393,26 @@ class APNsClient(object):
                         collapse_id,
                         push_type,
                     )
-                    # send_notification_sync now returns 'Success' or the error reason string
-                    results[token] = reason
-                    # Вывод после получения ответа будет внутри send_notification_sync
+                    # send_notification_sync возвращает 'Success' или причину ошибки
+                    results[notification.token] = reason
+                    print(
+                        f"DEBUG:   Batch item {i + 1}/{total_count} processed for {token_short}. Result: '{reason}'")  # DEBUG
 
-        except httpx.RequestError as e:
-             print(f"EXCEPTION: HTTPX Request Error during batch APNs send: {e}")
-             traceback.print_exc()
-             error_msg = f"HTTPX Request Error: {type(e).__name__}"
-             # Fill results with error for all originally intended tokens
-             results = {n.token: error_msg for n in notifications if n.token not in results}
         except Exception as e:
-             print(f"EXCEPTION: Unexpected Error during batch APNs send: {e}")
-             traceback.print_exc()
-             error_msg = f"Unexpected Batch Error: {type(e).__name__}"
-             # Fill results with error for all originally intended tokens
-             results = {n.token: error_msg for n in notifications if n.token not in results}
+            # Ловим ЛЮБЫЕ ошибки на уровне всего батча (например, ошибка создания клиента)
+            print(f"EXCEPTION: Error during batch processing (outside individual send): {e}")  # EXCEPTION
+            traceback.print_exc()
+            error_msg = f"Batch processing error: {type(e).__name__}"
+            print(f"DEBUG:   Filling remaining results with error: {error_msg}")  # DEBUG
+            # Заполняем ошибкой только те токены, для которых еще нет результата
+            original_tokens = [n.token for n in notification_list]
+            results.update({token: error_msg for token in original_tokens if token not in results})
 
-        print(f"INFO: Batch send processed. Results: {results}")
+        print(f"\nINFO: Batch send processing finished. Final Results: {results}")  # INFO
+        print("DEBUG: APNsClient.send_notification_batch finished")  # DEBUG
         return results
 
     def connect(self) -> None:
-        print("DEBUG: APNsClient.connect called (no-op for HTTPX client)")
+        # Не используется с HTTPX, просто оставим pass
+        print("DEBUG: APNsClient.connect called (no-op)")  # DEBUG
         pass

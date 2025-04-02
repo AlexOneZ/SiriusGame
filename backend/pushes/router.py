@@ -22,7 +22,10 @@ async def send_push(message: Message, handler: PushHandler = Depends()):  # Ис
 
     results = await handler.send_multiple_push(
         to_device_tokens=message.recipients,
-        body=message.body
+        title=message.title,
+        body=message.body,
+        destination=message.destination,
+        sound=message.sound
     )
     return {"results": results}
 
@@ -78,7 +81,9 @@ async def send_push_to_all(message: Message, handler: PushHandler = Depends()):
 
     results = await handler.send_multiple_push(
         to_device_tokens=all_tokens,
-        body=message.body
-        # Можно добавить title и т.д.
+        title=message.title,
+        body=message.body,
+        destination=message.destination,
+        sound=message.sound
     )
     return {"results": results}

@@ -35,8 +35,14 @@ class Message(BaseModel):
 
     Attributes:
         recipients (list[str]): List of recipient tokens.
-        body (str): Message to send.
+        title (str): Title of the notification.
+        body (str): Message body to send.
+        destination (str | None): Destination for the notification.
+        sound (str | None): Sound to play with notification.
     """
 
     recipients: list[str]
+    title: str
     body: str
+    destination: str | None = None
+    sound: str | None = "default"
