@@ -11,16 +11,25 @@ import UserNotifications
 @main
 struct SiriusProjectApp: App {
     let networkManager: NetworkManagerProtocol
+    var notificationsManager: NotificationsManager
+
     var appViewModel: AppViewModel
     let logging: Logging
-    var notificationsManager: NotificationsManager
+    let errorLogging: Logging
+    let errorPublisher: ErrorPublisher
+
     @UIApplicationDelegateAdaptor private var appDelegate: CustomAppDelegate
 
     init() {
+        errorPublisher = ErrorPublisher()
+
         logging = { message in
             printLogging(message)
         }
-        networkManager = NetworkManager(service: APIService(urlSession: URLSession.shared), logging: logging)
+
+        errorLogging = errorPublisherLogging(errorPublisher)
+
+        networkManager = NetworkManager(service: APIService(urlSession: URLSession.shared), logging: errorLogging)
         notificationsManager = NotificationsManager()
 
         appViewModel = AppViewModel(
@@ -39,10 +48,12 @@ struct SiriusProjectApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(
-                appViewModel: appViewModel,
-                notificationsManager: notificationsManager
-            )
+            ErrorHandlerView(errorPublisher: errorPublisher) {
+                ContentView(
+                    appViewModel: appViewModel,
+                    notificationsManager: notificationsManager
+                )
+            }
         }
     }
 }
