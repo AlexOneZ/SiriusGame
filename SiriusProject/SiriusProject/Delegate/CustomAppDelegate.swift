@@ -13,6 +13,7 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate {
     var app: SiriusProjectApp?
     var notificationCenter: UNUserNotificationCenter!
     var runner: MainThreadRunner!
+    var notificationsManager: NotificationsManager?
 
     override init() {
         super.init()
@@ -20,9 +21,11 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate {
 
     func setup(
         notificationCenter: UNUserNotificationCenter,
-        runner: @escaping MainThreadRunner
+        runner: @escaping MainThreadRunner,
+        notificationsManager: NotificationsManager
     ) {
         self.notificationCenter = notificationCenter
+        self.notificationsManager = notificationsManager
         notificationCenter.delegate = self
         self.runner = runner
     }
@@ -47,14 +50,6 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate {
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
         let stringifiedToken = deviceToken.map { data in String(format: "%02.2hhx", data) }.joined()
-        print("\(stringifiedToken)")
-    }
-    
-    func application(
-        _ application: UIApplication,
-        didFailToRegisterForRemoteNotificationsWithError error: Error
-    ) {
-        print("\(error.localizedDescription)")
     }
 }
 
@@ -65,10 +60,13 @@ extension CustomAppDelegate: UNUserNotificationCenterDelegate {
     ) async {
         let userInfo = response.notification.request.content.userInfo
         if let aps = userInfo["aps"] as? [String: Any],
-            let alert = aps["alert"] as? [String: Any],
-            let destination = alert["destination"] as? String,
-            destination == "notifications" {
-            // toggle()
+           let alert = aps["alert"] as? [String: Any],
+           let destination = alert["destination"] as? String,
+           destination == "notifications"
+        {
+            await MainActor.run {
+                notificationsManager?.isNotificationViewShowing = true
+            }
         }
     }
 
