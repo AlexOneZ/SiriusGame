@@ -16,6 +16,10 @@ final class LeaderboardViewModel: ObservableObject {
     init(networkManager: NetworkManagerProtocol, logging: @escaping Logging) {
         self.networkManager = networkManager
         self.logging = logging
+        fetchTeams()
+    }
+    
+    func fetchTeams() {
         networkManager.getTeams(completion: { [weak self] teams in
             self?.sortedTeams = teams.sorted(by: { $0.score > $1.score })
         })
