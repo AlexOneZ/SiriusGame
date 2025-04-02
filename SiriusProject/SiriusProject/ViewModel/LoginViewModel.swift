@@ -14,5 +14,15 @@ final class LoginViewModel: ObservableObject {
         self.networkManager = networkManager
     }
 
-    @Published var text = ""
+    @Published var teamName = ""
+    @AppStorage("teamID") var teamID: Int = 0
+    
+    func newTeamRegister() {
+        networkManager.enterTeam(name: teamName) { id in
+            //teamID = id
+//            onMainThread( {
+//                teamID = id
+//            })
+        }
+    }
 }
