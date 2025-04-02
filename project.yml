@@ -41,16 +41,17 @@ targets:
         type: application
         deploymentTarget: "17"
         sources: ["SiriusProject"]
+        capabilities:
+            - push-notifications
+        attributes:
+            SystemCapabilities:
+                com.apple.Push:
+                    enabled: 1
         settings:
           base:
             INFOPLIST_FILE: "SiriusProject/SiriusProject/Info.plist"
             CODE_SIGN_IDENTITY: "Apple Development: Aleksey Kobyakov (2VHQM6CHHB)"
-            PROVISIONING_PROFILE_SPECIFIER: "Sirius Provisioning"
+            PROVISIONING_PROFILE_SPECIFIER: "Provision with push"
+            CODE_SIGN_ENTITLEMENTS: SiriusProject/SiriusProject.entitlements
         resources:
             - path: Localizable
-    
-                
-                
-    
-        
-
