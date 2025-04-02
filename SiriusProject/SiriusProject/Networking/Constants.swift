@@ -9,7 +9,7 @@ import Foundation
 
 enum Constants {
     // MARK: - API
-
+    // don't forget back url that works
     static let scheme = "https"
     static let baseURL = "rnmwd-85-174-192-198.a.free.pinggy.link"
     static let port: Int? = nil

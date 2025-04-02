@@ -44,7 +44,7 @@ struct SiriusProjectApp: App {
             leaderboardViewModel: LeaderboardViewModel(networkManager: networkManager, logging: logging),
             mapViewModel: MapViewModel(),
             notificationsViewModel: NotificationsViewModel(networkManager: networkManager),
-            getRateReviewModel: GetRateReviewModel(networkManager: networkManager)
+            getRateReviewModel: GetRateReviewModel(networkManager: networkManager, logging: logging)
         )
         let center = UNUserNotificationCenter.current()
         appDelegate.setup(notificationCenter: center, runner: onMainThread, notificationsManager: notificationsManager, networkManager: networkManager as! NetworkManager)

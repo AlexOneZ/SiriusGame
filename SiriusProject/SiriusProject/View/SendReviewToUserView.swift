@@ -101,7 +101,6 @@ struct SendReviewToUserView: View {
                     .shadow(color: .blue.opacity(0.3), radius: 8, y: 4)
                 }
                 .disabled(score < 1)
-                // .buttonStyle(ScaleButtonStyle())
                 .padding()
             }
         }

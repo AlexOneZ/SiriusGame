@@ -10,9 +10,11 @@ import SwiftUI
 class GetRateReviewModel: ObservableObject {
     let networkManager: NetworkManagerProtocol
     @Published var rateSend: Bool = false
+    let logging: Logging
 
-    init(networkManager: NetworkManagerProtocol) {
+    init(networkManager: NetworkManagerProtocol, logging: @escaping Logging) {
         self.networkManager = networkManager
+        self.logging = logging
     }
     
     func setTeamEventScore(teamID: Int, score: Int) {

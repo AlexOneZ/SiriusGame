@@ -69,7 +69,7 @@ struct ContentView: View {
             pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
             leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
             mapViewModel: MapViewModel(),
-            notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging)), getRateReviewModel: GetRateReviewModel(networkManager: FakeNetworkManager(logging: printLogging))
+            notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging)), getRateReviewModel: GetRateReviewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: { _ in})
         ),
         notificationsManager: NotificationsManager()
     )

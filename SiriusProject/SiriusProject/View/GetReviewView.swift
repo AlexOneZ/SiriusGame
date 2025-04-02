@@ -17,20 +17,12 @@ struct GetReviewView: View {
     
     @AppStorage("teamID") var teamID: Int = -1
 
-    private let log: (String) -> Void
-
     init(
         getReviewViewModel: GetRateReviewModel,
-        event: Event = Event(id: 1, title: "Title", description: "Description", state: .done, score: 10),
-        log: @escaping (String) -> Void = { message in
-            #if DEBUG
-                print(message)
-            #endif
-        }
+        event: Event = Event(id: 1, title: "Title", description: "Description", state: .done, score: 10)
     ) {
         self.viewModel = getReviewViewModel
         self.event = event
-        self.log = log
     }
 
     var body: some View {
@@ -150,7 +142,7 @@ struct GetReviewView: View {
     }
 
     private func handleIncomingURL(_ url: URL) {
-        guard let idAndScore = url.recieveDeeplinkURL(log: log) else { return }
+        guard let idAndScore = url.recieveDeeplinkURL(log: viewModel.logging) else { return }
 
         receivedScore = idAndScore[1]
         isPresented = true
@@ -162,8 +154,7 @@ struct GetReviewView: View {
         ID: \(idAndScore[0]),
         Оценка: \(idAndScore[1])
         """
-        log(logMessage)
-        print(logMessage)
+        viewModel.logging(logMessage)
     }
 }
 
