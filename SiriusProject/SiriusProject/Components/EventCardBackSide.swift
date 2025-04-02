@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct EventCardBackSide: View {
     var appViewModel: AppViewModel
     let event: Event

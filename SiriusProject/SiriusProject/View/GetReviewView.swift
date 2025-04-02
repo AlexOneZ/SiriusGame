@@ -19,8 +19,6 @@ struct GetReviewView: View {
     @AppStorage("teamID") var teamID: Int = 0
     @Binding var isNeedUpdate: Bool
 
-    private let log: (String) -> Void
-
     init(
         event: Event = Event(
             id: 1,
@@ -33,17 +31,11 @@ struct GetReviewView: View {
             longitude: 0.0
         ),
         getReviewViewModel: GetRateReviewModel,
-        isNeedUpdate: Binding<Bool> = .constant(false),
-        log: @escaping (String) -> Void = { message in
-            #if DEBUG
-                print(message)
-            #endif
-        }
+        isNeedUpdate: Binding<Bool> = .constant(false)
     ) {
         viewModel = getReviewViewModel
         self.event = event
         _isNeedUpdate = isNeedUpdate
-        self.log = log
     }
 
     var body: some View {
