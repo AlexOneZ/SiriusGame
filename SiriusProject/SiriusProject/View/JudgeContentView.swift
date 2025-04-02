@@ -24,7 +24,7 @@ struct JudgeContentView: View {
 
     var body: some View {
         TabView {
-            EventsListView(eventsListViewModel: appViewModel.eventsListViewModel, isNotificationViewShowing: $isNotificationViewShowing)
+            EventsListView(appViewModel: appViewModel, eventsListViewModel: appViewModel.eventsListViewModel, isNotificationViewShowing: $isNotificationViewShowing)
                 .tabItem {
                     Image(systemName: "rectangle.on.rectangle")
                     Text("events")

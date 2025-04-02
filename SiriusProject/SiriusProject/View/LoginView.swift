@@ -12,7 +12,7 @@ struct LoginView: View {
 
     @AppStorage("isJudge") var isJudge: Bool = false
     @AppStorage("isLogin") var isLogin: Bool = false
-    @AppStorage("teamID") var teamID: Int = 0
+    @AppStorage("teamID") var teamID: Int = -1
     
     @State var isJudgeLogin: Bool = false
     @State var inputJudgePin: String = ""

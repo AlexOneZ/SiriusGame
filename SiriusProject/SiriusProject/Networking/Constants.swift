@@ -11,7 +11,7 @@ enum Constants {
     // MARK: - API
 
     static let scheme = "https"
-    static let baseURL = "siriusgame.a.pinggy.link"
+    static let baseURL = "rnmwd-85-174-192-198.a.free.pinggy.link"
     static let port: Int? = nil
 
     static let teamsPath = "/teams"

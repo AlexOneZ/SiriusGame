@@ -10,6 +10,7 @@ import SwiftUI
 import SwiftUI
 
 struct EventCardBackSide: View {
+    var appViewModel: AppViewModel
     let event: Event
     @State var animate: Bool = false
     @Binding var flip: Bool
@@ -73,7 +74,7 @@ struct EventCardBackSide: View {
                     }
                 }
                 .sheet(item: $presentedEventForUser) { event in
-                    GetReviewView(event: event)
+                    GetReviewView(getReviewViewModel: appViewModel.getRateReviewModel, event: event)
                 }
                 .sheet(isPresented: $isPresentedJudgeScreen) {
                     SendReviewToUserView(event: event)
@@ -107,7 +108,16 @@ struct EventCardBackSide: View {
 
 #Preview {
     EventCardBackSide(
-        event: Event(id: 1, title: "Хоккей", description: "Игра в хоккей", state: .done, score: 3, adress: "Ледовая аренда", rules: "матч состоит из трех периодов продолжительностью 20 минут. Между периодами команды уходят на 15-минутный перерыв и меняются воротами период начинается с вбрасывания шайбы на поле. Об окончании периода свидетельствует свисток главного судьи; цель игры – забросить большее количество шайб в ворота соперника. Если по истечении основного времени счет будет равным, игра переходит в овертайм; длительность овертайма составляет 5 минут, команды играют в формате три на три. Если победитель не определится в овертайме, назначаются штрафные послематчевые броски (буллиты)"),
+        appViewModel: AppViewModel(
+            logging: printLogging,
+            eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            loginViewModel: LoginViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
+            pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
+            leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            mapViewModel: MapViewModel(),
+            notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging)), getRateReviewModel: GetRateReviewModel(networkManager: FakeNetworkManager(logging: printLogging))
+        ), event: Event(id: 1, title: "Хоккей", description: "Игра в хоккей", state: .done, score: 3, adress: "Ледовая аренда", rules: "матч состоит из трех периодов продолжительностью 20 минут. Между периодами команды уходят на 15-минутный перерыв и меняются воротами период начинается с вбрасывания шайбы на поле. Об окончании периода свидетельствует свисток главного судьи; цель игры – забросить большее количество шайб в ворота соперника. Если по истечении основного времени счет будет равным, игра переходит в овертайм; длительность овертайма составляет 5 минут, команды играют в формате три на три. Если победитель не определится в овертайме, назначаются штрафные послематчевые броски (буллиты)"),
         flip: .constant(true)
     )
 }

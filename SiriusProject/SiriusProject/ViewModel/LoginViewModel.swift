@@ -15,14 +15,13 @@ final class LoginViewModel: ObservableObject {
     }
 
     @Published var teamName = ""
-    @AppStorage("teamID") var teamID: Int = 0
+    @AppStorage("teamID") var teamID: Int = -1
     
     func newTeamRegister() {
-        networkManager.enterTeam(name: teamName) { id in
-            //teamID = id
-//            onMainThread( {
-//                teamID = id
-//            })
+        networkManager.enterTeam(name: teamName) { [weak self] id in
+            onMainThread( {
+                self?.teamID = id
+            })
         }
     }
 }

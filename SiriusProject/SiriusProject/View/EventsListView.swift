@@ -8,15 +8,18 @@
 import SwiftUI
 
 struct EventsListView: View {
+    var appViewModel: AppViewModel
     private let log: (String) -> Void
     @ObservedObject var viewModel: EventsListViewModel
     @Binding var isNotificationViewShowing: Bool
 
     init(
+        appViewModel: AppViewModel,
         eventsListViewModel: EventsListViewModel,
         isNotificationViewShowing: Binding<Bool>,
         log: @escaping (String) -> Void = { _ in }
     ) {
+        self.appViewModel = appViewModel
         viewModel = eventsListViewModel
         _isNotificationViewShowing = isNotificationViewShowing
         self.log = log
@@ -26,7 +29,7 @@ struct EventsListView: View {
         ScrollView {
             LazyVStack(alignment: .leading) {
                 ForEach(viewModel.events, id: \.id) { event in
-                    EventCard(event: event)
+                    EventCard(appViewModel: appViewModel, event: event)
                 }
             }
         }
@@ -45,7 +48,16 @@ struct EventsListView: View {
 
 #Preview {
     EventsListView(
-        eventsListViewModel: EventsListViewModel(
+        appViewModel: AppViewModel(
+            logging: printLogging,
+            eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            loginViewModel: LoginViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
+            pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
+            leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            mapViewModel: MapViewModel(),
+            notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging)), getRateReviewModel: GetRateReviewModel(networkManager: FakeNetworkManager(logging: printLogging))
+        ), eventsListViewModel: EventsListViewModel(
             networkManager: FakeNetworkManager(logging: printLogging),
             logging: printLogging
         ),

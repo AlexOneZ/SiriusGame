@@ -23,7 +23,7 @@ struct ContentView: View {
     var body: some View {
         TabView {
             EventsListView(
-                eventsListViewModel: appViewModel.eventsListViewModel,
+                appViewModel: appViewModel, eventsListViewModel: appViewModel.eventsListViewModel,
                 isNotificationViewShowing: $notificationsManager.isNotificationViewShowing
             )
             .tabItem {
@@ -69,7 +69,7 @@ struct ContentView: View {
             pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
             leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
             mapViewModel: MapViewModel(),
-            notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging))
+            notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging)), getRateReviewModel: GetRateReviewModel(networkManager: FakeNetworkManager(logging: printLogging))
         ),
         notificationsManager: NotificationsManager()
     )

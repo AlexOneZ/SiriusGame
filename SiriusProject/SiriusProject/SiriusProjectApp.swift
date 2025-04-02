@@ -43,7 +43,8 @@ struct SiriusProjectApp: App {
             pointsViewModel: PointsViewModel(networkManager: networkManager),
             leaderboardViewModel: LeaderboardViewModel(networkManager: networkManager, logging: logging),
             mapViewModel: MapViewModel(),
-            notificationsViewModel: NotificationsViewModel(networkManager: networkManager)
+            notificationsViewModel: NotificationsViewModel(networkManager: networkManager),
+            getRateReviewModel: GetRateReviewModel(networkManager: networkManager)
         )
         let center = UNUserNotificationCenter.current()
         appDelegate.setup(notificationCenter: center, runner: onMainThread, notificationsManager: notificationsManager, networkManager: networkManager as! NetworkManager)
@@ -78,4 +79,5 @@ struct AppViewModel {
     var leaderboardViewModel: LeaderboardViewModel
     var mapViewModel: MapViewModel
     var notificationsViewModel: NotificationsViewModel
+    var getRateReviewModel: GetRateReviewModel
 }

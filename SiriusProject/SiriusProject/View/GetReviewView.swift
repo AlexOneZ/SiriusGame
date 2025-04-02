@@ -8,15 +8,19 @@
 import SwiftUI
 
 struct GetReviewView: View {
+    @ObservedObject var viewModel: GetRateReviewModel
     let event: Event?
     @State private var isPresented: Bool = false
     @State private var showAnimation: Bool = false
     @State private var receivedScore: Int? = nil
     @State private var isShowHandReviewView: Bool = false
+    
+    @AppStorage("teamID") var teamID: Int = -1
 
     private let log: (String) -> Void
 
     init(
+        getReviewViewModel: GetRateReviewModel,
         event: Event = Event(id: 1, title: "Title", description: "Description", state: .done, score: 10),
         log: @escaping (String) -> Void = { message in
             #if DEBUG
@@ -24,6 +28,7 @@ struct GetReviewView: View {
             #endif
         }
     ) {
+        self.viewModel = getReviewViewModel
         self.event = event
         self.log = log
     }
@@ -74,6 +79,9 @@ struct GetReviewView: View {
                     if let score = receivedScore {
                         RatingBadge(score: score)
                             .transition(.scale.combined(with: .opacity))
+                        if viewModel.rateSend {
+                            Text("Данные отправлены")
+                        }
                     }
                 }
 
@@ -147,6 +155,8 @@ struct GetReviewView: View {
         receivedScore = idAndScore[1]
         isPresented = true
 
+        viewModel.setTeamEventScore(teamID: teamID, score: receivedScore ?? 0)
+        
         let logMessage = """
         Получены данные:
         ID: \(idAndScore[0]),
@@ -213,5 +223,5 @@ private extension URL {
 }
 
 #Preview {
-    GetReviewView(event: Event(id: 1, title: "Title", state: .done, score: 5))
+    //GetReviewView(getReviewViewModel: <#GetRateReviewModel#>, event: Event(id: 1, title: "Title", state: .done, score: 5))
 }
