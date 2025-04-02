@@ -11,19 +11,20 @@ struct ContentView: View {
     var appViewModel: AppViewModel
 
     @AppStorage("isTeamLoggedIn") var isTeamLoggedIn: Bool = false
-    @State var isNotificationViewShowing: Bool = false
+    @ObservedObject var notificationsManager: NotificationsManager
     private let logging: Logging
 
-    init(appViewModel: AppViewModel) {
+    init(appViewModel: AppViewModel, notificationsManager: NotificationsManager) {
         self.appViewModel = appViewModel
         logging = appViewModel.logging
+        self.notificationsManager = notificationsManager
     }
 
     var body: some View {
         TabView {
             EventsListView(
                 eventsListViewModel: appViewModel.eventsListViewModel,
-                isNotificationViewShowing: $isNotificationViewShowing
+                isNotificationViewShowing: $notificationsManager.isNotificationViewShowing
             )
             .tabItem {
                 Image(systemName: "rectangle.on.rectangle")
@@ -31,7 +32,7 @@ struct ContentView: View {
             }
             MapView(
                 mapViewModel: appViewModel.mapViewModel,
-                isNotificationViewShowing: $isNotificationViewShowing
+                isNotificationViewShowing: $notificationsManager.isNotificationViewShowing
             )
             .tabItem {
                 Image(systemName: "mappin.circle")
@@ -59,9 +60,9 @@ struct ContentView: View {
             """
             logging(logMessage)
         }
-        .sheet(isPresented: $isNotificationViewShowing) {
+        .sheet(isPresented: $notificationsManager.isNotificationViewShowing) {
             NotificationsView(
-                isNotificationViewShowing: $isNotificationViewShowing,
+                isNotificationViewShowing: $notificationsManager.isNotificationViewShowing,
                 viewModel: appViewModel.notificationsViewModel
             )
         }
@@ -109,7 +110,8 @@ private extension URL {
             leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager(), logging: printLogging),
             mapViewModel: MapViewModel(),
             notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager())
-        )
+        ),
+        notificationsManager: NotificationsManager()
     )
     .environment(\.locale, .init(identifier: "ru"))
 }

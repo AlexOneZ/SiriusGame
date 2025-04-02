@@ -13,6 +13,7 @@ struct SiriusProjectApp: App {
     let networkManager: NetworkManagerProtocol
     var appViewModel: AppViewModel
     let logging: Logging
+    var notificationsManager: NotificationsManager
     @UIApplicationDelegateAdaptor private var appDelegate: CustomAppDelegate
 
     init() {
@@ -20,6 +21,7 @@ struct SiriusProjectApp: App {
             printLogging(message)
         }
         networkManager = NetworkManager(service: APIService(urlSession: URLSession.shared), logging: logging)
+        notificationsManager = NotificationsManager()
 
         appViewModel = AppViewModel(
             logging: logging,
@@ -32,12 +34,15 @@ struct SiriusProjectApp: App {
             notificationsViewModel: NotificationsViewModel(networkManager: networkManager)
         )
         let center = UNUserNotificationCenter.current()
-        appDelegate.setup(notificationCenter: center, runner: onMainThread)
+        appDelegate.setup(notificationCenter: center, runner: onMainThread, notificationsManager: notificationsManager)
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView(appViewModel: appViewModel)
+            ContentView(
+                appViewModel: appViewModel,
+                notificationsManager: notificationsManager
+            )
         }
     }
 }
