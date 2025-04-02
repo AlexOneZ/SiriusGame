@@ -64,7 +64,8 @@ extension CustomAppDelegate: UNUserNotificationCenterDelegate {
            let destination = alert["destination"] as? String,
            destination == "notifications"
         {
-            await MainActor.run {
+            runner { [weak self] in
+                guard let self = self else { return }
                 notificationsManager?.isNotificationViewShowing = true
             }
         }
