@@ -64,7 +64,7 @@ class APIService: Service {
                     completion(nil, .serverError(detail))
                     return
                 }
-                
+
                 if T.self == Data.self {
                     completion(data as? T, nil)
                     return
