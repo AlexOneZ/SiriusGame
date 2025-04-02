@@ -188,4 +188,21 @@ struct NetworkManager: NetworkManagerProtocol {
             completion(success ?? false)
         }
     }
+
+    func sendTokenToServer(token: String, logging: @escaping Logging, completion: @escaping (Bool) -> Void) {
+        guard let request = Endpoint.sendTokenToServer(token: token).request else {
+            logging("Error: Failed to create request")
+            completion(false)
+            return
+        }
+
+        service.makeRequest(with: request, respModel: Bool.self, logging: logging) { success, error in
+            if let error = error {
+                logging(error.localizedDescription)
+                completion(false)
+                return
+            }
+            completion(success ?? false)
+        }
+    }
 }

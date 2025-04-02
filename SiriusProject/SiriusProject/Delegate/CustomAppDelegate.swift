@@ -14,6 +14,7 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate {
     var notificationCenter: UNUserNotificationCenter!
     var runner: MainThreadRunner!
     var notificationsManager: NotificationsManager?
+    var networkManager: NetworkManager?
 
     override init() {
         super.init()
@@ -22,10 +23,12 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate {
     func setup(
         notificationCenter: UNUserNotificationCenter,
         runner: @escaping MainThreadRunner,
-        notificationsManager: NotificationsManager
+        notificationsManager: NotificationsManager,
+        networkManager: NetworkManager
     ) {
         self.notificationCenter = notificationCenter
         self.notificationsManager = notificationsManager
+        self.networkManager = networkManager
         notificationCenter.delegate = self
         self.runner = runner
     }
@@ -50,6 +53,7 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate {
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
         let stringifiedToken = deviceToken.map { data in String(format: "%02.2hhx", data) }.joined()
+        networkManager?.sendTokenToServer(token: stringifiedToken)
     }
 }
 

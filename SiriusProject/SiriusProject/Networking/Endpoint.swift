@@ -19,6 +19,7 @@ enum Endpoint {
     case getEvents(url: String = Constants.eventsPath)
     case addEvent(url: String = Constants.eventsPath, name: String, description: String?)
     case deleteEvent(url: String = Constants.eventsPath, eventId: Int)
+    case sendTokenToServer(url: String = Constants.apiPath, token: String)
 
     var request: URLRequest? {
         guard let url = url else { return nil }
@@ -61,6 +62,8 @@ enum Endpoint {
             return url
         case let .deleteEvent(url, eventId):
             return "\(url)/\(eventId)"
+        case let .sendTokenToServer(url, _):
+            return url
         }
     }
 
@@ -82,6 +85,8 @@ enum Endpoint {
             return [.init(name: "new_name", value: name)]
         case let .setTeamEventScore(_, _, _, score):
             return [.init(name: "score", value: "\(score)")]
+        case let .sendTokenToServer(_, token):
+            return [.init(name: "token", value: token)]
         }
     }
 
@@ -93,7 +98,8 @@ enum Endpoint {
              .getEvents:
             return HTTP.Method.get.rawValue
         case .enterTeam,
-             .addEvent:
+             .addEvent,
+             .sendTokenToServer:
             return HTTP.Method.post.rawValue
         case .updateTeamName,
              .setTeamEventScore:
