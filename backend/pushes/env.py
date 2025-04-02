@@ -1,7 +1,6 @@
 import os
 import dotenv
 
-# Load envirnment variables from .env file upon module start.
 dotenv.load_dotenv(verbose=True)
 
 
