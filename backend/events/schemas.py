@@ -1,9 +1,8 @@
-from typing import Optional
 from pydantic import BaseModel
 
 class SEventAdd(BaseModel):
     name: str
-    description: Optional[str] = None
+    description: str | None = None
 
 class SEvent(SEventAdd):
     id: int
