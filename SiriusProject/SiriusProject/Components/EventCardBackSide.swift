@@ -58,7 +58,7 @@ struct EventCardBackSide: View {
                                 .font(.headline)
                                 .padding()
                                 .frame(maxWidth: .infinity)
-                                .background(Color(.purple))
+                                .background(Color(.siriusPurple2))
                                 .cornerRadius(20)
                         }
                     }

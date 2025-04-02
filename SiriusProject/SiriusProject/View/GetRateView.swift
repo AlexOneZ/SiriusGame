@@ -34,7 +34,7 @@ struct GetRateView: View {
                     .foregroundStyle(.white)
                     .padding()
                     .frame(maxWidth: 300)
-                    .background(Color(!viewModel.canSubmit ? .systemGray4 : .purple))
+                    .background(!viewModel.canSubmit ? Color(.systemGray4) : Color(.siriusBlue))
                     .cornerRadius(20)
             }
             .disabled(!viewModel.canSubmit)
