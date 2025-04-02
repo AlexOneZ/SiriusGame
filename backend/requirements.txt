@@ -2,3 +2,6 @@ fastapi
 uvicorn 
 sqlalchemy
 aiosqlite 
+httpx
+jwt
+dotenv
