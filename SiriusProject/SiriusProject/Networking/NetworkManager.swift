@@ -5,6 +5,8 @@
 //  Created by Андрей Степанов on 26.03.2025.
 //
 
+import Foundation
+
 struct NetworkManager: NetworkManagerProtocol {
     private let service: APIService
     let logging: Logging
@@ -196,13 +198,13 @@ struct NetworkManager: NetworkManagerProtocol {
             return
         }
 
-        service.makeRequest(with: request, respModel: Bool.self, logging: logging) { success, error in
+        service.makeRequest(with: request, respModel: Data.self, logging: logging) { response, error in
             if let error = error {
                 logging(error.localizedDescription)
                 completion(false)
                 return
             }
-            completion(success ?? false)
+            completion(response != nil)
         }
     }
 }

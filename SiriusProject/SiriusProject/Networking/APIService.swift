@@ -65,6 +65,11 @@ class APIService: Service {
                     return
                 }
 
+                if T.self == Data.self {
+                    completion(data as? T, nil)
+                    return
+                }
+
                 let result = try JSONDecoder().decode(T.self, from: data)
                 completion(result, nil)
             } catch {
