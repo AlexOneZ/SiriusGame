@@ -1,0 +1,9 @@
+fastapi
+uvicorn 
+sqlalchemy
+aiosqlite 
+httpx[http2]
+jwt
+dotenv
+python-dotenv~=1.1.0
+PyJWT~=1.7.1
