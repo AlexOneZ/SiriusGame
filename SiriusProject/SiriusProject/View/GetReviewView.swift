@@ -89,9 +89,9 @@ struct GetReviewView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("variant") + Text(" 1:")
                         .font(.headline)
-                    InstructionStep(number: 1, text: "Попросите судью открыть приложение")
-                    InstructionStep(number: 2, text: "Судья выберет вашу дисциплину")
-                    InstructionStep(number: 3, text: "Ожидайте получения оценки через AirDrop")
+                    InstructionStep(number: 1, text: "askthejudgeopenapp")
+                    InstructionStep(number: 2, text: "thejudgewillchoose")
+                    InstructionStep(number: 3, text: "expecttoreceiveanestimate")
                 }
                 .padding()
                 .background(
@@ -101,10 +101,10 @@ struct GetReviewView: View {
                 .padding(.horizontal)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Вариант 2:")
+                    Text("variant") + Text(" 2:")
                         .font(.headline)
-                    InstructionStep(number: 1, text: "Подойдите к судье")
-                    InstructionStep(number: 2, text: "Воспользуйтесь кнопкой ручного ввода оценки")
+                    InstructionStep(number: 1, text: "gotojudge")
+                    InstructionStep(number: 2, text: "usemanualbutton")
                 }
                 .padding()
                 .background(
@@ -113,7 +113,7 @@ struct GetReviewView: View {
                 )
                 .padding(.horizontal)
 
-                Button("Ручной ввод", systemImage: "person.fill.questionmark") {
+                Button("manualinput", systemImage: "person.fill.questionmark") {
                     isShowHandReviewView.toggle()
                 }
                 .font(.headline)
@@ -162,7 +162,6 @@ struct GetReviewView: View {
         Оценка: \(idAndScore[1])
         """
         log(logMessage)
-        print(logMessage)
     }
 }
 

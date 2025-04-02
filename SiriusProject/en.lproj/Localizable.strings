@@ -41,5 +41,13 @@
 "participant" = "Participant";
 "noevents" = "No Events";
 "nonotifications" = "No Notifications";
+"variant" = "Option";
 "howtogetscore" = "How to get score";
-"askthejudge" = "Ask the judge to give you a grade for this discipline. Make sure that AirDrop is enabled on your device."
+"askthejudgesetscore" = "Ask the judge to give you a grade for this discipline. Make sure that AirDrop is enabled on your device.";
+"askthejudgeopenapp" = "Ask the judge to open the app.";
+"thejudgewillchoose" = "The judge will choose your discipline";
+"expecttoreceiveanestimate" = "Expect to receive a grade via AirDrop";
+"gotojudge" = "Go to the judge";
+"usemanualbutton" = "Use the manual grade input button";
+"manualinput" = "Manual input";
+
