@@ -19,7 +19,7 @@ final class SettingsViewModel: ObservableObject {
     }
 
     func fetchTeamName() {
-        networkManager.getTeam(teamId: 1, logging: logging, completion: { [weak self] team in
+        networkManager.getTeam(teamId: 1, completion: { [weak self] team in
             onMainThread {
                 if let team = team {
                     self?.teamName = team.name
@@ -29,7 +29,7 @@ final class SettingsViewModel: ObservableObject {
     }
 
     func changeName(newName: String) {
-        networkManager.updateTeamName(teamId: 1, name: newName, logging: logging, completion: { [weak self] hasCompleted in
+        networkManager.updateTeamName(teamId: 1, name: newName, completion: { [weak self] hasCompleted in
             onMainThread {
                 if hasCompleted {
                     self?.teamName = newName
@@ -38,12 +38,8 @@ final class SettingsViewModel: ObservableObject {
         })
     }
 
-    func logOutAction() {}
-
-    func getSendInfoURL(event: Event) -> URL? {
-        let logMessage = "String to url: siriusgameurl://*\(event.id)*\(event.title)*\(String(describing: event.description))*\(event.state)*\(event.score)"
-        logging(logMessage)
-
-        return URL(string: "siriusgameurl://*\(event.id)*\(event.title)*\(String(describing: event.description))*\(event.state)*\(event.score)")
+    func logOutAction() {
+        UserDefaults.standard.set(false, forKey: "isLogin")
+        UserDefaults.standard.set(false, forKey: "isJudge")
     }
 }

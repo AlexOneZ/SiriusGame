@@ -2,6 +2,7 @@ import datetime
 from sqlalchemy import func
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import ForeignKey
 from typing import Optional
 
 engine = create_async_engine('sqlite+aiosqlite:///database.db')
@@ -15,14 +16,25 @@ class EventOrm(Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column()
-    description: Mapped[Optional[str]] = mapped_column()
+    description: Mapped[str | None] = mapped_column()
 
 class TeamOrm(Model):
     __tablename__ = "teams"
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column()
+    score: Mapped[int] = mapped_column(default=0)
 
+class TeamEventOrm(Model):
+    __tablename__ = "teams_events"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"))
+    event_id: Mapped[int] = mapped_column(ForeignKey("events.id"))
+    order: Mapped[int]
+    score: Mapped[int]
+    state: Mapped[str]
+    
 class DeviceEntity(Model):
     __tablename__ = "devices"
 

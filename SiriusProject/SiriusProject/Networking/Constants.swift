@@ -16,4 +16,6 @@ enum Constants {
 
     static let teamsPath = "/teams"
     static let eventsPath = "/events"
+    static let pushesPath = "/pushes"
+    static let registerPath = "/register"
 }

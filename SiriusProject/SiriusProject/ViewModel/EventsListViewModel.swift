@@ -10,7 +10,7 @@ import SwiftUI
 final class EventsListViewModel: ObservableObject {
     let networkManager: NetworkManagerProtocol
     let logging: Logging
-    @Published var showRateView: Bool = false
+    // @Published var showRateView: Bool = false
     @Published var events: [Event] = []
 
     init(networkManager: NetworkManagerProtocol, logging: @escaping Logging) {
@@ -20,7 +20,7 @@ final class EventsListViewModel: ObservableObject {
     }
 
     func fetchEvents() {
-        networkManager.getTeamEvents(teamId: 1, logging: logging, completion: { [weak self] events in
+        networkManager.getTeamEvents(teamId: 1, completion: { [weak self] events in
             onMainThread {
                 self?.events = events
             }

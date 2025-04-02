@@ -36,6 +36,12 @@ struct LeaderboardView: View {
                 }
             }
         }
+        .onAppear {
+            viewModel.fetchTeams()
+        }
+        .refreshable {
+            viewModel.fetchTeams()
+        }
     }
 
     func getPlaceColor(for place: Int) -> Color {

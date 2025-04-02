@@ -1,7 +1,7 @@
 fastapi
 uvicorn 
 sqlalchemy
-aiosqlite 
+aiosqlite
 httpx[http2]
 jwt
 dotenv

@@ -27,7 +27,9 @@ struct EventStateViewComponent: View {
         .padding()
         .background {
             RoundedRectangle(cornerRadius: 15)
-                .foregroundStyle(Color(.systemGray5))
+                .fill(
+                    LinearGradient(gradient: Gradient(colors: [Color("SiriusBlue2"), Color("SiriusBlue2")]), startPoint: .topLeading, endPoint: .topLeading)
+                )
         }
     }
 }

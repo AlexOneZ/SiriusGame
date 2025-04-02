@@ -8,29 +8,31 @@
 import SwiftUI
 
 struct EventsListView: View {
+    private let log: (String) -> Void
     @ObservedObject var viewModel: EventsListViewModel
     @Binding var isNotificationViewShowing: Bool
 
     init(
         eventsListViewModel: EventsListViewModel,
-        isNotificationViewShowing: Binding<Bool>
+        isNotificationViewShowing: Binding<Bool>,
+        log: @escaping (String) -> Void = { _ in }
     ) {
         viewModel = eventsListViewModel
         _isNotificationViewShowing = isNotificationViewShowing
+        self.log = log
     }
 
     var body: some View {
         ScrollView {
             LazyVStack(alignment: .leading) {
                 ForEach(viewModel.events, id: \.id) { event in
-                    EventCard(show: $viewModel.showRateView, event: event)
+                    EventCard(event: event)
                 }
             }
         }
         .refreshable {
             viewModel.fetchEvents()
         }
-        .sheet(isPresented: $viewModel.showRateView, content: { GetRateView() })
         .overlay(alignment: .bottomTrailing) {
             NotificationsButton(
                 action: { isNotificationViewShowing = true }
@@ -44,7 +46,7 @@ struct EventsListView: View {
 #Preview {
     EventsListView(
         eventsListViewModel: EventsListViewModel(
-            networkManager: FakeNetworkManager(),
+            networkManager: FakeNetworkManager(logging: printLogging),
             logging: printLogging
         ),
         isNotificationViewShowing: .constant(false)

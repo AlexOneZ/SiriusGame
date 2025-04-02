@@ -11,15 +11,29 @@ import UserNotifications
 @main
 struct SiriusProjectApp: App {
     let networkManager: NetworkManagerProtocol
+    var notificationsManager: NotificationsManager
+
     var appViewModel: AppViewModel
     let logging: Logging
+    let errorLogging: Logging
+    let errorPublisher: ErrorPublisher
+
     @UIApplicationDelegateAdaptor private var appDelegate: CustomAppDelegate
 
+    @AppStorage("isJudge") var isJudge: Bool = false
+    @AppStorage("isLogin") var isLogin: Bool = false
+
     init() {
+        errorPublisher = ErrorPublisher()
+
         logging = { message in
             printLogging(message)
         }
-        networkManager = NetworkManager(service: APIService(urlSession: URLSession.shared), logging: logging)
+
+        errorLogging = errorPublisherLogging(errorPublisher)
+
+        networkManager = NetworkManager(service: APIService(urlSession: URLSession.shared), logging: errorLogging)
+        notificationsManager = NotificationsManager()
 
         appViewModel = AppViewModel(
             logging: logging,
@@ -32,12 +46,25 @@ struct SiriusProjectApp: App {
             notificationsViewModel: NotificationsViewModel(networkManager: networkManager)
         )
         let center = UNUserNotificationCenter.current()
-        appDelegate.setup(notificationCenter: center, runner: onMainThread)
+        appDelegate.setup(notificationCenter: center, runner: onMainThread, notificationsManager: notificationsManager, networkManager: networkManager as! NetworkManager)
     }
 
     var body: some Scene {
         WindowGroup {
-            ContentView(appViewModel: appViewModel)
+            ErrorHandlerView(errorPublisher: errorPublisher) {
+                if isLogin {
+                    if isJudge {
+                        JudgeContentView(appViewModel: appViewModel)
+                    } else {
+                        ContentView(
+                            appViewModel: appViewModel,
+                            notificationsManager: notificationsManager
+                        )
+                    }
+                } else {
+                    LoginView(viewModel: appViewModel.loginViewModel)
+                }
+            }
         }
     }
 }
