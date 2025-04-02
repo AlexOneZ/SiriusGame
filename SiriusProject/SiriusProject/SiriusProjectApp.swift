@@ -46,7 +46,7 @@ struct SiriusProjectApp: App {
             notificationsViewModel: NotificationsViewModel(networkManager: networkManager)
         )
         let center = UNUserNotificationCenter.current()
-        appDelegate.setup(notificationCenter: center, runner: onMainThread, notificationsManager: notificationsManager)
+        appDelegate.setup(notificationCenter: center, runner: onMainThread, notificationsManager: notificationsManager, networkManager: networkManager as! NetworkManager)
     }
 
     var body: some Scene {

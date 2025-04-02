@@ -67,4 +67,9 @@ struct FakeNetworkManager: NetworkManagerProtocol {
         logging("Deleting event with ID: \(eventId)")
         completion(true)
     }
+
+    func sendTokenToServer(token: String, completion: @escaping (Bool) -> Void) {
+        logging("Token: \(token)")
+        completion(true)
+    }
 }
