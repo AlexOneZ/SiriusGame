@@ -62,7 +62,7 @@ struct EventCardBackSide: View {
                             }
 
                         } label: {
-                            Text(isJudge ? "send score" : "getscore")
+                            Text(isJudge ? "sendscore" : "getscore")
                                 .foregroundStyle(.white)
                                 .font(.headline)
                                 .padding()

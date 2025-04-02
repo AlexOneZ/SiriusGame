@@ -32,7 +32,7 @@ struct SiriusProjectApp: App {
 
         errorLogging = errorPublisherLogging(errorPublisher)
 
-        networkManager = NetworkManager(service: APIService(urlSession: URLSession.shared), logging: errorLogging)
+        networkManager = FakeNetworkManager(logging: printLogging)/*NetworkManager(service: APIService(urlSession: URLSession.shared), logging: errorLogging)*/
         notificationsManager = NotificationsManager()
 
         appViewModel = AppViewModel(
@@ -46,12 +46,7 @@ struct SiriusProjectApp: App {
             notificationsViewModel: NotificationsViewModel(networkManager: networkManager, logging: logging)
         )
         let center = UNUserNotificationCenter.current()
-        appDelegate.setup(
-            notificationCenter: center,
-            runner: onMainThread,
-            notificationsManager: notificationsManager,
-            networkManager: networkManager as! NetworkManager
-        )
+        appDelegate.setup(notificationCenter: center, runner: onMainThread, notificationsManager: notificationsManager, networkManager: networkManager)
     }
 
     var body: some Scene {

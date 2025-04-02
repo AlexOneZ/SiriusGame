@@ -44,7 +44,7 @@ struct GetReviewView: View {
 
             VStack(spacing: 24) {
                 VStack(spacing: 8) {
-                    Text("Получить оценку")
+                    Text("getscore")
                         .font(.system(.title, design: .rounded))
                         .fontWeight(.bold)
                         .foregroundStyle(.primary)
@@ -70,10 +70,10 @@ struct GetReviewView: View {
                         )
 
                     VStack(spacing: 8) {
-                        Text("Как получить оценку")
+                        Text("howtogetscore")
                             .font(.headline)
 
-                        Text("Попросите судью выставить вам оценку за эту дисциплину. Убедитесь, что AirDrop включен на вашем устройстве.")
+                        Text("askthejudge")
                             .font(.subheadline)
                             .multilineTextAlignment(.center)
                             .foregroundStyle(.secondary)
@@ -87,7 +87,7 @@ struct GetReviewView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Варитан 1:")
+                    Text("variant") + Text(" 1:")
                         .font(.headline)
                     InstructionStep(number: 1, text: "Попросите судью открыть приложение")
                     InstructionStep(number: 2, text: "Судья выберет вашу дисциплину")
