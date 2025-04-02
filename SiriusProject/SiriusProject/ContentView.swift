@@ -43,22 +43,12 @@ struct ContentView: View {
                     Image(systemName: "chart.bar.xaxis.ascending")
                     Text("leaderboard")
                 }
+
             SettingsView(settingsViewModel: appViewModel.settingsViewModel)
                 .tabItem {
                     Image(systemName: "gear")
                     Text("settings")
                 }
-        }
-        .onOpenURL { url in
-            let event = url.recieveDeeplinkURL(logging: logging)
-            let logMessage = """
-                \(event?.id ?? -1),
-                \(event?.title ?? "no title"),
-                \(event?.description ?? "no description"),
-                \(event?.state ?? EventState.now),
-                \(event?.score ?? -100)
-            """
-            logging(logMessage)
         }
         .sheet(isPresented: $notificationsManager.isNotificationViewShowing) {
             NotificationsView(
@@ -66,36 +56,6 @@ struct ContentView: View {
                 viewModel: appViewModel.notificationsViewModel
             )
         }
-    }
-}
-
-private extension URL {
-    func recieveDeeplinkURL(logging: @escaping Logging) -> Event? {
-        let infoFromURL = absoluteString
-        let parsedInfo = infoFromURL.split(separator: "*")
-
-        guard let id = Int(parsedInfo[1]) else {
-            logging("ID not converted!")
-            return nil
-        }
-        let title = String(parsedInfo[2])
-        let description = String(parsedInfo[3])
-        guard let eventState = EventState(rawValue: String(parsedInfo[4])) else {
-            logging("StateEvent not converted")
-            return nil
-        }
-        guard let score = Int(parsedInfo[5]) else {
-            logging("Score not converted")
-            return nil
-        }
-
-        return Event(
-            id: id,
-            title: title,
-            description: description,
-            state: eventState,
-            score: score
-        )
     }
 }
 

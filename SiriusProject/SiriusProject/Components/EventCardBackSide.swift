@@ -16,7 +16,11 @@ struct EventCardBackSide: View {
     @State var height: CGFloat = 90
     @State var show: Bool = false
     @State var detailsOpacity: CGFloat = 1
-    @Binding var showRate: Bool
+
+    @AppStorage("isJudge") var isJudge: Bool = false
+
+    @State var isPresentedJudgeScreen: Bool = false
+    @State var presentedEventForUser: Event? = nil
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -51,9 +55,14 @@ struct EventCardBackSide: View {
 
                     if event.state == EventState.now {
                         Button {
-                            showRate.toggle()
+                            if isJudge {
+                                isPresentedJudgeScreen = true
+                            } else {
+                                presentedEventForUser = event
+                            }
+
                         } label: {
-                            Text("getscore")
+                            Text(isJudge ? "send score" : "getscore")
                                 .foregroundStyle(.white)
                                 .font(.headline)
                                 .padding()
@@ -62,6 +71,12 @@ struct EventCardBackSide: View {
                                 .cornerRadius(20)
                         }
                     }
+                }
+                .sheet(item: $presentedEventForUser) { event in
+                    GetReviewView(event: event)
+                }
+                .sheet(isPresented: $isPresentedJudgeScreen) {
+                    SendReviewToUserView(event: event)
                 }
                 .opacity(detailsOpacity)
                 .transition(.opacity)
@@ -91,5 +106,8 @@ struct EventCardBackSide: View {
 }
 
 #Preview {
-    EventCardBackSide(event: Event(id: 1, title: "Хоккей", description: "Игра в хоккей", state: .done, score: 3, adress: "Ледовая аренда", rules: "матч состоит из трех периодов продолжительностью 20 минут. Между периодами команды уходят на 15-минутный перерыв и меняются воротами период начинается с вбрасывания шайбы на поле. Об окончании периода свидетельствует свисток главного судьи; цель игры – забросить большее количество шайб в ворота соперника. Если по истечении основного времени счет будет равным, игра переходит в овертайм; длительность овертайма составляет 5 минут, команды играют в формате три на три. Если победитель не определится в овертайме, назначаются штрафные послематчевые броски (буллиты)"), flip: .constant(true), showRate: .constant(false))
+    EventCardBackSide(
+        event: Event(id: 1, title: "Хоккей", description: "Игра в хоккей", state: .done, score: 3, adress: "Ледовая аренда", rules: "матч состоит из трех периодов продолжительностью 20 минут. Между периодами команды уходят на 15-минутный перерыв и меняются воротами период начинается с вбрасывания шайбы на поле. Об окончании периода свидетельствует свисток главного судьи; цель игры – забросить большее количество шайб в ворота соперника. Если по истечении основного времени счет будет равным, игра переходит в овертайм; длительность овертайма составляет 5 минут, команды играют в формате три на три. Если победитель не определится в овертайме, назначаются штрафные послематчевые броски (буллиты)"),
+        flip: .constant(true)
+    )
 }

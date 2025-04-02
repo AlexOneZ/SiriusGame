@@ -13,13 +13,8 @@ struct SettingsView: View {
     @State var isPresented: Bool = false
     @State var changedName: String = ""
 
-    let event = Event(
-        id: 1,
-        title: "Title",
-        description: "Description",
-        state: .done,
-        score: 1
-    )
+    @AppStorage("isJudge") var isJudge: Bool = false
+    @AppStorage("isLogin") var isLogin: Bool = false
 
     init(settingsViewModel: SettingsViewModel) {
         viewModel = settingsViewModel
@@ -30,19 +25,13 @@ struct SettingsView: View {
             Spacer()
             Text(viewModel.teamName)
                 .font(.title)
+                .padding()
+
+            Text("role") +
+                Text(": ") +
+                Text(isJudge ? LocalizedStringKey("judge") : LocalizedStringKey("participant"))
 
             Spacer()
-
-            if let urlSceme = viewModel.getSendInfoURL(event: event) {
-                ShareLink(
-                    item: urlSceme,
-                    preview:
-                    SharePreview("send_url_info")
-                ) {
-                    Label("", systemImage: "square.and.arrow.up")
-                }
-                .padding()
-            }
 
             Button("changename") {
                 isPresented = true

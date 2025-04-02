@@ -43,6 +43,7 @@ targets:
         sources: ["SiriusProject"]
         capabilities:
             - push-notifications
+
         attributes:
             SystemCapabilities:
                 com.apple.Push:
@@ -53,5 +54,6 @@ targets:
             CODE_SIGN_IDENTITY: "Apple Development: Aleksey Kobyakov (2VHQM6CHHB)"
             PROVISIONING_PROFILE_SPECIFIER: "Provision with push"
             CODE_SIGN_ENTITLEMENTS: SiriusProject/SiriusProject.entitlements
+
         resources:
             - path: Localizable

@@ -10,6 +10,9 @@ import SwiftUI
 struct LoginView: View {
     @ObservedObject var viewModel: LoginViewModel
 
+    @AppStorage("isJudge") var isJudge: Bool = false
+    @AppStorage("isLogin") var isLogin: Bool = false
+
     var body: some View {
         VStack {
             Text("enter")
@@ -23,9 +26,16 @@ struct LoginView: View {
             Spacer()
 
             Button {
-                // action
+                isLogin = true
+                isJudge = false
             } label: {
                 SButton(title: "login")
+            }
+            Button {
+                isLogin = true
+                isJudge = true
+            } label: {
+                SButton(title: "login_as_judge")
             }
             .padding(.bottom, 70)
         }
