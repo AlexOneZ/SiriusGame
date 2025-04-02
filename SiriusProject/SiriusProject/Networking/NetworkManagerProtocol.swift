@@ -9,7 +9,7 @@ protocol NetworkManagerProtocol {
     var logging: Logging { get }
 
     func getTeams(completion: @escaping ([Team]) -> Void)
-    func enterTeam(name: String, completion: @escaping (Bool) -> Void)
+    func enterTeam(name: String, completion: @escaping (Int) -> Void)
     func getTeam(teamId: Int, completion: @escaping (Team?) -> Void)
     func updateTeamName(teamId: Int, name: String, completion: @escaping (Bool) -> Void)
     func deleteTeam(teamId: Int, completion: @escaping (Bool) -> Void)

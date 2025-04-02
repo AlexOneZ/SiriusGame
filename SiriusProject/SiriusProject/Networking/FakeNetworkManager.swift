@@ -24,8 +24,8 @@ struct FakeNetworkManager: NetworkManagerProtocol {
                     Team(id: 7, name: "team 7", score: 43)])
     }
 
-    func enterTeam(name: String, completion: @escaping (Bool) -> Void) {
-        completion(true)
+    func enterTeam(name: String, completion: @escaping (Int) -> Void) {
+        completion(1)
     }
 
     func getTeam(teamId: Int, completion: @escaping (Team?) -> Void) {
