@@ -10,3 +10,8 @@ struct Team: Codable {
     var name: String
     var score: Int = 0
 }
+
+struct EnterTeamResponse: Codable {
+    let ok: Bool
+    let team_id: Int
+}
