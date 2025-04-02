@@ -9,42 +9,47 @@ import SwiftUI
 
 struct ContentView: View {
     var appViewModel: AppViewModel
-    private let log: (String) -> Void
 
-    init(appViewModel: AppViewModel, log: @escaping (String) -> Void = { message in
-        #if DEBUG
-            print(message)
-        #endif
-    }) {
+    @AppStorage("isTeamLoggedIn") var isTeamLoggedIn: Bool = false
+    @State var isNotificationViewShowing: Bool = false
+    private let logging: Logging
+
+    init(appViewModel: AppViewModel) {
         self.appViewModel = appViewModel
-        self.log = log
+        logging = appViewModel.logging
     }
 
     var body: some View {
         TabView {
-            EventsListView(eventsListViewModel: appViewModel.eventsListViewModel)
-                .tabItem {
-                    Image(systemName: "rectangle.on.rectangle")
-                    Text("events")
-                }
-            MapView(mapViewModel: appViewModel.mapViewModel)
-                .tabItem {
-                    Image(systemName: "mappin.circle")
-                    Text("map")
-                }
+            EventsListView(
+                eventsListViewModel: appViewModel.eventsListViewModel,
+                isNotificationViewShowing: $isNotificationViewShowing
+            )
+            .tabItem {
+                Image(systemName: "rectangle.on.rectangle")
+                Text("events")
+            }
+            MapView(
+                mapViewModel: appViewModel.mapViewModel,
+                isNotificationViewShowing: $isNotificationViewShowing
+            )
+            .tabItem {
+                Image(systemName: "mappin.circle")
+                Text("map")
+            }
             LeaderboardView(liderboardViewModel: appViewModel.leaderboardViewModel)
                 .tabItem {
                     Image(systemName: "chart.bar.xaxis.ascending")
                     Text("leaderboard")
                 }
-            SettingsView(settingsViewModel: appViewModel.settingsViewModel, log: log)
+            SettingsView(settingsViewModel: appViewModel.settingsViewModel)
                 .tabItem {
                     Image(systemName: "gear")
                     Text("settings")
                 }
         }
         .onOpenURL { url in
-            let event = url.recieveDeeplinkURL(log: log)
+            let event = url.recieveDeeplinkURL(logging: logging)
             let logMessage = """
                 \(event?.id ?? -1),
                 \(event?.title ?? "no title"),
@@ -52,28 +57,34 @@ struct ContentView: View {
                 \(event?.state ?? EventState.now),
                 \(event?.score ?? -100)
             """
-            log(logMessage)
+            logging(logMessage)
+        }
+        .sheet(isPresented: $isNotificationViewShowing) {
+            NotificationsView(
+                isNotificationViewShowing: $isNotificationViewShowing,
+                viewModel: appViewModel.notificationsViewModel
+            )
         }
     }
 }
 
 private extension URL {
-    func recieveDeeplinkURL(log: @escaping (String) -> Void = { _ in }) -> Event? {
+    func recieveDeeplinkURL(logging: @escaping Logging) -> Event? {
         let infoFromURL = absoluteString
         let parsedInfo = infoFromURL.split(separator: "*")
 
         guard let id = Int(parsedInfo[1]) else {
-            log("ID not converted!")
+            logging("ID not converted!")
             return nil
         }
         let title = String(parsedInfo[2])
         let description = String(parsedInfo[3])
         guard let eventState = EventState(rawValue: String(parsedInfo[4])) else {
-            log("StateEvent not converted")
+            logging("StateEvent not converted")
             return nil
         }
         guard let score = Int(parsedInfo[5]) else {
-            log("Score not converted")
+            logging("Score not converted")
             return nil
         }
 
@@ -90,19 +101,15 @@ private extension URL {
 #Preview {
     ContentView(
         appViewModel: AppViewModel(
-            eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager()),
-            settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager()),
+            logging: printLogging,
+            eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager(), logging: printLogging),
+            settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager(), logging: printLogging),
             loginViewModel: LoginViewModel(networkManager: FakeNetworkManager()),
             pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager()),
-            leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager()),
+            leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager(), logging: printLogging),
             mapViewModel: MapViewModel(),
             notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager())
-        ),
-        log: { message in
-            #if DEBUG
-                print(message)
-            #endif
-        }
+        )
     )
     .environment(\.locale, .init(identifier: "ru"))
 }

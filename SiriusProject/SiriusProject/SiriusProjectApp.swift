@@ -12,20 +12,25 @@ import UserNotifications
 struct SiriusProjectApp: App {
     let networkManager: NetworkManagerProtocol
     var appViewModel: AppViewModel
+    let logging: Logging
     @UIApplicationDelegateAdaptor private var appDelegate: CustomAppDelegate
 
     init() {
-        networkManager = FakeNetworkManager()
+        logging = { message in
+            printLogging(message)
+        }
+        networkManager = NetworkManager(service: APIService(urlSession: URLSession.shared), logging: logging)
+
         appViewModel = AppViewModel(
-            eventsListViewModel: EventsListViewModel(networkManager: networkManager),
-            settingsViewModel: SettingsViewModel(networkManager: networkManager),
+            logging: logging,
+            eventsListViewModel: EventsListViewModel(networkManager: networkManager, logging: logging),
+            settingsViewModel: SettingsViewModel(networkManager: networkManager, logging: logging),
             loginViewModel: LoginViewModel(networkManager: networkManager),
             pointsViewModel: PointsViewModel(networkManager: networkManager),
-            leaderboardViewModel: LeaderboardViewModel(networkManager: networkManager),
+            leaderboardViewModel: LeaderboardViewModel(networkManager: networkManager, logging: logging),
             mapViewModel: MapViewModel(),
             notificationsViewModel: NotificationsViewModel(networkManager: networkManager)
         )
-
         let center = UNUserNotificationCenter.current()
         appDelegate.setup(notificationCenter: center, runner: onMainThread)
     }
@@ -38,6 +43,7 @@ struct SiriusProjectApp: App {
 }
 
 struct AppViewModel {
+    let logging: Logging
     var eventsListViewModel: EventsListViewModel
     var settingsViewModel: SettingsViewModel
     var loginViewModel: LoginViewModel

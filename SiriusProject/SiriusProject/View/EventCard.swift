@@ -8,42 +8,28 @@
 import SwiftUI
 
 struct EventCard: View {
+    @State var flip: Bool = false
+    @Binding var show: Bool
     let event: Event
-
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text("\(event.id)")
-                    .padding()
-                    .background {
-                        Circle()
-                            .foregroundStyle(Color(.systemGray5))
-                    }
-                Text(event.title)
-            }
-            HStack {
-                Circle()
-                    .foregroundStyle(event.state.getColor())
-                    .frame(width: 10)
-                if let description = event.state.getDescription() {
-                    Text(description)
-                } else {
-                    Text("score") + Text(": \(event.score)")
-                }
-                Spacer()
-            }
-            .frame(maxWidth: .infinity)
-            .padding()
-            .background {
-                RoundedRectangle(cornerRadius: 15)
-                    .foregroundStyle(Color(.systemGray5))
-            }
+        ZStack {
+            EventCardFrontSide(event: event, flip: $flip)
+                .rotation3DEffect(.degrees(flip ? 90 : 0), axis: (x: 0.0001, y: 1, z: 0.0001))
+                .animation(flip ? .linear : .linear.delay(0.35), value: flip)
+            EventCardBackSide(event: event, flip: $flip, showRate: $show)
+                .rotation3DEffect(.degrees(flip ? 0 : -90), axis: (x: 0.0001, y: 1, z: 0.0001))
+                .animation(flip ? .linear.delay(0.35) : .linear, value: flip)
         }
-        .padding()
-        .background {
-            RoundedRectangle(cornerRadius: 20)
-                .foregroundStyle(Color(.systemGray3))
+        .onTapGesture {
+            flip.toggle()
         }
-        .padding(.horizontal)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
+}
+
+#Preview {
+    EventCard(
+        show: .constant(false),
+        event: Event(id: 1, title: "Хоккей", description: "Игра в хоккей", state: .done, score: 3, adress: "Ледовая аренда", rules: "матч состоит из трех периодов продолжительностью 20 минут. Между периодами команды уходят на 15-минутный перерыв и меняются воротами период начинается с вбрасывания шайбы на поле. Об окончании периода свидетельствует свисток главного судьи; цель игры – забросить большее количество шайб в ворота соперника. Если по истечении основного времени счет будет равным, игра переходит в овертайм; длительность овертайма составляет 5 минут, команды играют в формате три на три. Если победитель не определится в овертайме, назначаются штрафные послематчевые броски (буллиты)")
+    )
 }
