@@ -53,7 +53,6 @@ struct LoginView: View {
                     role: .destructive,
                     action: {}
                 )
-
             })
             .padding(.bottom, 70)
         }
