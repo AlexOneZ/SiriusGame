@@ -17,6 +17,9 @@ class STeamEvent(BaseModel):
     event_id: int
     name: str
     description: str | None
+    latidude: float
+    longitude: float
+    location: str
     order: int
     state: str
     score: int

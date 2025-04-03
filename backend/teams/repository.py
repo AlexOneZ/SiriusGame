@@ -104,7 +104,10 @@ class TeamRepository:
                     state=team_event_orm.state,
                     score=team_event_orm.score,
                     name=event_orm.name,
-                    description=event_orm.description
+                    description=event_orm.description,
+                    latidude=event_orm.latidude,
+                    longitude=event_orm.longitude,
+                    location=event_orm.location
                 )
                 for team_event_orm, event_orm in result
             ]

@@ -1,8 +1,11 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 class SEventAdd(BaseModel):
     name: str
     description: str | None = None
+    latidude: float
+    longitude: float
+    location: str
 
 class SEvent(SEventAdd):
     id: int
