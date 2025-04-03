@@ -10,9 +10,9 @@ import Foundation
 enum Constants {
     // MARK: - API
 
-    static let scheme = "https"
-    static let baseURL = "siriusgame.a.pinggy.link"
-    static let port: Int? = nil
+    static let scheme = "http"
+    static let baseURL = "raminsultan07.fvds.ru"
+    static let port: Int? = 8000
 
     static let teamsPath = "/teams"
     static let eventsPath = "/events"

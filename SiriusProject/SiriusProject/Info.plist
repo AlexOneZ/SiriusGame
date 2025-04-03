@@ -29,5 +29,10 @@
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We want use your location to navigate you to events</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>
