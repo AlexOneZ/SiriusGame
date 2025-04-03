@@ -20,10 +20,15 @@ struct JudgeContentView: View {
 
     var body: some View {
         TabView {
-            EventsListView(eventsListViewModel: appViewModel.eventsListViewModel, isNotificationViewShowing: $isNotificationViewShowing)
+//            EventsListView(appViewModel: appViewModel, eventsListViewModel: appViewModel.eventsListViewModel, isNotificationViewShowing: $isNotificationViewShowing)
+//                .tabItem {
+//                    Image(systemName: "rectangle.on.rectangle")
+//                    Text("events")
+//                }
+            SendReviewToUserView()
                 .tabItem {
-                    Image(systemName: "rectangle.on.rectangle")
-                    Text("events")
+                    Image(systemName: "square.and.arrow.up")
+                    Text("Set Rate")
                 }
             SettingsView(settingsViewModel: appViewModel.settingsViewModel, logging: logging)
                 .tabItem {

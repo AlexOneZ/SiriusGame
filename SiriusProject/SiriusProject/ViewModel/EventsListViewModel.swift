@@ -20,10 +20,14 @@ final class EventsListViewModel: ObservableObject {
     }
 
     func fetchEvents() {
-        networkManager.getTeamEvents(teamId: 1, completion: { [weak self] events in
-            onMainThread {
-                self?.events = events
-            }
-        })
+        print("try fetch events")
+        if teamID > 0 {
+            print("call network")
+            networkManager.getTeamEvents(teamId: teamID, completion: { [weak self] events in
+                onMainThread {
+                    self?.events = events
+                }
+            })
+        }
     }
 }

@@ -8,15 +8,19 @@
 import SwiftUI
 
 struct EventsListView: View {
+    var appViewModel: AppViewModel
     private let log: (String) -> Void
     @ObservedObject var viewModel: EventsListViewModel
     @Binding var isNotificationViewShowing: Bool
+    @State var isNeedUpdate: Bool = false
 
     init(
+        appViewModel: AppViewModel,
         eventsListViewModel: EventsListViewModel,
         isNotificationViewShowing: Binding<Bool>,
         log: @escaping (String) -> Void = { _ in }
     ) {
+        self.appViewModel = appViewModel
         viewModel = eventsListViewModel
         _isNotificationViewShowing = isNotificationViewShowing
         self.log = log
@@ -33,13 +37,21 @@ struct EventsListView: View {
                 ScrollView {
                     LazyVStack(alignment: .leading) {
                         ForEach(viewModel.events, id: \.id) { event in
-                            EventCard(event: event)
+                            EventCard(appViewModel: appViewModel, event: event, isNeedUpdate: $isNeedUpdate)
                         }
                     }
                 }
             }
         }
         .refreshable {
+            viewModel.fetchEvents()
+        }
+        .onAppear {
+            print("Try get events on appear")
+            viewModel.fetchEvents()
+        }
+        .onChange(of: isNeedUpdate) {
+            print("New fetch events")
             viewModel.fetchEvents()
         }
         .overlay(alignment: .bottomTrailing) {
@@ -52,12 +64,4 @@ struct EventsListView: View {
     }
 }
 
-#Preview {
-    EventsListView(
-        eventsListViewModel: EventsListViewModel(
-            networkManager: FakeNetworkManager(logging: printLogging),
-            logging: printLogging
-        ),
-        isNotificationViewShowing: .constant(false)
-    )
-}
+#Preview {}
