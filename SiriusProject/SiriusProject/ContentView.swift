@@ -31,9 +31,7 @@ struct ContentView: View {
                 Text("events")
             }
             MapView(
-                viewModel: appViewModel.mapViewModel
-//                isNotificationViewShowing: $notificationsManager.isNotificationViewShowing
-            )
+                viewModel: appViewModel.mapViewModel)
             .tabItem {
                 Image(systemName: "mappin.circle")
                 Text("map")

@@ -4,8 +4,6 @@
 //
 //  Created by Илья Лебедев on 27.03.2025.
 //
-import MapKit
-import SwiftUI
 
 import MapKit
 import SwiftUI

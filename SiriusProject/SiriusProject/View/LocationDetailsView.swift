@@ -5,8 +5,6 @@
 //  Created by Илья Лебедев on 02.04.2025.
 //
 
-import SwiftUI
-
 import MapKit
 import SwiftUI
 

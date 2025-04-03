@@ -61,13 +61,13 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
 
-        DispatchQueue.main.async {
+        onMainThread {
             self.userLocation = location.coordinate
         }
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        DispatchQueue.main.async {
+        onMainThread {
             self.errorMessage = "Ошибка получения местоположения: \(error.localizedDescription)"
         }
     }
