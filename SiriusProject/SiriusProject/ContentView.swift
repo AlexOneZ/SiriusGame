@@ -31,20 +31,18 @@ struct ContentView: View {
                 Text("events")
             }
             MapView(
-                mapViewModel: appViewModel.mapViewModel,
-                isNotificationViewShowing: $notificationsManager.isNotificationViewShowing
-            )
-            .tabItem {
-                Image(systemName: "mappin.circle")
-                Text("map")
-            }
+                viewModel: appViewModel.mapViewModel)
+                .tabItem {
+                    Image(systemName: "mappin.circle")
+                    Text("map")
+                }
             LeaderboardView(liderboardViewModel: appViewModel.leaderboardViewModel)
                 .tabItem {
                     Image(systemName: "chart.bar.xaxis.ascending")
                     Text("leaderboard")
                 }
 
-            SettingsView(settingsViewModel: appViewModel.settingsViewModel)
+            SettingsView(settingsViewModel: appViewModel.settingsViewModel, logging: logging)
                 .tabItem {
                     Image(systemName: "gear")
                     Text("settings")
@@ -65,10 +63,10 @@ struct ContentView: View {
             logging: printLogging,
             eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
             settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
-            loginViewModel: LoginViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
+            loginViewModel: LoginViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: { _ in }),
             pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
             leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
-            mapViewModel: MapViewModel(),
+            mapViewModel: MapViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
             notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging))
         ),
         notificationsManager: NotificationsManager()

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject var viewModel: SettingsViewModel
+    let logging: Logging
 
     @State var isPresented: Bool = false
     @State var changedName: String = ""
@@ -16,8 +17,9 @@ struct SettingsView: View {
     @AppStorage("isJudge") var isJudge: Bool = false
     @AppStorage("isLogin") var isLogin: Bool = false
 
-    init(settingsViewModel: SettingsViewModel) {
+    init(settingsViewModel: SettingsViewModel, logging: @escaping Logging) {
         viewModel = settingsViewModel
+        self.logging = logging
     }
 
     var body: some View {
@@ -52,9 +54,13 @@ struct SettingsView: View {
             }
             .padding(.bottom)
         }
+        .onAppear {
+            print("try fetch")
+            viewModel.fetchTeamName()
+        }
     }
 }
 
 #Preview {
-    SettingsView(settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging))
+    SettingsView(settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging), logging: { _ in })
 }

@@ -10,7 +10,7 @@ import SwiftUI
 final class EventsListViewModel: ObservableObject {
     let networkManager: NetworkManagerProtocol
     let logging: Logging
-    // @Published var showRateView: Bool = false
+    @AppStorage("teamID") var teamID: Int = 0
     @Published var events: [Event] = []
 
     init(networkManager: NetworkManagerProtocol, logging: @escaping Logging) {

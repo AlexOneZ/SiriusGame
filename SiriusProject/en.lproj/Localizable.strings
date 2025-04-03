@@ -38,3 +38,5 @@
 "role" = "Role";
 "judge" = "Judge";
 "participant" = "Participant";
+"noevents" = "No Events";
+"nonotifications" = "No Notifications";

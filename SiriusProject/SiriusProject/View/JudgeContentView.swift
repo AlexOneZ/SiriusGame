@@ -9,17 +9,13 @@ import SwiftUI
 
 struct JudgeContentView: View {
     var appViewModel: AppViewModel
-    private let log: (String) -> Void
+    private let logging: Logging
     // delete it
     @State var isNotificationViewShowing: Bool = false
 
-    init(appViewModel: AppViewModel, log: @escaping (String) -> Void = { message in
-        #if DEBUG
-            print(message)
-        #endif
-    }) {
+    init(appViewModel: AppViewModel, logging: @escaping Logging) {
         self.appViewModel = appViewModel
-        self.log = log
+        self.logging = logging
     }
 
     var body: some View {
@@ -29,7 +25,7 @@ struct JudgeContentView: View {
                     Image(systemName: "rectangle.on.rectangle")
                     Text("events")
                 }
-            SettingsView(settingsViewModel: appViewModel.settingsViewModel)
+            SettingsView(settingsViewModel: appViewModel.settingsViewModel, logging: logging)
                 .tabItem {
                     Image(systemName: "gear")
                     Text("settings")
