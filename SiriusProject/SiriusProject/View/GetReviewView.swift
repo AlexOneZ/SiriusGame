@@ -158,10 +158,10 @@ struct GetReviewView: View {
         guard let idAndScore = url.recieveDeeplinkURL(log: viewModel.logging) else { return }
 
         receivedScore = idAndScore[1]
-        
+
         scoreGet(score: idAndScore[1])
     }
-    
+
     private func scoreGet(score: Int) {
         isPresented = true
         viewModel.setTeamEventScore(teamID: teamID, score: receivedScore ?? 0)
