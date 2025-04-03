@@ -41,7 +41,7 @@ struct LoginView: View {
                 SButton(title: "login_as_judge")
             }
             .alert("Eneter judge pin", isPresented: $isJudgeLogin, actions: {
-                TextField("Input", text: $inputJudgePin)
+                SecureField("Input", text: $inputJudgePin)
                 Button("Check?", role: .cancel, action: {
                     if judgeSecretKey == inputJudgePin {
                         isLogin = true
