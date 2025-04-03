@@ -19,11 +19,14 @@ schemes:
         build:
             targets:
                 SiriusProject: all
+                SiriusProjectTests: [test]
         run:
             config: Staging Debug
             
         test:
             config: Staging Debug
+            targets:
+                - name: SiriusProjectTests
             gatherCoverageData: true
             coverageTargets:
                 - SiriusProject
@@ -57,3 +60,14 @@ targets:
 
         resources:
             - path: Localizable
+    SiriusProjectTests:
+        platform: iOS
+        type: bundle.unit-test
+        deploymentTarget: "17"
+        sources: ["SiriusProjectTests"]
+        dependencies:
+            - target: SiriusProject
+        settings:
+          base:
+            INFOPLIST_FILE: "SiriusProject/SiriusProject/Info.plist"
+            CODE_SIGN_IDENTITY: "Apple Development: Aleksey Kobyakov (2VHQM6CHHB)"
