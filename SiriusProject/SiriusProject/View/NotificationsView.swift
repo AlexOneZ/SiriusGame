@@ -14,14 +14,23 @@ struct NotificationsView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVStack(spacing: 4) {
-                    Group {
-                        ForEach(viewModel.notifications.indices, id: \.self) { index in
-                            NotificationCell(notification: viewModel.notifications[index])
+            ZStack {
+                if viewModel.notifications.isEmpty {
+                    Text("nonotifications")
+                        .foregroundStyle(.placeholder)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .multilineTextAlignment(.center)
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing: 4) {
+                            Group {
+                                ForEach(viewModel.notifications.indices, id: \.self) { index in
+                                    NotificationCell(notification: viewModel.notifications[index])
+                                }
+                            }
+                            .padding(.top, 13)
                         }
                     }
-                    .padding(.top, 13)
                 }
             }
             .navigationTitle(header)
