@@ -101,4 +101,9 @@ struct FakeNetworkManager: NetworkManagerProtocol {
             )
         ])
     }
+
+    func deleteAllTeams(completion: @escaping (Bool) -> Void) {
+        logging("Deleted all teams")
+        completion(true)
+    }
 }
