@@ -9,38 +9,23 @@ import SwiftUI
 
 final class NotificationsViewModel: ObservableObject {
     let networkManager: NetworkManagerProtocol
-    @Published var notifications: [Notification] = [
-        Notification(
-            title: "Регистрация команды",
-            body: "Ваша команда успешно зарегистрирована! Можете приступать к игре!"
-        ),
-        Notification(
-            title: "Соревнование началось!",
-            body: "Уважаемые участники! Соревнование по футболу уже началось!"
-        ),
-        Notification(
-            title: "Соревнование завершено!",
-            body: "Уважаемые участники! Соревнование по футболу завершено! Вы набрали 7/10 баллов!"
-        ),
-        Notification(
-            title: "Соревнование началось!",
-            body: "Уважаемые участники! Соревнование по хоккею уже началось!"
-        ),
-        Notification(
-            title: "Соревнование завершено!",
-            body: "Уважаемые участники! Соревнование по хоккею завершено! Вы набрали 10/10 баллов!"
-        ),
-        Notification(
-            title: "Соревнование началось!",
-            body: "Уважаемые участники! Соревнование по гольфу уже началось!"
-        ),
-        Notification(
-            title: "Соревнование завершено!",
-            body: "Уважаемые участники! Соревнование по гольфу завершено! Вы набрали 3/10 баллов!"
-        )
-    ]
+    let logging: Logging
+    @Published var isLoading = false
+    @Published var notifications: [Notification] = []
+    @AppStorage("notificationsToken") var token = ""
 
-    init(networkManager: NetworkManagerProtocol) {
+    init(networkManager: NetworkManagerProtocol, logging: @escaping Logging) {
         self.networkManager = networkManager
+        self.logging = logging
+    }
+
+    func getHistoryNotifications() {
+        isLoading = true
+        networkManager.getHistoryNotifications(token: token, completion: { [weak self] notifications in
+            onMainThread {
+                self?.notifications = notifications
+                self?.isLoading = false
+            }
+        })
     }
 }

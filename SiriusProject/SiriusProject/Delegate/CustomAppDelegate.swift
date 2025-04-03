@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 import UIKit
 import UserNotifications
 
@@ -15,6 +16,8 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate {
     var runner: MainThreadRunner!
     var notificationsManager: NotificationsManager?
     var networkManager: NetworkManager?
+
+    @AppStorage("notificationsToken") var token: String = ""
 
     override init() {
         super.init()
@@ -40,8 +43,8 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate {
         notificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { [weak self] granted, _ in
             guard let self = self else { return }
             if granted {
-                runner { [application] in
-                    application.registerForRemoteNotifications()
+                self.runner { [weak application] in
+                    application?.registerForRemoteNotifications()
                 }
             }
         }
@@ -53,6 +56,7 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate {
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
         let stringifiedToken = deviceToken.map { data in String(format: "%02.2hhx", data) }.joined()
+        token = stringifiedToken
         networkManager?.sendTokenToServer(token: stringifiedToken) { _ in }
     }
 }

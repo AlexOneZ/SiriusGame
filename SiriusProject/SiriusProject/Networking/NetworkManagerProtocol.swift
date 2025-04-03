@@ -19,4 +19,5 @@ protocol NetworkManagerProtocol {
     func addEvent(name: String, description: String?, completion: @escaping (Bool) -> Void)
     func deleteEvent(eventId: Int, completion: @escaping (Bool) -> Void)
     func sendTokenToServer(token: String, completion: @escaping (Bool) -> Void)
+    func getHistoryNotifications(token: String, completion: @escaping ([Notification]) -> Void)
 }

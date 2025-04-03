@@ -5,8 +5,11 @@
 //  Created by Андрей Степанов on 29.03.2025.
 //
 
+import SwiftUI
+
 struct FakeNetworkManager: NetworkManagerProtocol {
     let logging: Logging
+    var token: String = ""
 
     init(logging: @escaping Logging) {
         self.logging = logging
@@ -71,5 +74,31 @@ struct FakeNetworkManager: NetworkManagerProtocol {
     func sendTokenToServer(token: String, completion: @escaping (Bool) -> Void) {
         logging("Token: \(token)")
         completion(true)
+    }
+
+    func getHistoryNotifications(token: String, completion: @escaping ([Notification]) -> Void) {
+        logging("Fetching events for token: \(token)")
+        completion([
+            Notification(
+                title: "Регистрация команды",
+                body: "Ваша команда успешно зарегистрирована! Можете приступать к игре!",
+                date: Date()
+            ),
+            Notification(
+                title: "Соревнование началось!",
+                body: "Уважаемые участники! Соревнование по футболу уже началось!",
+                date: Date()
+            ),
+            Notification(
+                title: "Соревнование завершено!",
+                body: "Уважаемые участники! Соревнование по футболу завершено! Вы набрали 7/10 баллов!",
+                date: Date()
+            ),
+            Notification(
+                title: "Соревнование началось!",
+                body: "Уважаемые участники! Соревнование по хоккею уже началось!",
+                date: Date()
+            )
+        ])
     }
 }

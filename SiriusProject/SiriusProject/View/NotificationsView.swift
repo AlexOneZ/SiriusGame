@@ -8,14 +8,41 @@
 import SwiftUI
 
 struct NotificationsView: View {
+    private let log: (String) -> Void
     @Binding var isNotificationViewShowing: Bool
     @ObservedObject var viewModel: NotificationsViewModel
     var header: LocalizedStringKey = "notifications"
 
+    init(
+        notificationsViewModel: NotificationsViewModel,
+        isNotificationViewShowing: Binding<Bool>,
+        log: @escaping (String) -> Void
+    ) {
+        viewModel = notificationsViewModel
+        _isNotificationViewShowing = isNotificationViewShowing
+        self.log = log
+    }
+
     var body: some View {
         NavigationStack {
             ZStack {
-                if viewModel.notifications.isEmpty {
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        Color("SiriusDarkColor").opacity(0.5),
+                        Color("SiriusDarkColor").opacity(0.1)
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .ignoresSafeArea()
+
+                if viewModel.isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        .scaleEffect(1.5)
+                        .transition(.opacity.animation(.easeInOut(duration: 0.3)))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if viewModel.notifications.isEmpty {
                     Text("nonotifications")
                         .foregroundStyle(.placeholder)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -35,29 +62,17 @@ struct NotificationsView: View {
             }
             .navigationTitle(header)
             .navigationBarTitleDisplayMode(.inline)
-            .background(
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color("SiriusDarkColor").opacity(0.5),
-                        Color("SiriusDarkColor").opacity(0.1)
-                    ]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-                .ignoresSafeArea()
-            )
+            .refreshable {
+                viewModel.getHistoryNotifications()
+            }
             .toolbarBackground(
                 Color.white,
                 for: .navigationBar
             )
             .toolbarBackground(.visible, for: .navigationBar)
         }
+        .onAppear {
+            viewModel.getHistoryNotifications()
+        }
     }
-}
-
-#Preview {
-    NotificationsView(
-        isNotificationViewShowing: .constant(true),
-        viewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging))
-    )
 }

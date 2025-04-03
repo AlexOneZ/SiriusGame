@@ -16,10 +16,13 @@ struct NotificationCell: View {
                 .font(.system(size: 23, weight: .bold))
                 .foregroundColor(Color("SiriusDarkColor").opacity(0.9))
                 .padding(.bottom, 5)
+                .frame(maxWidth: .infinity, alignment: .leading)
             Text(notification.body)
                 .foregroundColor(Color("SiriusDarkColor").opacity(0.7))
+                .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
         .foregroundColor(.white)
         .containerRelativeFrame(.horizontal) { width, _ in width * 0.85 }
         .background(.white)
@@ -28,5 +31,5 @@ struct NotificationCell: View {
 }
 
 #Preview {
-    NotificationCell(notification: .init(title: "Test", body: "Test"))
+    NotificationCell(notification: .init(title: "Test", body: "Test", date: Date()))
 }
