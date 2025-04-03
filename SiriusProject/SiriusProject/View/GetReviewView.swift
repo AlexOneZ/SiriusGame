@@ -215,5 +215,3 @@ private extension URL {
         return [id, score]
     }
 }
-
-#Preview {}

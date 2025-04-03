@@ -63,5 +63,3 @@ struct EventsListView: View {
         }
     }
 }
-
-#Preview {}
