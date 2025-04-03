@@ -225,4 +225,21 @@ struct NetworkManager: NetworkManagerProtocol {
             completion(notifications ?? [])
         }
     }
+
+    func deleteAllTeams(completion: @escaping (Bool) -> Void) {
+        guard let request = Endpoint.deleteAllTeams().request else {
+            logging("Error: Failed to create request")
+            completion(false)
+            return
+        }
+
+        service.makeRequest(with: request, respModel: Data.self, logging: logging) { response, error in
+            if let error = error {
+                logging(error.localizedDescription)
+                completion(false)
+                return
+            }
+            completion(response != nil)
+        }
+    }
 }

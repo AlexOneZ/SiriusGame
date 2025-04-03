@@ -22,6 +22,8 @@ enum Endpoint {
     case sendTokenToServer(url: String = Constants.pushesPath, url1: String = Constants.registerPath, token: String)
     case getHistoryNotifications(url: String = Constants.pushesPath, url1: String = Constants.historyPath, token: String)
 
+    case deleteAllTeams(url: String = Constants.pushesPath)
+
     var request: URLRequest? {
         guard let url = url else { return nil }
         var request = URLRequest(url: url)
@@ -67,6 +69,8 @@ enum Endpoint {
             return url + url1
         case let .getHistoryNotifications(url, url1, token):
             return "\(url)\(url1)/\(token)"
+        case let .deleteAllTeams(url):
+            return url
         }
     }
 
@@ -79,7 +83,8 @@ enum Endpoint {
              .deleteTeam,
              .deleteEvent,
              .sendTokenToServer,
-             .getHistoryNotifications:
+             .getHistoryNotifications,
+             .deleteAllTeams:
             return []
         case let .enterTeam(_, name):
             return [.init(name: "name", value: name)]
@@ -111,7 +116,7 @@ enum Endpoint {
         case .updateTeamName,
              .setTeamEventScore:
             return HTTP.Method.put.rawValue
-        case .deleteTeam, .deleteEvent:
+        case .deleteTeam, .deleteEvent, .deleteAllTeams:
             return HTTP.Method.delete.rawValue
         }
     }
