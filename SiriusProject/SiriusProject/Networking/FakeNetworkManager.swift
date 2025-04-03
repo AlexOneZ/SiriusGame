@@ -61,8 +61,8 @@ struct FakeNetworkManager: NetworkManagerProtocol {
         completion(true)
     }
 
-    func addEvent(name: String, description: String?, completion: @escaping (Bool) -> Void) {
-        logging("Adding event: \(name) with description: \(description ?? "No description")")
+    func addEvent(name: String, description: String, location: String, latidude: Double, longitude: Double, completion: @escaping (Bool) -> Void) {
+        logging("Adding event: \(name) with description: \(description), \(location), \(latidude), \(longitude)")
         completion(true)
     }
 
