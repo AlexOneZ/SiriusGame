@@ -22,7 +22,7 @@ struct NotificationsView: View {
         _isNotificationViewShowing = isNotificationViewShowing
         self.log = log
     }
-
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -42,12 +42,14 @@ struct NotificationsView: View {
                         .scaleEffect(1.5)
                         .transition(.opacity.animation(.easeInOut(duration: 0.3)))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                } else if viewModel.notifications.isEmpty {
+                }
+                else if viewModel.notifications.isEmpty {
                     Text("nonotifications")
                         .foregroundStyle(.placeholder)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .multilineTextAlignment(.center)
-                } else {
+                }
+                else {
                     ScrollView {
                         LazyVStack(spacing: 4) {
                             Group {
