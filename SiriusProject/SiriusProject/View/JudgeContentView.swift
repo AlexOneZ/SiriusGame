@@ -30,6 +30,12 @@ struct JudgeContentView: View {
                     Text("createevent")
                 }
 
+            SendPushView(viewModel: appViewModel.sendPushViewModel)
+                .tabItem {
+                    Image(systemName: "paperplane.fill")
+                    Text("Pushs")
+                }
+
             SettingsView(settingsViewModel: appViewModel.settingsViewModel, logging: logging)
                 .tabItem {
                     Image(systemName: "gear")

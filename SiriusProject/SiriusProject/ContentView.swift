@@ -71,7 +71,8 @@ struct ContentView: View {
             mapViewModel: MapViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
             notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
             getRateReviewModel: GetRateReviewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
-            createEventViewModel: CreateEventViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: { _ in })
+            createEventViewModel: CreateEventViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: { _ in }),
+            sendPushViewModel: SendPushViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging)
         ),
         notificationsManager: NotificationsManager()
     )

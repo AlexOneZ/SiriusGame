@@ -60,3 +60,6 @@
 "neizvestnayalocationerror" = "Unknown error when accessing the location.";
 "locationerror" = "Location Error";
 "createevent" = "Create event";
+"sendpush" = "Send push to all";
+"sendpushbutton" = "Send push";
+
