@@ -16,17 +16,17 @@ struct GetRateView: View {
         VStack(alignment: .center) {
             Spacer()
 
-            Text("Enter score and passcode to rate")
+            Text("Введите проверочный код")
                 .font(.headline)
             Group {
-                TextField("Score", text: $viewModel.score.value)
-                    .validatedField(validatedField: viewModel.score, placeholder: "Score")
+                TextField("Оценка", text: $viewModel.score.value)
+                    .validatedField(validatedField: viewModel.score, placeholder: "Оценка")
                     .onChange(of: viewModel.score.value) {
                         guard let number = Int(viewModel.score.value) else { return }
                         score = number
                     }
-                SecureField("Judge password", text: $viewModel.judgePasscode.value)
-                    .validatedField(validatedField: viewModel.judgePasscode, placeholder: "Judge password")
+                SecureField("Пароль судьи", text: $viewModel.judgePasscode.value)
+                    .validatedField(validatedField: viewModel.judgePasscode, placeholder: "Пароль судьи")
             }
             .keyboardType(.numberPad)
 
@@ -35,7 +35,7 @@ struct GetRateView: View {
             Button {
                 dismiss()
             } label: {
-                Text("Rate")
+                Text("Оценить")
                     .foregroundStyle(.white)
                     .padding()
                     .frame(maxWidth: 300)
