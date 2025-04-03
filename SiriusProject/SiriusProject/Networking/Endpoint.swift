@@ -21,6 +21,7 @@ enum Endpoint {
     case deleteEvent(url: String = Constants.eventsPath, eventId: Int)
     case sendTokenToServer(url: String = Constants.pushesPath, url1: String = Constants.registerPath, token: String)
     case getHistoryNotifications(url: String = Constants.pushesPath, url1: String = Constants.historyPath, token: String)
+    case sendPushesToAll(url: String = Constants.pushesPath, url1: String = Constants.sendToAllPath, teamname: String, score: Int)
 
     case deleteAllTeams(url: String = Constants.pushesPath)
 
@@ -71,6 +72,8 @@ enum Endpoint {
             return "\(url)\(url1)/\(token)"
         case let .deleteAllTeams(url):
             return url
+        case let .sendPushesToAll(url, url1, _, _):
+            return url + url1
         }
     }
 
@@ -84,7 +87,8 @@ enum Endpoint {
              .deleteEvent,
              .sendTokenToServer,
              .getHistoryNotifications,
-             .deleteAllTeams:
+             .deleteAllTeams,
+             .sendPushesToAll:
             return []
         case let .enterTeam(_, name):
             return [.init(name: "name", value: name)]
@@ -111,7 +115,8 @@ enum Endpoint {
             return HTTP.Method.get.rawValue
         case .enterTeam,
              .addEvent,
-             .sendTokenToServer:
+             .sendTokenToServer,
+             .sendPushesToAll:
             return HTTP.Method.post.rawValue
         case .updateTeamName,
              .setTeamEventScore:
@@ -126,6 +131,24 @@ enum Endpoint {
         case let .sendTokenToServer(_, _, token):
             let jsonPost = try? JSONEncoder().encode(["token": token])
             return jsonPost
+        case let .sendPushesToAll(_, _, teamname, score):
+            struct PushNotification: Encodable {
+                let recipients: [String]
+                let title: String
+                let body: String
+                let sound: String
+                let destination: String
+            }
+
+            let notification = PushNotification(
+                recipients: [],
+                title: "Вау!",
+                body: "Команда \(teamname) только что сделали \(score) очков! Теперь ваша очередь!",
+                sound: "default",
+                destination: "notification"
+            )
+
+            return try? JSONEncoder().encode(notification)
         default:
             return nil
         }

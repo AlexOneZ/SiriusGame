@@ -242,4 +242,21 @@ struct NetworkManager: NetworkManagerProtocol {
             completion(response != nil)
         }
     }
+
+    func sendPushesToAll(teamname: String, score: Int, completion: @escaping (Bool) -> Void) {
+        guard let request = Endpoint.sendPushesToAll(teamname: teamname, score: score).request else {
+            logging("Error: Failed to create request")
+            completion(false)
+            return
+        }
+
+        service.makeRequest(with: request, respModel: Data.self, logging: logging) { response, error in
+            if let error = error {
+                logging(error.localizedDescription)
+                completion(false)
+                return
+            }
+            completion(response != nil)
+        }
+    }
 }
