@@ -10,26 +10,26 @@ import Foundation
 
 @MainActor
 final class MapViewModel: ObservableObject {
-    
     private let networkManager: NetworkManagerProtocol
-    
+
     @Published var events: [Event] = []
-    
+
     @Published var selectedMapItem: Int? {
         didSet {
             setSelectedEvent()
             showDetails = selectedEvent != nil
         }
     }
+
     @Published var selectedEvent: Event?
-    
+
     @Published var route: MKRoute?
     @Published var getRoute: Bool = false
-    
+
     @Published var showDetails: Bool = false
     @Published var showingAlert = false
     @Published var showingRouteAlert = false
-    
+
     @Published var routeError: String? {
         didSet {
             if routeError != nil {
@@ -39,13 +39,12 @@ final class MapViewModel: ObservableObject {
             }
         }
     }
-    
+
     init(networkManager: NetworkManagerProtocol) {
         self.networkManager = networkManager
         fetchEvents()
     }
-    
-    
+
     func fetchEvents() {
         networkManager.getTeamEvents(teamId: 1, completion: { [weak self] events in
             onMainThread {
@@ -53,43 +52,38 @@ final class MapViewModel: ObservableObject {
             }
         })
     }
-    
+
     func setSelectedEvent() {
         if let selectedMapItem = selectedMapItem {
-            self.selectedEvent = events.first(where: {$0.id.hashValue == selectedMapItem.hashValue})
+            selectedEvent = events.first(where: { $0.id.hashValue == selectedMapItem.hashValue })
         } else {
-            self.selectedEvent = nil
+            selectedEvent = nil
         }
     }
-    
-    func fetchRoute(userLocation: CLLocationCoordinate2D?) async  {
+
+    func fetchRoute(userLocation: CLLocationCoordinate2D?) async {
         guard let userLocation else { return }
         guard let selectedEvent else { return }
         let userPlacemark = MKPlacemark(coordinate: userLocation)
         let mapSelection = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: CLLocationDegrees(selectedEvent.latitude), longitude: selectedEvent.longitude)))
-        
+
         let request = MKDirections.Request()
         request.source = MKMapItem(placemark: userPlacemark)
         request.transportType = .walking
         request.destination = mapSelection
-        
+
         do {
             let directions = MKDirections(request: request)
             let response = try await directions.calculate()
             let firstRoute = response.routes.first
-            self.route = firstRoute
-            
+            route = firstRoute
+
         } catch {
-            self.routeError = error.localizedDescription
-            self.showingRouteAlert = true
+            routeError = error.localizedDescription
+            showingRouteAlert = true
             print(error.localizedDescription)
         }
-        
+
         getRoute = false
     }
-    
 }
-
-
-
-

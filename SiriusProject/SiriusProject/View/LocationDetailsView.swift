@@ -7,9 +7,8 @@
 
 import SwiftUI
 
-
-import SwiftUI
 import MapKit
+import SwiftUI
 
 struct LoactionDetails: View {
     let event: Event
@@ -17,7 +16,7 @@ struct LoactionDetails: View {
     @Binding var selectemMapItem: Int?
     @Binding var show: Bool
     var body: some View {
-        VStack() {
+        VStack {
             HStack(alignment: .top) {
                 VStack(alignment: .leading) {
                     Text(event.title)
@@ -25,7 +24,6 @@ struct LoactionDetails: View {
                         .font(.title2)
                     Text("Где:" + event.address)
                         .font(.callout)
-                    
                 }
                 Spacer()
                 HStack {
@@ -38,10 +36,9 @@ struct LoactionDetails: View {
                         Text("Очков: \(event.score)")
                     }
                 }
-                
-                
+
                 Spacer()
-                
+
                 Button {
                     selectemMapItem = nil
                 }
@@ -51,10 +48,9 @@ struct LoactionDetails: View {
                         .frame(width: 24, height: 24)
                         .foregroundStyle(.gray, Color(.systemGray6))
                 }
-                
             }
             .padding(.vertical)
-            
+
             Button {
                 getRoute = true
                 show = false
@@ -65,7 +61,7 @@ struct LoactionDetails: View {
                     .padding()
                     .frame(maxWidth: .infinity)
                     .background(Color(.siriusBlue))
-                    .cornerRadius (12)
+                    .cornerRadius(12)
             }
         }
         .padding(.horizontal)

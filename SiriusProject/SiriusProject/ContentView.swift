@@ -48,7 +48,7 @@ struct ContentView: View {
                 .tabItem {
                     Image(systemName: "gear")
                     Text("settings")
-                } 
+                }
         }
         .sheet(isPresented: $notificationsManager.isNotificationViewShowing) {
             NotificationsView(

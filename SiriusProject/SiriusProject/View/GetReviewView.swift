@@ -17,14 +17,16 @@ struct GetReviewView: View {
     private let log: (String) -> Void
 
     init(
-        event: Event = Event(id: 1,
-                             title: "Title",
-                             state: .done,
-                             score: 10,
-                             address: "",
-                             description: "Description",
-                             latitude: 0.0,
-                             longitude: 0.0),
+        event: Event = Event(
+            id: 1,
+            title: "Title",
+            state: .done,
+            score: 10,
+            address: "",
+            description: "Description",
+            latitude: 0.0,
+            longitude: 0.0
+        ),
         log: @escaping (String) -> Void = { message in
             #if DEBUG
                 print(message)
@@ -220,12 +222,14 @@ private extension URL {
 }
 
 #Preview {
-    GetReviewView(event: Event(id: 1,
-                               title: "Title",
-                               state: .done,
-                               score: 5,
-                               address: "",
-                               description: "Description",
-                               latitude: 0.0,
-                               longitude: 0.0))
+    GetReviewView(event: Event(
+        id: 1,
+        title: "Title",
+        state: .done,
+        score: 5,
+        address: "",
+        description: "Description",
+        latitude: 0.0,
+        longitude: 0.0
+    ))
 }

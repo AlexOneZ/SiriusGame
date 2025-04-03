@@ -10,7 +10,7 @@ import SwiftUI
 struct Event: Identifiable {
     let id: Int
     var title: String
-    var state: EventState = EventState.done
+    var state: EventState = .done
     var score: Int = 0
     var address: String
     var description: String
@@ -21,12 +21,12 @@ struct Event: Identifiable {
 extension Event: Codable {
     enum CodingKeys: String, CodingKey {
         case title = "name"
-        case description = "description"
+        case description
         case id = "order"
         case state
         case score
         case address = "location"
         case latitude = "latidude"
-        case longitude = "longitude"
+        case longitude
     }
 }

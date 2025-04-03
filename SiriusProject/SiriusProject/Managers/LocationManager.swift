@@ -5,9 +5,9 @@
 //  Created by Илья Лебедев on 02.04.2025.
 //
 
-import Foundation
-import CoreLocation
 import _MapKit_SwiftUI
+import CoreLocation
+import Foundation
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var region: MapCameraPosition = .region(MKCoordinateRegion(
@@ -40,6 +40,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
 
     // MARK: - CLLocationManagerDelegate
+
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         DispatchQueue.main.async {
             self.locationStatus = status
@@ -59,7 +60,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last else { return }
-        
+
         DispatchQueue.main.async {
             self.userLocation = location.coordinate
         }
