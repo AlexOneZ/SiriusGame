@@ -32,8 +32,8 @@ struct SiriusProjectApp: App {
 
         errorLogging = errorPublisherLogging(errorPublisher)
 
-        networkManager = /*FakeNetworkManager(logging: printLogging)*/
-         NetworkManager(service: APIService(urlSession: URLSession.shared), logging: errorLogging)
+        networkManager = /* FakeNetworkManager(logging: printLogging) */
+            NetworkManager(service: APIService(urlSession: URLSession.shared), logging: errorLogging)
         notificationsManager = NotificationsManager()
 
         appViewModel = AppViewModel(
