@@ -50,8 +50,10 @@ struct ContentView: View {
         }
         .sheet(isPresented: $notificationsManager.isNotificationViewShowing) {
             NotificationsView(
-                isNotificationViewShowing: $notificationsManager.isNotificationViewShowing,
-                viewModel: appViewModel.notificationsViewModel
+                notificationsViewModel: appViewModel.notificationsViewModel,
+                isNotificationViewShowing:
+                $notificationsManager.isNotificationViewShowing,
+                log: logging
             )
         }
     }
@@ -67,7 +69,7 @@ struct ContentView: View {
             pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
             leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
             mapViewModel: MapViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
-            notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging))
+            notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging)
         ),
         notificationsManager: NotificationsManager()
     )

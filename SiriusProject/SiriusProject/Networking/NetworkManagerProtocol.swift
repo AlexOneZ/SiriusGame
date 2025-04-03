@@ -7,6 +7,7 @@
 
 protocol NetworkManagerProtocol {
     var logging: Logging { get }
+    var token: String { get set }
 
     func getTeams(completion: @escaping ([Team]) -> Void)
     func enterTeam(name: String, completion: @escaping (Int) -> Void)
@@ -19,4 +20,5 @@ protocol NetworkManagerProtocol {
     func addEvent(name: String, description: String?, completion: @escaping (Bool) -> Void)
     func deleteEvent(eventId: Int, completion: @escaping (Bool) -> Void)
     func sendTokenToServer(token: String, completion: @escaping (Bool) -> Void)
+    func getHistoryNotifications(token: String, completion: @escaping ([Notification]) -> Void)
 }

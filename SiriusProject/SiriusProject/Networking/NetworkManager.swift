@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import SwiftUI
 
 struct NetworkManager: NetworkManagerProtocol {
     private let service: APIService
     let logging: Logging
+    @AppStorage("notificationsToken") var token: String = ""
 
     init(service: APIService, logging: @escaping Logging) {
         self.service = service
@@ -205,6 +207,22 @@ struct NetworkManager: NetworkManagerProtocol {
                 return
             }
             completion(response != nil)
+        }
+    }
+
+    func getHistoryNotifications(token: String, completion: @escaping ([Notification]) -> Void) {
+        guard let request = Endpoint.getHistoryNotifications(token: token).request else {
+            logging("Error: Failed to create request")
+            completion([])
+            return
+        }
+        service.makeRequest(with: request, respModel: [Notification].self, logging: logging) { notifications, error in
+            if let error = error {
+                logging(error.localizedDescription)
+                completion([])
+                return
+            }
+            completion(notifications ?? [])
         }
     }
 }

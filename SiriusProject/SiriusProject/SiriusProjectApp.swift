@@ -43,10 +43,15 @@ struct SiriusProjectApp: App {
             pointsViewModel: PointsViewModel(networkManager: networkManager),
             leaderboardViewModel: LeaderboardViewModel(networkManager: networkManager, logging: logging),
             mapViewModel: MapViewModel(networkManager: networkManager),
-            notificationsViewModel: NotificationsViewModel(networkManager: networkManager)
+            notificationsViewModel: NotificationsViewModel(networkManager: networkManager, logging: logging)
         )
         let center = UNUserNotificationCenter.current()
-        appDelegate.setup(notificationCenter: center, runner: onMainThread, notificationsManager: notificationsManager, networkManager: networkManager as! NetworkManager)
+        appDelegate.setup(
+            notificationCenter: center,
+            runner: onMainThread,
+            notificationsManager: notificationsManager,
+            networkManager: networkManager as! NetworkManager
+        )
     }
 
     var body: some Scene {
