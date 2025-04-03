@@ -31,13 +31,11 @@ struct ContentView: View {
                 Text("events")
             }
             MapView(
-                mapViewModel: appViewModel.mapViewModel,
-                isNotificationViewShowing: $notificationsManager.isNotificationViewShowing
-            )
-            .tabItem {
-                Image(systemName: "mappin.circle")
-                Text("map")
-            }
+                viewModel: appViewModel.mapViewModel)
+                .tabItem {
+                    Image(systemName: "mappin.circle")
+                    Text("map")
+                }
             LeaderboardView(liderboardViewModel: appViewModel.leaderboardViewModel)
                 .tabItem {
                     Image(systemName: "chart.bar.xaxis.ascending")
@@ -68,7 +66,7 @@ struct ContentView: View {
             loginViewModel: LoginViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
             pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
             leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
-            mapViewModel: MapViewModel(),
+            mapViewModel: MapViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
             notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging))
         ),
         notificationsManager: NotificationsManager()

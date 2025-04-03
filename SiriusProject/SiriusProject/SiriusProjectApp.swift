@@ -42,7 +42,7 @@ struct SiriusProjectApp: App {
             loginViewModel: LoginViewModel(networkManager: networkManager),
             pointsViewModel: PointsViewModel(networkManager: networkManager),
             leaderboardViewModel: LeaderboardViewModel(networkManager: networkManager, logging: logging),
-            mapViewModel: MapViewModel(),
+            mapViewModel: MapViewModel(networkManager: networkManager),
             notificationsViewModel: NotificationsViewModel(networkManager: networkManager)
         )
         let center = UNUserNotificationCenter.current()

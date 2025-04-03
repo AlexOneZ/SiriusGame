@@ -10,11 +10,12 @@ import SwiftUI
 struct Event: Identifiable {
     let id: Int
     var title: String
-    var description: String?
-    var state: EventState
-    var score: Int
-    var adress: String?
-    var rules: String?
+    var state: EventState = .done
+    var score: Int = 0
+    var address: String
+    var description: String
+    var latitude: Double = 1.0
+    var longitude: Double = 1.0
 }
 
 extension Event: Codable {
@@ -24,5 +25,8 @@ extension Event: Codable {
         case id = "order"
         case state
         case score
+        case address = "location"
+        case latitude = "latidude"
+        case longitude
     }
 }
