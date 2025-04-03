@@ -66,7 +66,6 @@ struct EventsListView: View {
     }
 }
 
-
 #Preview {
     EventsListView(
         appViewModel: AppViewModel(
