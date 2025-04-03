@@ -159,20 +159,20 @@ struct NetworkManager: NetworkManagerProtocol {
         }
     }
 
-    func addEvent(name: String, description: String?, completion: @escaping (Bool) -> Void) {
-        guard let request = Endpoint.addEvent(name: name, description: description).request else {
+    func addEvent(name: String, description: String, location: String, latidude: Double, longitude: Double, completion: @escaping (Bool) -> Void) {
+        guard let request = Endpoint.addEvent(name: name, description: description, location: location, latidude: latidude, longitude: longitude).request else {
             logging("Error: Failed to create request")
             completion(false)
             return
         }
 
-        service.makeRequest(with: request, respModel: Bool.self, logging: logging) { success, error in
+        service.makeRequest(with: request, respModel: EventAddResponse.self, logging: logging) { success, error in
             if let error = error {
                 logging(error.localizedDescription)
                 completion(false)
                 return
             }
-            completion(success ?? false)
+            completion(success != nil)
         }
     }
 

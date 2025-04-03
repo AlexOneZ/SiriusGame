@@ -82,6 +82,14 @@ class TeamRepository:
             return True if result.scalar_one_or_none() else False
 
     @classmethod
+    async def delete_all(cls) -> bool:
+        async with new_session() as session:
+            await session.execute(delete(TeamEventOrm))
+            await session.execute(delete(TeamOrm))
+            await session.commit()
+            return True 
+
+    @classmethod
     async def get_team_events(cls, team_id: int) -> Optional[List[STeamEvent]]:
         team_model = await cls.get_by_id(team_id)
         if not team_model:

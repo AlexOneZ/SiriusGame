@@ -45,6 +45,11 @@ async def delete_team(team_id: int):
         raise HTTPException(status_code=404, detail="Team not found")
     return {"ok": True}
 
+@router.delete("")
+async def delete_all_teams():
+    success = await TeamRepository.delete_all()
+    return {"ok": True}
+
 @router.get("/{team_id}/events")
 async def get_team_events(team_id: int) -> List[STeamEvent]:
     events = await TeamRepository.get_team_events(team_id)
