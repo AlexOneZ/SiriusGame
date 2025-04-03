@@ -22,7 +22,7 @@ struct JudgeContentView: View {
             SendReviewToUserView()
                 .tabItem {
                     Image(systemName: "square.and.arrow.up")
-                    Text("Set Rate")
+                    Text("Поставить оценку")
                 }
             SettingsView(settingsViewModel: appViewModel.settingsViewModel, logging: logging)
                 .tabItem {

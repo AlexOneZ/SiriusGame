@@ -52,7 +52,9 @@ struct EventsListView: View {
         }
         .onChange(of: isNeedUpdate) {
             print("New fetch events")
-            viewModel.fetchEvents()
+            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.5) {
+                viewModel.fetchEvents()
+            }
         }
         .overlay(alignment: .bottomTrailing) {
             NotificationsButton(
