@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from typing import List
 
-from .schemas import Device, Message
+from .schemas import Device, Message, NotificationHistory
 from .repository import DeviceRepository
 from .handler import PushHandler
 
@@ -87,3 +87,37 @@ async def send_push_to_all(message: Message, handler: PushHandler = Depends()):
         destination=message.destination
     )
     return {"results": results}
+
+
+@router.get("/history/{device_token}", response_model=List[NotificationHistory])
+async def get_device_notification_history(
+        device_token: str,
+        limit: int = Query(100, ge=1, le=1000),  # Параметры пагинации
+        offset: int = Query(0, ge=0)
+):
+    """
+    Получает историю уведомлений для указанного токена устройства.
+    """
+    device = await DeviceRepository.get_device_by_token(device_token)
+    if not device or not device.id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Device token not found")
+
+    history = await DeviceRepository.get_history_for_device(device.id, limit=limit, offset=offset)
+    return history
+
+
+@router.delete("/history/{history_id}", status_code=status.HTTP_200_OK)
+async def delete_notification_history_entry(history_id: int):
+    """
+    Удаляет одну запись из истории уведомлений по её ID.
+    """
+    existing_entry = await DeviceRepository.get_history_by_id(history_id)
+    if not existing_entry:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Notification history entry not found")
+
+    success = await DeviceRepository.delete_notification_history(history_id)
+    if not success:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                            detail="Failed to delete history entry after check")
+
+    return {"ok": True, "detail": f"Notification history entry with id {history_id} deleted."}

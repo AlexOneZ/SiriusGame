@@ -1,6 +1,8 @@
+# backend/pushes/handler.py
+
 import logging
 import json
-from typing import List, Dict, Tuple, Union
+from typing import List, Dict, Tuple, Union, Optional  # Добавляем Optional
 
 from .apn_handler import (
     APNsClient,
@@ -29,134 +31,120 @@ class PushHandler:
         )
         self.topic: str = PushConfig.get_apns_app_bundle_id()
 
-    async def send_push(
-            self, to_device_token: str, title: str, body: str,
-            destination: str | None = None, sound: str = "default",
-            badge: int | None = 1,
-            priority: NotificationPriority = NotificationPriority.Immediate,
-            push_type: NotificationType = NotificationType.Alert,
-            custom_payload: dict | None = None,
-    ) -> bool:
-        # Initialize custom payload dictionary if not provided
-        if custom_payload is None:
-            custom_payload = {}
-
-        # Add destination to custom payload if provided
-        if destination:
-            custom_payload["destination"] = destination
-
-        payload = Payload(alert={"title": title, "body": body}, sound=sound, badge=badge, custom=custom_payload)
-
-        try:
-            self.connection.send_notification(
-                token_hex=to_device_token, notification=payload,
-                topic=self.topic, priority=priority,
-            )
-            logger.info(f"Successfully sent push to {to_device_token}")
-            return True
-        except (Unregistered, BadDeviceToken) as e:
-            logger.warning(f"Device token {to_device_token} is invalid ({e.__class__.__name__}). Removing.")
-            await DeviceRepository.delete_device_by_token(to_device_token)
-            return False
-        except APNsException as e:
-            reason = getattr(e, 'reason', str(e))
-            logger.error(f"Failed to send push to {to_device_token}: {e.__class__.__name__} - {reason}")
-            if reason and reason in ("Unregistered", "BadDeviceToken"):
-                logger.info(f"Marking token {to_device_token} for removal due to single send error: {reason}")
-                await DeviceRepository.delete_device_by_token(to_device_token)
-            return False
-        except Exception as e:
-            logger.exception(f"An unexpected error occurred while sending push to {to_device_token}: {e}")
-            return False
-
     async def send_multiple_push(
-            self, to_device_tokens: List[str], title: str, body: str,
-            destination: str | None = None, sound: str = "default",
-            badge: int | None = 1,
+            self,
+            to_device_tokens: List[str],
+            title: str,
+            body: str,
+            destination: Optional[str] = None,  # Используем Optional
+            sound: Optional[str] = "default",  # Используем Optional
+            badge: Optional[int] = 1,  # Используем Optional
             priority: NotificationPriority = NotificationPriority.Immediate,
             push_type: NotificationType = NotificationType.Alert,
-            custom_payload: dict | None = None,
-    ) -> Dict[str, Union[str, Tuple[str, str]]]:
-        # Initialize custom payload dictionary if not provided
-        if custom_payload is None:
-            custom_payload = {}
+            custom_payload: Optional[Dict] = None,  # Используем Optional
+    ) -> Dict[str, str]:
 
-        # Add destination to custom payload if provided
-        if destination:
-            custom_payload["destination"] = destination
-
-        payload = Payload(alert={"title": title, "body": body}, sound=sound, badge=badge, custom=custom_payload)
-
-        notifications = [
-            Notification(token=token, payload=payload) for token in to_device_tokens
-        ]
-
-        if not notifications:
+        if not to_device_tokens:
             logger.info("No device tokens provided for send_multiple_push.")
             return {}
 
-        results = {}
         try:
-            raw_results = self.connection.send_notification_batch(
-                notifications=notifications, topic=self.topic, priority=priority,
-            )
-
-            tokens_to_remove = []
-            processed_results = {}
-
-            for token, result_data_str in raw_results.items():
-                reason = None
-                is_success = result_data_str == "Success"
-
-                if is_success:
-                    processed_results[token] = "Success"
-                    continue
-
-                try:
-                    error_info = json.loads(result_data_str)
-                    if isinstance(error_info, dict) and 'reason' in error_info:
-                        reason = error_info['reason']
-                        processed_results[token] = reason
-                    else:
-                        logger.warning(f"Unexpected error JSON format for token {token}: {result_data_str}")
-                        processed_results[token] = f"Unknown format: {result_data_str}"
-                        continue
-                except json.JSONDecodeError:
-                    logger.warning(f"Non-JSON error response for token {token}: {result_data_str}")
-                    processed_results[token] = f"Non-JSON error: {result_data_str}"
-                    continue
-                except Exception as e_parse:
-                    logger.exception(f"Error parsing APNs response '{result_data_str}' for token {token}: {e_parse}")
-                    processed_results[token] = f"Parse error: {result_data_str}"
-                    continue
-
-                logger.warning(f"Failed to send to {token}: {reason}")
-
-                try:
-                    if reason:
-                        exception_class = exception_class_for_reason(reason)
-                        if exception_class in (Unregistered, BadDeviceToken):
-                            logger.info(f"Marking token {token} for removal due to: {reason}")
-                            tokens_to_remove.append(token)
-                except KeyError:
-                    logger.warning(f"Unknown APNs error reason code encountered: {reason}")
-                except Exception as e_inner:
-                    logger.exception(f"Error processing APNs reason '{reason}' for token {token}: {e_inner}")
-
-            if tokens_to_remove:
-                logger.info(f"Removing invalid tokens: {tokens_to_remove}")
-                for token in tokens_to_remove:
-                    try:
-                        await DeviceRepository.delete_device_by_token(token)
-                    except Exception as e_delete:
-                        logger.exception(f"Failed to delete token {token} from repository: {e_delete}")
-
-            return processed_results
-
-        except APNsException as e:
-            error_reason = getattr(e, 'reason', str(e))
-            logger.error(f"APNs batch send error: {e.__class__.__name__} - {error_reason}")
-            return {token: f"Batch send error: {error_reason}" for token in to_device_tokens}
+            token_id_map = await DeviceRepository.get_device_id_map_by_tokens(to_device_tokens)
+            valid_tokens = list(token_id_map.keys())
+            if len(valid_tokens) < len(to_device_tokens):
+                invalid_tokens = set(to_device_tokens) - set(valid_tokens)
+                logger.warning(f"Some requested tokens not found in DB and will be skipped: {invalid_tokens}")
         except Exception as e:
-            logger.exception(f"An unexpected error occurred during batch send: {e}")
-            return {token: f"Unexpected batch error: {type(e).__name__}" for token in to_device_tokens}
+            logger.exception("Failed to retrieve device IDs for tokens. Aborting push.")
+            return {token: f"Failed to get device info: {e}" for token in to_device_tokens}
+
+        if not valid_tokens:
+            logger.warning("No valid device tokens found in DB for the push request.")
+            return {}
+
+        effective_custom_payload = custom_payload or {}
+        if destination:
+            effective_custom_payload["destination"] = destination
+
+        alert_content = {"title": title, "body": body}
+        payload = Payload(
+            alert=alert_content,
+            sound=sound,
+            badge=badge,
+            custom=effective_custom_payload if effective_custom_payload else None
+        )
+
+        notifications_to_send = [
+            Notification(token=token, payload=payload) for token in valid_tokens
+        ]
+
+        apns_results: Dict[str, str] = {}
+        try:
+            apns_results = self.connection.send_notification_batch(
+                notifications=notifications_to_send,
+                topic=self.topic,
+                priority=priority,
+                # push_type=push_type - apn_handler сам определит
+            )
+            logger.info(f"APNs batch send results: {apns_results}")
+
+        except Exception as e:
+            error_reason = f"Batch send failed: {type(e).__name__} - {e}"
+            logger.exception(error_reason)
+            apns_results = {token: error_reason for token in valid_tokens}
+
+        history_entries_to_add = []
+        tokens_to_remove = []
+
+        for token in valid_tokens:
+            apns_status = apns_results.get(token, "SendAttemptFailed")
+
+            device_id = token_id_map.get(token)
+            if device_id:
+                history_entries_to_add.append({
+                    "device_id": device_id,
+                    "title": title,
+                    "body": body,
+                    "apns_status": apns_status,
+                    "destination": destination,
+                    "sound": sound,
+                    # sent_at - default in DB
+                })
+            else:
+                logger.error(
+                    f"Consistency error: device_id not found for valid token {token} during history recording.")
+
+            if apns_status not in ["Success", None, "SendAttemptFailed"]:
+                try:
+                    exception_class = exception_class_for_reason(apns_status)
+
+                    # Commented for DEBUG
+                    # if exception_class in (Unregistered, BadDeviceToken):
+                    #     tokens_to_remove.append(token)
+                except KeyError:
+                    logger.debug(f"APNs status '{apns_status}' for token {token} is not a reason for removal.")
+                except Exception as e_check:
+                    logger.exception(f"Error checking APNs status '{apns_status}' for removal: {e_check}")
+
+        if history_entries_to_add:
+            try:
+                await DeviceRepository.add_notification_history_batch(history_entries_to_add)
+                logger.info(f"Added {len(history_entries_to_add)} entries to notification history.")
+            except Exception as e_hist:
+                logger.exception(f"Failed to add notification history batch: {e_hist}")
+
+        if tokens_to_remove:
+            logger.info(f"Removing invalid tokens based on APNs feedback: {tokens_to_remove}")
+            removed_count = 0
+            for token in set(tokens_to_remove):
+                try:
+                    if await DeviceRepository.delete_device_by_token(token):
+                        removed_count += 1
+                except Exception as e_delete:
+                    logger.exception(f"Failed to delete token {token} from repository: {e_delete}")
+            logger.info(f"Successfully removed {removed_count} invalid tokens.")
+
+        final_api_results = {token: "TokenNotFoundInDB" for token in set(to_device_tokens) - set(valid_tokens)}
+        final_api_results.update(apns_results)
+
+        return final_api_results

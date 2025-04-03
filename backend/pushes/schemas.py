@@ -46,3 +46,17 @@ class Message(BaseModel):
     body: str
     sound: str | None = "default"
     destination: str | None = None
+
+
+class NotificationHistory(BaseModel):
+    id: int
+    device_id: int
+    title: str
+    body: str
+    sound: str | None = "default"
+    destination: str | None = None
+    sent_at: datetime
+    apns_status: str
+
+    class Config:
+        from_attributes = True # ORM
