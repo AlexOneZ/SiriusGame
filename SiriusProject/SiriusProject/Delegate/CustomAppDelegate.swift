@@ -15,7 +15,7 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate {
     var notificationCenter: UNUserNotificationCenter!
     var runner: MainThreadRunner!
     var notificationsManager: NotificationsManager?
-    var networkManager: NetworkManager?
+    var networkManager: NetworkManagerProtocol?
 
     @AppStorage("notificationsToken") var token: String = ""
 
@@ -27,7 +27,7 @@ class CustomAppDelegate: NSObject, UIApplicationDelegate {
         notificationCenter: UNUserNotificationCenter,
         runner: @escaping MainThreadRunner,
         notificationsManager: NotificationsManager,
-        networkManager: NetworkManager
+        networkManager: NetworkManagerProtocol
     ) {
         self.notificationCenter = notificationCenter
         self.notificationsManager = notificationsManager

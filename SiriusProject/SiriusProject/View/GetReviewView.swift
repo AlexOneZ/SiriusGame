@@ -44,7 +44,7 @@ struct GetReviewView: View {
 
             VStack(spacing: 24) {
                 VStack(spacing: 8) {
-                    Text("Получить оценку")
+                    Text("getscore")
                         .font(.system(.title, design: .rounded))
                         .fontWeight(.bold)
                         .foregroundStyle(.primary)
@@ -70,10 +70,10 @@ struct GetReviewView: View {
                         )
 
                     VStack(spacing: 8) {
-                        Text("Как получить оценку")
+                        Text("howtogetscore")
                             .font(.headline)
 
-                        Text("Попросите судью выставить вам оценку за эту дисциплину. Убедитесь, что AirDrop включен на вашем устройстве.")
+                        Text("askthejudgesetscore")
                             .font(.subheadline)
                             .multilineTextAlignment(.center)
                             .foregroundStyle(.secondary)
@@ -87,11 +87,11 @@ struct GetReviewView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Варитан 1:")
+                    Text("variant") + Text(" 1:")
                         .font(.headline)
-                    InstructionStep(number: 1, text: "Попросите судью открыть приложение")
-                    InstructionStep(number: 2, text: "Судья выберет вашу дисциплину")
-                    InstructionStep(number: 3, text: "Ожидайте получения оценки через AirDrop")
+                    InstructionStep(number: 1, text: "askthejudgeopenapp")
+                    InstructionStep(number: 2, text: "thejudgewillchoose")
+                    InstructionStep(number: 3, text: "expecttoreceiveanestimate")
                 }
                 .padding()
                 .background(
@@ -101,10 +101,10 @@ struct GetReviewView: View {
                 .padding(.horizontal)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Вариант 2:")
+                    Text("variant") + Text(" 2:")
                         .font(.headline)
-                    InstructionStep(number: 1, text: "Подойдите к судье")
-                    InstructionStep(number: 2, text: "Воспользуйтесь кнопкой ручного ввода оценки")
+                    InstructionStep(number: 1, text: "gotojudge")
+                    InstructionStep(number: 2, text: "usemanualbutton")
                 }
                 .padding()
                 .background(
@@ -113,7 +113,7 @@ struct GetReviewView: View {
                 )
                 .padding(.horizontal)
 
-                Button("Ручной ввод", systemImage: "person.fill.questionmark") {
+                Button("manualinput", systemImage: "person.fill.questionmark") {
                     isShowHandReviewView.toggle()
                 }
                 .font(.headline)
@@ -134,7 +134,7 @@ struct GetReviewView: View {
             handleIncomingURL(url)
         }
         .onChange(of: receivedScore) {}
-        .alert("Оценка получена!", isPresented: $isPresented) {
+        .alert("gradereceived", isPresented: $isPresented) {
             Button("OK", role: .cancel) {
                 withAnimation {
                     showAnimation = true
@@ -145,7 +145,7 @@ struct GetReviewView: View {
             }
         } message: {
             if let title = event?.title, let score = receivedScore {
-                Text("Ваша оценка за \(title): \(score)/10")
+                Text("yourratingfor") + Text(" \(title): \(score)/10")
             }
         }
     }
@@ -162,7 +162,6 @@ struct GetReviewView: View {
         Оценка: \(idAndScore[1])
         """
         log(logMessage)
-        print(logMessage)
     }
 }
 
@@ -186,7 +185,7 @@ struct RatingBadge: View {
 
 struct InstructionStep: View {
     let number: Int
-    let text: String
+    let text: LocalizedStringKey
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
