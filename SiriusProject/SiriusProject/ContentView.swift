@@ -31,8 +31,8 @@ struct ContentView: View {
                 Text("events")
             }
             MapView(
-                mapViewModel: appViewModel.mapViewModel,
-                isNotificationViewShowing: $notificationsManager.isNotificationViewShowing
+                viewModel: appViewModel.mapViewModel
+//                isNotificationViewShowing: $notificationsManager.isNotificationViewShowing
             )
             .tabItem {
                 Image(systemName: "mappin.circle")
@@ -48,7 +48,7 @@ struct ContentView: View {
                 .tabItem {
                     Image(systemName: "gear")
                     Text("settings")
-                }
+                } 
         }
         .sheet(isPresented: $notificationsManager.isNotificationViewShowing) {
             NotificationsView(
@@ -68,7 +68,7 @@ struct ContentView: View {
             loginViewModel: LoginViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
             pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
             leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
-            mapViewModel: MapViewModel(),
+            mapViewModel: MapViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
             notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging))
         ),
         notificationsManager: NotificationsManager()

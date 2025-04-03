@@ -15,7 +15,14 @@ struct SendReviewToUserView: View {
     @State private var showConfirmation: Bool = false
 
     init(
-        event: Event = Event(id: 1, title: "Title", description: "Description", state: .done, score: 1),
+        event: Event = Event(id: 1,
+                             title: "Title",
+                             state: .done,
+                             score: 1,
+                             address: "",
+                             description: "Description",
+                             latitude: 0.0,
+                             longitude: 0.0 ),
         log: @escaping (String) -> Void = { _ in }
     ) {
         self.event = event

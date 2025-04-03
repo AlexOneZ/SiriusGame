@@ -27,5 +27,7 @@
 			<string>com.Sirius.SiriusGame</string>
 		</dict>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We want use your location to navigate you to events</string>
 </dict>
 </plist>

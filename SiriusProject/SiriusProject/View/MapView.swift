@@ -7,30 +7,96 @@
 import MapKit
 import SwiftUI
 
+
+import SwiftUI
+import MapKit
+
 struct MapView: View {
     @ObservedObject var viewModel: MapViewModel
-    @Binding var isNotificationViewShowing: Bool
-
-    init(
-        mapViewModel: MapViewModel,
-        isNotificationViewShowing: Binding<Bool>
-    ) {
-        viewModel = mapViewModel
-        _isNotificationViewShowing = isNotificationViewShowing
+    @StateObject var locationManager = LocationManager()
+    
+    init(viewModel: MapViewModel) {
+        self.viewModel = viewModel
     }
-
-    let point = CLLocationCoordinate2D(latitude: 43.40222213237247, longitude: 39.95576828887273)
-
+    
     var body: some View {
-        Map(position: $viewModel.region) {
-            Marker("Football", coordinate: point)
+        Map(position: $locationManager.region, interactionModes: .all, selection: $viewModel.selectedMapItem) {
+            
+            ForEach(viewModel.events, id: \.id) { event in
+                Marker(event.title,
+                       systemImage: SportIconProvider.getSportIconCircle(for: event.title),
+                       coordinate: CLLocationCoordinate2D(latitude: event.latitude,
+                                                          longitude: event.longitude))
+                .tag(event.id)
+                .tint(event.state.getColor())
+            }
+            
+            UserAnnotation()
+            
+            if let route = viewModel.route  {
+                MapPolyline(route)
+                    .stroke(Color(.siriusPurple2), lineWidth: 5)
+            }
         }
+        
         .overlay(alignment: .bottomTrailing) {
-            NotificationsButton(
-                action: { isNotificationViewShowing = true }
-            )
-            .padding(.trailing, 30)
-            .padding(.bottom, 40)
+            if viewModel.route != nil {
+                Button {
+                    viewModel.route = nil
+                    viewModel.selectedMapItem = nil
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title)
+                        .foregroundStyle(Color.gray)
+                        .padding()
+                }
+            }
         }
+        
+        .alert(locationManager.errorMessage ?? "",
+               isPresented: $viewModel.showingAlert) {
+            Button("OK", role: .cancel) { }
+        }
+        .alert(viewModel.routeError ?? "",
+                      isPresented: $viewModel.showingRouteAlert) {
+                   Button("OK", role: .cancel) {
+                       viewModel.routeError = nil }
+               }
+        
+                      .sheet(isPresented: $viewModel.showDetails, content: {
+                          if let event = viewModel.selectedEvent {
+                              LoactionDetails(event: event,
+                                              getRoute: $viewModel.getRoute,
+                                              selectemMapItem: $viewModel.selectedMapItem,
+                                              show: $viewModel.showDetails)
+                              .presentationDetents([.height(120)])
+                              .presentationBackgroundInteraction(.enabled(upThrough: .height(120)))
+                              
+                          }
+                      })
+        
+                      .mapControls {
+                          MapUserLocationButton()
+                          MapPitchToggle()
+                          MapCompass()
+                      }
+        
+                      .onAppear {
+                          locationManager.startUpdatingLocation()
+                          viewModel.fetchEvents()
+                      }
+        
+                      .onChange(of: viewModel.getRoute) { oldValue, newValue in
+                          if newValue {
+                              Task {
+                                  await viewModel.fetchRoute(userLocation: locationManager.userLocation)
+                              }
+                          }
+                      }
     }
+    
+}
+
+#Preview {
+    MapView(viewModel: MapViewModel(networkManager: FakeNetworkManager(logging: printLogging)))
 }
