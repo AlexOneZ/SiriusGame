@@ -46,7 +46,8 @@ struct SiriusProjectApp: App {
             mapViewModel: MapViewModel(networkManager: networkManager),
             notificationsViewModel: NotificationsViewModel(networkManager: networkManager, logging: logging),
             getRateReviewModel: GetRateReviewModel(networkManager: networkManager, logging: logging),
-            createEventViewModel: CreateEventViewModel(networkManager: networkManager, logging: logging)
+            createEventViewModel: CreateEventViewModel(networkManager: networkManager, logging: logging),
+            sendPushViewModel: SendPushViewModel(networkManager: networkManager, logging: logging)
         )
         let center = UNUserNotificationCenter.current()
         appDelegate.setup(
@@ -88,4 +89,5 @@ struct AppViewModel {
     var notificationsViewModel: NotificationsViewModel
     var getRateReviewModel: GetRateReviewModel
     var createEventViewModel: CreateEventViewModel
+    var sendPushViewModel: SendPushViewModel
 }

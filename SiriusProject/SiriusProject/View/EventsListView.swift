@@ -77,7 +77,7 @@ struct EventsListView: View {
             leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
             mapViewModel: MapViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
             notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging), getRateReviewModel: GetRateReviewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
-            createEventViewModel: CreateEventViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging)
+            createEventViewModel: CreateEventViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging), sendPushViewModel: SendPushViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging)
         ), eventsListViewModel: EventsListViewModel(
             networkManager: FakeNetworkManager(logging: printLogging),
             logging: printLogging

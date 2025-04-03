@@ -60,3 +60,5 @@
 "neizvestnayalocationerror" = "Неизвестная ошибка при доступе к местоположению.";
 "locationerror" = "Ошибка получения местоположения";
 "createevent" = "Добавить событие";
+"sendpush" = "Уведомления для всех";
+"sendpushbutton" = "Отправить";

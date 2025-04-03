@@ -17,12 +17,12 @@ struct TextFieldView: View {
             .font(.system(size: 20, weight: .medium))
             .padding()
             .background {
+//                RoundedRectangle(cornerRadius: 20)
+//                    .stroke(Color.black, lineWidth: 1)
+//                    .background {
                 RoundedRectangle(cornerRadius: 20)
-                    .stroke(Color.black, lineWidth: 1)
-                    .background {
-                        RoundedRectangle(cornerRadius: 20)
-                            .fill(.black.opacity(0.1))
-                    }
+                    .fill(.black.opacity(0.1))
+//                    }
             }
             .padding(.horizontal, 20)
     }
