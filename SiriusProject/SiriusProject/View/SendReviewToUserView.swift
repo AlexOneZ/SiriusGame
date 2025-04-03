@@ -35,14 +35,10 @@ struct SendReviewToUserView: View {
     var body: some View {
         VStack(spacing: 24) {
             VStack(spacing: 8) {
-                Text("Rate the event")
+                Text("Оценить событие")
                     .font(.system(.title, design: .rounded))
                     .fontWeight(.bold)
                     .foregroundStyle(.primary)
-
-                Text(event.title)
-                    .font(.headline)
-                    .foregroundStyle(.secondary)
             }
             .padding(.top, 24)
 
@@ -98,7 +94,7 @@ struct SendReviewToUserView: View {
                 ) {
                     HStack {
                         Image(systemName: "square.and.arrow.up")
-                        Text("Share Rating")
+                        Text("Отправить оценку")
                     }
                     .font(.headline)
                     .foregroundStyle(.white)

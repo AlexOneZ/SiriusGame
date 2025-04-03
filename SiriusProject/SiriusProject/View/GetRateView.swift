@@ -11,6 +11,7 @@ struct GetRateView: View {
     @ObservedObject var viewModel = GetRateViewModel()
     @Environment(\.dismiss) var dismiss
     @Binding var score: Int?
+    @Binding var isHandReview: Bool
 
     var body: some View {
         VStack(alignment: .center) {
@@ -21,10 +22,6 @@ struct GetRateView: View {
             Group {
                 TextField("Оценка", text: $viewModel.score.value)
                     .validatedField(validatedField: viewModel.score, placeholder: "Оценка")
-                    .onChange(of: viewModel.score.value) {
-                        guard let number = Int(viewModel.score.value) else { return }
-                        score = number
-                    }
                 SecureField("Пароль судьи", text: $viewModel.judgePasscode.value)
                     .validatedField(validatedField: viewModel.judgePasscode, placeholder: "Пароль судьи")
             }
@@ -33,6 +30,9 @@ struct GetRateView: View {
             Spacer()
 
             Button {
+                guard let number = Int(viewModel.score.value) else { return }
+                score = number
+                isHandReview = true
                 dismiss()
             } label: {
                 Text("Оценить")
