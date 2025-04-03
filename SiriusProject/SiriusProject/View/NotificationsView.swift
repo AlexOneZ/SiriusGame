@@ -12,7 +12,7 @@ struct NotificationsView: View {
     @Binding var isNotificationViewShowing: Bool
     @ObservedObject var viewModel: NotificationsViewModel
     var header: LocalizedStringKey = "notifications"
-    
+
     init(
         notificationsViewModel: NotificationsViewModel,
         isNotificationViewShowing: Binding<Bool>,
@@ -22,7 +22,7 @@ struct NotificationsView: View {
         _isNotificationViewShowing = isNotificationViewShowing
         self.log = log
     }
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -35,21 +35,19 @@ struct NotificationsView: View {
                     endPoint: .bottomTrailing
                 )
                 .ignoresSafeArea()
-                
+
                 if viewModel.isLoading {
                     ProgressView()
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
                         .scaleEffect(1.5)
                         .transition(.opacity.animation(.easeInOut(duration: 0.3)))
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                }
-                else if viewModel.notifications.isEmpty {
+                } else if viewModel.notifications.isEmpty {
                     Text("nonotifications")
                         .foregroundStyle(.placeholder)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .multilineTextAlignment(.center)
-                }
-                else {
+                } else {
                     ScrollView {
                         LazyVStack(spacing: 4) {
                             Group {
