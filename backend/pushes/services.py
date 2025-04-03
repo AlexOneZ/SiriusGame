@@ -39,6 +39,6 @@ class PushService:
             to_device_tokens=message.recipients,
             title=message.title,
             body=message.body,
-            destination=message.destination,
-            sound=message.sound
+            sound=message.sound,
+            destination=message.destination
         )

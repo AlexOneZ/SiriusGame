@@ -44,5 +44,5 @@ class Message(BaseModel):
     recipients: list[str]
     title: str
     body: str
-    destination: str | None = None
     sound: str | None = "default"
+    destination: str | None = None
