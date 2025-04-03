@@ -24,6 +24,12 @@ struct JudgeContentView: View {
                     Image(systemName: "square.and.arrow.up")
                     Text("Set Rate")
                 }
+            CreateEventView(viewModel: appViewModel.createEventViewModel)
+                .tabItem {
+                    Image(systemName: "trophy.fill")
+                    Text("createevent")
+                }
+
             SettingsView(settingsViewModel: appViewModel.settingsViewModel, logging: logging)
                 .tabItem {
                     Image(systemName: "gear")

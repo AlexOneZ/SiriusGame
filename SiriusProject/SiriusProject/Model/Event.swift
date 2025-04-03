@@ -30,3 +30,8 @@ extension Event: Codable {
         case longitude
     }
 }
+
+struct EventAddResponse: Codable {
+    let ok: Bool
+    let event_id: Int
+}

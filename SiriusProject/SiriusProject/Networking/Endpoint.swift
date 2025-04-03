@@ -17,7 +17,7 @@ enum Endpoint {
     case setTeamEventScore(url: String = Constants.teamsPath, teamId: Int, url1: String = Constants.eventsPath, score: Int)
 
     case getEvents(url: String = Constants.eventsPath)
-    case addEvent(url: String = Constants.eventsPath, name: String, description: String?)
+    case addEvent(url: String = Constants.eventsPath, name: String, description: String, location: String, latidude: Double, longitude: Double)
     case deleteEvent(url: String = Constants.eventsPath, eventId: Int)
     case sendTokenToServer(url: String = Constants.pushesPath, url1: String = Constants.registerPath, token: String)
     case getHistoryNotifications(url: String = Constants.pushesPath, url1: String = Constants.historyPath, token: String)
@@ -59,8 +59,8 @@ enum Endpoint {
             return "\(url)/\(teamId)\(url1)"
         case let .getEvents(url):
             return url
-        case let .addEvent(url, _, _):
-            return url
+        case let .addEvent(url, name, description, location, latidude, longitude):
+            return "\(url)"
         case let .deleteEvent(url, eventId):
             return "\(url)/\(eventId)"
         case let .sendTokenToServer(url, url1, _):
@@ -83,9 +83,12 @@ enum Endpoint {
             return []
         case let .enterTeam(_, name):
             return [.init(name: "name", value: name)]
-        case let .addEvent(_, name, description):
+        case let .addEvent(_, name, description, location, latitude, longitude):
             return [.init(name: "name", value: name),
-                    .init(name: "description", value: description)]
+                    .init(name: "description", value: description),
+                    .init(name: "latidude", value: String(latitude)),
+                    .init(name: "longitude", value: String(longitude)),
+                    .init(name: "location", value: location)]
         case let .updateTeamName(_, _, name):
             return [.init(name: "new_name", value: name)]
         case let .setTeamEventScore(_, _, _, score):

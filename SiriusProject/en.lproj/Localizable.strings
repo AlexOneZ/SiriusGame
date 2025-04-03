@@ -59,3 +59,4 @@
 "dostupklocationzapreshen" = "Access to the location is prohibited. Change the settings.";
 "neizvestnayalocationerror" = "Unknown error when accessing the location.";
 "locationerror" = "Location Error";
+"createevent" = "Create event";
