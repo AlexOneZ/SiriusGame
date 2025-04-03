@@ -58,4 +58,4 @@
 "ochkov" = "Points: ";
 "dostupklocationzapreshen" = "Access to the location is prohibited. Change the settings.";
 "neizvestnayalocationerror" = "Unknown error when accessing the location.";
-"locationerror" = "Location Error"
+"locationerror" = "Location Error";
