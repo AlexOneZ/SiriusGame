@@ -177,7 +177,6 @@ struct GetReviewView: View {
                 print("not setted")
             }
         }
-        
     }
 }
 
