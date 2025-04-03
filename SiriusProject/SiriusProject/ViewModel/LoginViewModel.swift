@@ -9,20 +9,23 @@ import SwiftUI
 
 final class LoginViewModel: ObservableObject {
     let networkManager: NetworkManagerProtocol
+    let logging: Logging
 
-    init(networkManager: NetworkManagerProtocol) {
+    init(networkManager: NetworkManagerProtocol, logging: @escaping Logging) {
         self.networkManager = networkManager
+        self.logging = logging
     }
 
     @Published var teamName = ""
     @AppStorage("teamID") var teamID: Int = 0
-    
+
     func newTeamRegister() {
-        networkManager.enterTeam(name: teamName) { id in
-            //teamID = id
-//            onMainThread( {
-//                teamID = id
-//            })
+        logging("Try register new team \(teamName)")
+        networkManager.enterTeam(name: teamName) { [weak self] id in
+            onMainThread {
+                self?.logging("try setup id \(id)")
+                self?.teamID = id
+            }
         }
     }
 }

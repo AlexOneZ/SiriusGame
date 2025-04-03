@@ -13,7 +13,7 @@ struct LoginView: View {
     @AppStorage("isJudge") var isJudge: Bool = false
     @AppStorage("isLogin") var isLogin: Bool = false
     @AppStorage("teamID") var teamID: Int = 0
-    
+
     @State var isJudgeLogin: Bool = false
     @State var inputJudgePin: String = ""
     let judgeSecretKey = "1234"
@@ -27,16 +27,14 @@ struct LoginView: View {
             Spacer()
 
             TextFieldView(title: "team title", text: $viewModel.teamName)
-            
-            if teamID >= 0 {
-                Text("Id defined")
+
+            if teamID > 0 {
+                Text("Id defined \(teamID)")
             }
 
             Spacer()
 
             Button {
-                isLogin = true
-                isJudge = false
                 viewModel.newTeamRegister()
             } label: {
                 SButton(title: "login")
@@ -47,26 +45,36 @@ struct LoginView: View {
                 SButton(title: "login_as_judge")
             }
             .alert("Eneter judge pin", isPresented: $isJudgeLogin, actions: {
-                
                 TextField("Input", text: $inputJudgePin)
-                Button("Check?", role: .cancel ,action: {
+                Button("Check?", role: .cancel, action: {
                     if judgeSecretKey == inputJudgePin {
                         isLogin = true
                         isJudge = true
                     }
                 })
-                Button("Dismiss", role: .destructive, action: {}
+                Button(
+                    "Dismiss",
+                    role: .destructive,
+                    action: {}
                 )
-                
-            }, message:{
+
+            }, message: {
                 Text("Input pin:")
             })
             .padding(.bottom, 70)
         }
         .padding()
+        .onAppear {
+            viewModel.logging("teamId on lView \(teamID)")
+        }
+        .onChange(of: teamID) {
+            viewModel.logging("teamID changed")
+            isLogin = true
+            isJudge = false
+        }
     }
 }
 
 #Preview {
-    LoginView(viewModel: LoginViewModel(networkManager: FakeNetworkManager(logging: printLogging)))
+    LoginView(viewModel: LoginViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: { _ in }))
 }
