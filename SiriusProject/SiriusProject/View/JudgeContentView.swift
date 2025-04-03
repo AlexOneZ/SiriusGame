@@ -10,7 +10,6 @@ import SwiftUI
 struct JudgeContentView: View {
     var appViewModel: AppViewModel
     private let logging: Logging
-    // delete it
     @State var isNotificationViewShowing: Bool = false
 
     init(appViewModel: AppViewModel, logging: @escaping Logging) {
@@ -20,10 +19,10 @@ struct JudgeContentView: View {
 
     var body: some View {
         TabView {
-            EventsListView(eventsListViewModel: appViewModel.eventsListViewModel, isNotificationViewShowing: $isNotificationViewShowing)
+            SendReviewToUserView()
                 .tabItem {
-                    Image(systemName: "rectangle.on.rectangle")
-                    Text("events")
+                    Image(systemName: "square.and.arrow.up")
+                    Text("Set Rate")
                 }
             SettingsView(settingsViewModel: appViewModel.settingsViewModel, logging: logging)
                 .tabItem {

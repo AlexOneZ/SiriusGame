@@ -124,7 +124,7 @@ struct NetworkManager: NetworkManagerProtocol {
     }
 
     func setTeamEventScore(teamId: Int, score: Int, completion: @escaping (Bool) -> Void) {
-        guard let request = Endpoint.getEvents().request else {
+        guard let request = Endpoint.setTeamEventScore(teamId: teamId, score: score).request else {
             logging("Error: Failed to create request")
             completion(false)
             return

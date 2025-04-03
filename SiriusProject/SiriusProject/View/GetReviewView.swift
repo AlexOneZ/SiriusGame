@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct GetReviewView: View {
+    @ObservedObject var viewModel: GetRateReviewModel
     let event: Event?
     @State private var isPresented: Bool = false
     @State private var showAnimation: Bool = false
     @State private var receivedScore: Int? = nil
     @State private var isShowHandReviewView: Bool = false
 
-    private let log: (String) -> Void
+    @AppStorage("teamID") var teamID: Int = 0
+    @Binding var isNeedUpdate: Bool
 
     init(
         event: Event = Event(
@@ -27,14 +29,12 @@ struct GetReviewView: View {
             latitude: 0.0,
             longitude: 0.0
         ),
-        log: @escaping (String) -> Void = { message in
-            #if DEBUG
-                print(message)
-            #endif
-        }
+        getReviewViewModel: GetRateReviewModel,
+        isNeedUpdate: Binding<Bool> = .constant(false)
     ) {
+        viewModel = getReviewViewModel
         self.event = event
-        self.log = log
+        _isNeedUpdate = isNeedUpdate
     }
 
     var body: some View {
@@ -151,17 +151,13 @@ struct GetReviewView: View {
     }
 
     private func handleIncomingURL(_ url: URL) {
-        guard let idAndScore = url.recieveDeeplinkURL(log: log) else { return }
+        guard let idAndScore = url.recieveDeeplinkURL(log: viewModel.logging) else { return }
 
         receivedScore = idAndScore[1]
         isPresented = true
 
-        let logMessage = """
-        Получены данные:
-        ID: \(idAndScore[0]),
-        Оценка: \(idAndScore[1])
-        """
-        log(logMessage)
+        viewModel.setTeamEventScore(teamID: teamID, score: receivedScore ?? 0)
+        isNeedUpdate = true
     }
 }
 
@@ -218,17 +214,4 @@ private extension URL {
 
         return [id, score]
     }
-}
-
-#Preview {
-    GetReviewView(event: Event(
-        id: 1,
-        title: "Title",
-        state: .done,
-        score: 5,
-        address: "",
-        description: "Description",
-        latitude: 0.0,
-        longitude: 0.0
-    ))
 }
