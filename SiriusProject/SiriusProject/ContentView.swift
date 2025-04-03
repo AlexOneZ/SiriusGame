@@ -32,10 +32,10 @@ struct ContentView: View {
             }
             MapView(
                 viewModel: appViewModel.mapViewModel)
-            .tabItem {
-                Image(systemName: "mappin.circle")
-                Text("map")
-            }
+                .tabItem {
+                    Image(systemName: "mappin.circle")
+                    Text("map")
+                }
             LeaderboardView(liderboardViewModel: appViewModel.leaderboardViewModel)
                 .tabItem {
                     Image(systemName: "chart.bar.xaxis.ascending")
