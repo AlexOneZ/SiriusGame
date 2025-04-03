@@ -52,7 +52,9 @@ struct EventsListView: View {
         }
         .onChange(of: isNeedUpdate) {
             print("New fetch events")
-            viewModel.fetchEvents()
+            DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.5) {
+                viewModel.fetchEvents()
+            }
         }
         .overlay(alignment: .bottomTrailing) {
             NotificationsButton(
@@ -62,4 +64,24 @@ struct EventsListView: View {
             .padding(.bottom, 40)
         }
     }
+}
+
+#Preview {
+    EventsListView(
+        appViewModel: AppViewModel(
+            logging: printLogging,
+            eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            loginViewModel: LoginViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
+            leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            mapViewModel: MapViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
+            notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging), getRateReviewModel: GetRateReviewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            createEventViewModel: CreateEventViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging)
+        ), eventsListViewModel: EventsListViewModel(
+            networkManager: FakeNetworkManager(logging: printLogging),
+            logging: printLogging
+        ),
+        isNotificationViewShowing: .constant(false)
+    )
 }

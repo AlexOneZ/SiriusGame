@@ -14,6 +14,7 @@ struct GetReviewView: View {
     @State private var showAnimation: Bool = false
     @State private var receivedScore: Int? = nil
     @State private var isShowHandReviewView: Bool = false
+    @State private var isHandReview: Bool = false
 
     @AppStorage("teamID") var teamID: Int = 0
     @Binding var isNeedUpdate: Bool
@@ -128,12 +129,15 @@ struct GetReviewView: View {
             }
         }
         .sheet(isPresented: $isShowHandReviewView) {
-            GetRateView(score: $receivedScore)
+            GetRateView(score: $receivedScore, isHandReview: $isHandReview)
         }
         .onOpenURL { url in
             handleIncomingURL(url)
         }
-        .onChange(of: receivedScore) {}
+        .onChange(of: isHandReview) {
+            print("Get hand review")
+            scoreGet(score: receivedScore ?? 1)
+        }
         .alert("gradereceived", isPresented: $isPresented) {
             Button("OK", role: .cancel) {
                 withAnimation {
@@ -154,8 +158,12 @@ struct GetReviewView: View {
         guard let idAndScore = url.recieveDeeplinkURL(log: viewModel.logging) else { return }
 
         receivedScore = idAndScore[1]
-        isPresented = true
 
+        scoreGet(score: idAndScore[1])
+    }
+
+    private func scoreGet(score: Int) {
+        isPresented = true
         viewModel.setTeamEventScore(teamID: teamID, score: receivedScore ?? 0)
         isNeedUpdate = true
     }

@@ -13,7 +13,7 @@ struct LenghtRule: ValidateProtocol {
     let errorMessage: String
     var lenght: Int
 
-    init(errorMessage: String = "Incorrect lenght", lenght: Int) {
+    init(errorMessage: String = "Неккоретная длина", lenght: Int) {
         self.errorMessage = errorMessage
         self.lenght = lenght
     }

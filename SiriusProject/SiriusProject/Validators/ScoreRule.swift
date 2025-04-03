@@ -12,9 +12,9 @@ struct ScoreRule: ValidateProtocol {
 
     let errorMessage: String
     let minScore: Int = 0
-    let maxScore: Int = 100
+    let maxScore: Int = 10
 
-    init(errorMessage: String = "Score must be from 0 to 100") {
+    init(errorMessage: String = "Диапазон очков должен быть от 0 до 10") {
         self.errorMessage = errorMessage
     }
 

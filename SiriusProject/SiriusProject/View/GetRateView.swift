@@ -11,31 +11,31 @@ struct GetRateView: View {
     @ObservedObject var viewModel = GetRateViewModel()
     @Environment(\.dismiss) var dismiss
     @Binding var score: Int?
+    @Binding var isHandReview: Bool
 
     var body: some View {
         VStack(alignment: .center) {
             Spacer()
 
-            Text("Enter score and passcode to rate")
+            Text("Введите проверочный код")
                 .font(.headline)
             Group {
-                TextField("Score", text: $viewModel.score.value)
-                    .validatedField(validatedField: viewModel.score, placeholder: "Score")
-                    .onChange(of: viewModel.score.value) {
-                        guard let number = Int(viewModel.score.value) else { return }
-                        score = number
-                    }
-                SecureField("Judge password", text: $viewModel.judgePasscode.value)
-                    .validatedField(validatedField: viewModel.judgePasscode, placeholder: "Judge password")
+                TextField("Оценка", text: $viewModel.score.value)
+                    .validatedField(validatedField: viewModel.score, placeholder: "Оценка")
+                SecureField("Пароль судьи", text: $viewModel.judgePasscode.value)
+                    .validatedField(validatedField: viewModel.judgePasscode, placeholder: "Пароль судьи")
             }
             .keyboardType(.numberPad)
 
             Spacer()
 
             Button {
+                guard let number = Int(viewModel.score.value) else { return }
+                score = number
+                isHandReview = true
                 dismiss()
             } label: {
-                Text("Rate")
+                Text("Оценить")
                     .foregroundStyle(.white)
                     .padding()
                     .frame(maxWidth: 300)

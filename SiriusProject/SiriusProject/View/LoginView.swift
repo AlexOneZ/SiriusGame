@@ -40,22 +40,19 @@ struct LoginView: View {
             } label: {
                 SButton(title: "login_as_judge")
             }
-            .alert("Eneter judge pin", isPresented: $isJudgeLogin, actions: {
-                TextField("Input", text: $inputJudgePin)
-                Button("Check?", role: .cancel, action: {
+            .alert("Введите пароль судьи", isPresented: $isJudgeLogin, actions: {
+                SecureField("Пароль", text: $inputJudgePin)
+                Button("Проверить", role: .cancel, action: {
                     if judgeSecretKey == inputJudgePin {
                         isLogin = true
                         isJudge = true
                     }
                 })
                 Button(
-                    "Dismiss",
+                    "Отмена",
                     role: .destructive,
                     action: {}
                 )
-
-            }, message: {
-                Text("Input pin:")
             })
             .padding(.bottom, 70)
         }
