@@ -63,10 +63,8 @@ extension CustomAppDelegate: UNUserNotificationCenterDelegate {
         didReceive response: UNNotificationResponse
     ) async {
         let userInfo = response.notification.request.content.userInfo
-        if let aps = userInfo["aps"] as? [String: Any],
-           let alert = aps["alert"] as? [String: Any],
-           let destination = alert["destination"] as? String,
-           destination == "notifications"
+        if let destination = userInfo["destination"] as? String,
+           destination == "notification"
         {
             runner { [weak self] in
                 guard let self = self else { return }
