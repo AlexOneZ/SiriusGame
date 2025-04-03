@@ -106,4 +106,10 @@ struct FakeNetworkManager: NetworkManagerProtocol {
         logging("Deleted all teams")
         completion(true)
     }
+
+    func sendPushesToAll(teamname: String, score: Int, completion: @escaping (Bool) -> Void) {
+        logging("Teamname: \(teamname)")
+        logging("Score: \(score)")
+        completion(true)
+    }
 }

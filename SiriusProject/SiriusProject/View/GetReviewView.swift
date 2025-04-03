@@ -165,6 +165,11 @@ struct GetReviewView: View {
     private func scoreGet(score: Int) {
         isPresented = true
         viewModel.setTeamEventScore(teamID: teamID, score: receivedScore ?? 0)
+        var teamname = ""
+        viewModel.networkManager.getTeam(teamId: teamID) { team in
+            teamname = team?.name ?? ""
+        }
+        viewModel.networkManager.sendPushesToAll(teamname: teamname, score: receivedScore ?? 0) { _ in }
         isNeedUpdate = true
     }
 }
