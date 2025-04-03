@@ -25,7 +25,7 @@ struct EventsListView: View {
         _isNotificationViewShowing = isNotificationViewShowing
         self.log = log
     }
-
+    
     var body: some View {
         ZStack {
             if viewModel.events.isEmpty {
