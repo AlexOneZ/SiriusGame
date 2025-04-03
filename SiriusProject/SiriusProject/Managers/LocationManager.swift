@@ -8,6 +8,7 @@
 import _MapKit_SwiftUI
 import CoreLocation
 import Foundation
+import SwiftUI
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var region: MapCameraPosition = .region(MKCoordinateRegion(
@@ -16,7 +17,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     ))
     @Published var userLocation: CLLocationCoordinate2D?
     @Published var locationStatus: CLAuthorizationStatus?
-    @Published var errorMessage: String?
+    @Published var errorMessage: LocalizedStringKey?
 
     private let locationManager = CLLocationManager()
 
@@ -48,12 +49,12 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             case .authorizedWhenInUse, .authorizedAlways:
                 self.startUpdatingLocation()
             case .denied, .restricted:
-                self.errorMessage = "Доступ к местоположению запрещен. Измените настройки."
+                self.errorMessage = "dostupklocationzapreshen"
                 self.stopUpdatingLocation()
             case .notDetermined:
                 self.requestPermission()
             @unknown default:
-                self.errorMessage = "Неизвестная ошибка при доступе к местоположению."
+                self.errorMessage = "neizvestnayalocationerror"
             }
         }
     }
@@ -68,7 +69,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         onMainThread {
-            self.errorMessage = "Ошибка получения местоположения: \(error.localizedDescription)"
+            self.errorMessage = "locationerror"
         }
     }
 }

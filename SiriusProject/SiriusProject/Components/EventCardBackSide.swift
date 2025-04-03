@@ -43,13 +43,13 @@ struct EventCardBackSide: View {
                 VStack(alignment: .leading) {
                     EventInfoBlockViewComponent(
                         title: NSLocalizedString("location", comment: "Местоположение"),
-                        description: event.address ?? "",
+                        description: event.address,
                         hide: $show
                     )
 
                     EventInfoBlockViewComponent(
                         title: NSLocalizedString("rules", comment: "Правила игры"),
-                        description: event.description ?? "",
+                        description: event.description,
                         hide: $show
                     )
 

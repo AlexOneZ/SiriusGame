@@ -20,7 +20,7 @@ struct LoactionDetails: View {
                     Text(event.title)
                         .fontWeight(.semibold)
                         .font(.title2)
-                    Text("Где:" + event.address)
+                    Text("where") + Text(event.address)
                         .font(.callout)
                 }
                 Spacer()
@@ -31,7 +31,7 @@ struct LoactionDetails: View {
                     if let description = event.state.getDescription() {
                         Text(description)
                     } else {
-                        Text("Очков: \(event.score)")
+                        Text("ochkov") + Text("\(event.score)")
                     }
                 }
 
@@ -53,7 +53,7 @@ struct LoactionDetails: View {
                 getRoute = true
                 show = false
             } label: {
-                Text("Построить маршрут")
+                Text("setroute")
                     .font(.headline)
                     .foregroundColor(.white)
                     .padding()

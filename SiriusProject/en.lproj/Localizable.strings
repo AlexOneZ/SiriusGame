@@ -50,4 +50,12 @@
 "gotojudge" = "Go to the judge";
 "usemanualbutton" = "Use the manual grade input button";
 "manualinput" = "Manual input";
-
+"gradereceived" = "The grade has been received!";
+"yourratingfor" = "Your rating for";
+"teamtitle" = "Team name";
+"where" = "Place: ";
+"setroute" = "Set Route";
+"ochkov" = "Points: ";
+"dostupklocationzapreshen" = "Access to the location is prohibited. Change the settings.";
+"neizvestnayalocationerror" = "Unknown error when accessing the location.";
+"locationerror" = "Location Error"

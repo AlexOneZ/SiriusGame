@@ -50,3 +50,12 @@
 "gotojudge" = "Подойдите к судье";
 "usemanualbutton" = "Воспользуйтесь кнопкой ручного ввода оценки";
 "manualinput" = "Ручной ввод";
+"gradereceived" = "Оценка получена!";
+"yourratingfor" = "Ваша оценка за";
+"teamtitle" = "Название команды";
+"where" = "Где: ";
+"setroute" = "Построить маршрут";
+"ochkov" = "Очков: ";
+"dostupklocationzapreshen" = "Доступ к местоположению запрещен. Измените настройки.";
+"neizvestnayalocationerror" = "Неизвестная ошибка при доступе к местоположению.";
+"locationerror" = "Ошибка получения местоположения";

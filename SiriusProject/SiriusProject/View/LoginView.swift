@@ -26,11 +26,7 @@ struct LoginView: View {
 
             Spacer()
 
-            TextFieldView(title: "team title", text: $viewModel.teamName)
-
-            if teamID > 0 {
-                Text("Id defined \(teamID)")
-            }
+            TextFieldView(title: "teamtitle", text: $viewModel.teamName)
 
             Spacer()
 

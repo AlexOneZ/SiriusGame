@@ -73,7 +73,7 @@ struct GetReviewView: View {
                         Text("howtogetscore")
                             .font(.headline)
 
-                        Text("askthejudge")
+                        Text("askthejudgesetscore")
                             .font(.subheadline)
                             .multilineTextAlignment(.center)
                             .foregroundStyle(.secondary)
@@ -134,7 +134,7 @@ struct GetReviewView: View {
             handleIncomingURL(url)
         }
         .onChange(of: receivedScore) {}
-        .alert("Оценка получена!", isPresented: $isPresented) {
+        .alert("gradereceived", isPresented: $isPresented) {
             Button("OK", role: .cancel) {
                 withAnimation {
                     showAnimation = true
@@ -145,7 +145,7 @@ struct GetReviewView: View {
             }
         } message: {
             if let title = event?.title, let score = receivedScore {
-                Text("Ваша оценка за \(title): \(score)/10")
+                Text("yourratingfor") + Text(" \(title): \(score)/10")
             }
         }
     }
@@ -185,7 +185,7 @@ struct RatingBadge: View {
 
 struct InstructionStep: View {
     let number: Int
-    let text: String
+    let text: LocalizedStringKey
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
