@@ -65,3 +65,22 @@ struct EventsListView: View {
         }
     }
 }
+
+#Preview {
+    EventsListView(
+        appViewModel: AppViewModel(
+            logging: printLogging,
+            eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            loginViewModel: LoginViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
+            leaderboardViewModel: LeaderboardViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            mapViewModel: MapViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
+            notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging), getRateReviewModel: GetRateReviewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: { _ in })
+        ), eventsListViewModel: EventsListViewModel(
+            networkManager: FakeNetworkManager(logging: printLogging),
+            logging: printLogging
+        ),
+        isNotificationViewShowing: .constant(false)
+    )
+}

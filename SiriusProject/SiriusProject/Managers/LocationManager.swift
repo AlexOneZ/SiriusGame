@@ -63,7 +63,9 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         guard let location = locations.last else { return }
 
         onMainThread {
-            self.userLocation = location.coordinate
+            DispatchQueue.main.async {
+                self.userLocation = location.coordinate
+            }
         }
     }
 
