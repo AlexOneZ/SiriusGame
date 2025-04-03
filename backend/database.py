@@ -19,6 +19,9 @@ class EventOrm(Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column()
     description: Mapped[str | None] = mapped_column()
+    latidude: Mapped[float] = mapped_column()
+    longitude: Mapped[float] = mapped_column()
+    location: Mapped[str] = mapped_column()
 
 
 class TeamOrm(Model):
