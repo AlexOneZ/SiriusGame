@@ -11,6 +11,7 @@ final class SettingsViewModel: ObservableObject {
     let networkManager: NetworkManagerProtocol
     let logging: Logging
     @Published var teamName: String = ""
+    @AppStorage("teamID") var teamID: Int = 0
 
     init(networkManager: NetworkManagerProtocol, logging: @escaping Logging) {
         self.networkManager = networkManager
@@ -19,27 +20,37 @@ final class SettingsViewModel: ObservableObject {
     }
 
     func fetchTeamName() {
-        networkManager.getTeam(teamId: 1, completion: { [weak self] team in
-            onMainThread {
-                if let team = team {
-                    self?.teamName = team.name
+        if teamID > 0 {
+            logging("try to get for id \(teamID)")
+            networkManager.getTeam(teamId: teamID, completion: { [weak self] team in
+                onMainThread {
+                    if let team = team {
+                        self?.teamName = team.name
+                    }
                 }
-            }
-        })
+            })
+        } else {
+            logging("ID not defined")
+        }
     }
 
     func changeName(newName: String) {
-        networkManager.updateTeamName(teamId: 1, name: newName, completion: { [weak self] hasCompleted in
-            onMainThread {
-                if hasCompleted {
-                    self?.teamName = newName
+        if teamID > 0 {
+            logging("try get events for team id \(teamID)")
+            networkManager.updateTeamName(teamId: teamID, name: newName, completion: { [weak self] hasCompleted in
+                onMainThread {
+                    if hasCompleted {
+                        self?.logging("Succes change name")
+                        self?.teamName = newName
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
     func logOutAction() {
         UserDefaults.standard.set(false, forKey: "isLogin")
         UserDefaults.standard.set(false, forKey: "isJudge")
+        UserDefaults.standard.set(0, forKey: "teamID")
     }
 }

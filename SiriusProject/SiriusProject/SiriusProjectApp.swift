@@ -39,7 +39,7 @@ struct SiriusProjectApp: App {
             logging: logging,
             eventsListViewModel: EventsListViewModel(networkManager: networkManager, logging: logging),
             settingsViewModel: SettingsViewModel(networkManager: networkManager, logging: logging),
-            loginViewModel: LoginViewModel(networkManager: networkManager),
+            loginViewModel: LoginViewModel(networkManager: networkManager, logging: logging),
             pointsViewModel: PointsViewModel(networkManager: networkManager),
             leaderboardViewModel: LeaderboardViewModel(networkManager: networkManager, logging: logging),
             mapViewModel: MapViewModel(networkManager: networkManager),
@@ -54,7 +54,7 @@ struct SiriusProjectApp: App {
             ErrorHandlerView(errorPublisher: errorPublisher) {
                 if isLogin {
                     if isJudge {
-                        JudgeContentView(appViewModel: appViewModel)
+                        JudgeContentView(appViewModel: appViewModel, logging: logging)
                     } else {
                         ContentView(
                             appViewModel: appViewModel,
