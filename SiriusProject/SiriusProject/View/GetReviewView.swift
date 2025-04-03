@@ -167,10 +167,17 @@ struct GetReviewView: View {
         viewModel.setTeamEventScore(teamID: teamID, score: receivedScore ?? 0)
         var teamname = ""
         viewModel.networkManager.getTeam(teamId: teamID) { team in
-            teamname = team?.name ?? ""
+            if let name = team?.name {
+                teamname = name
+                viewModel.networkManager.sendPushesToAll(teamname: teamname, score: receivedScore ?? 0) { _ in }
+                isNeedUpdate = true
+                print("setted")
+
+            } else {
+                print("not setted")
+            }
         }
-        viewModel.networkManager.sendPushesToAll(teamname: teamname, score: receivedScore ?? 0) { _ in }
-        isNeedUpdate = true
+        
     }
 }
 
