@@ -21,12 +21,21 @@ struct EventsListView: View {
         _isNotificationViewShowing = isNotificationViewShowing
         self.log = log
     }
-
+    
     var body: some View {
-        ScrollView {
-            LazyVStack(alignment: .leading) {
-                ForEach(viewModel.events, id: \.id) { event in
-                    EventCard(event: event)
+        ZStack {
+            if viewModel.events.isEmpty {
+                Text("noevents")
+                    .foregroundStyle(.placeholder)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .multilineTextAlignment(.center)
+            } else {
+                ScrollView {
+                    LazyVStack(alignment: .leading) {
+                        ForEach(viewModel.events, id: \.id) { event in
+                            EventCard(event: event)
+                        }
+                    }
                 }
             }
         }
