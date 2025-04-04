@@ -33,6 +33,26 @@ struct SettingsView: View {
                 Text(": ") +
                 Text(isJudge ? LocalizedStringKey("judge") : LocalizedStringKey("participant"))
 
+            Button {
+                viewModel.deleteAllTeams()
+            } label: {
+                Text("deleteallteams")
+                    .foregroundStyle(Color.white)
+                    .padding()
+                    .background(Color(.red))
+                    .cornerRadius(20)
+            }
+            .alert("askdeleteallteams", isPresented: $viewModel.showAlert, actions: {
+                Button("delete", role: .destructive) {
+                    viewModel.deleteTeams = true
+                }
+                Button("cancel", role: .cancel) {}
+            })
+
+            .alert("teamsdeleted", isPresented: $viewModel.teamsDeleted, actions: {
+                Button("Ok", role: .cancel) {}
+            })
+
             Spacer()
 
             Button("changename") {

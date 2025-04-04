@@ -11,6 +11,14 @@ final class SettingsViewModel: ObservableObject {
     let networkManager: NetworkManagerProtocol
     let logging: Logging
     @Published var teamName: String = ""
+    @Published var showAlert: Bool = false
+    @Published var deleteTeams: Bool = false {
+        didSet {
+            deleteAllTeams()
+        }
+    }
+
+    @Published var teamsDeleted: Bool = false
     @AppStorage("teamID") var teamID: Int = 0
 
     init(networkManager: NetworkManagerProtocol, logging: @escaping Logging) {
@@ -45,6 +53,17 @@ final class SettingsViewModel: ObservableObject {
                     }
                 }
             })
+        }
+    }
+
+    func deleteAllTeams() {
+        if !deleteTeams {
+            showAlert = true
+        } else {
+            print("delete all teams")
+            networkManager.deleteAllTeams(completion: { _ in })
+            deleteTeams = false
+            teamsDeleted = true
         }
     }
 

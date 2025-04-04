@@ -24,7 +24,7 @@ enum Endpoint {
     case sendPushesToAll(url: String = Constants.pushesPath, url1: String = Constants.sendToAllPath, teamname: String, score: Int)
     case sendTextPushesToAll(url: String = Constants.pushesPath, url1: String = Constants.sendToAllPath, text: String, title: String)
 
-    case deleteAllTeams(url: String = Constants.pushesPath)
+    case deleteAllTeams(url: String = Constants.teamsPath)
 
     var request: URLRequest? {
         guard let url = url else { return nil }
