@@ -21,6 +21,7 @@ protocol NetworkManagerProtocol {
     func deleteEvent(eventId: Int, completion: @escaping (Bool) -> Void)
     func sendTokenToServer(token: String, completion: @escaping (Bool) -> Void)
     func getHistoryNotifications(token: String, completion: @escaping ([Notification]) -> Void)
-
     func deleteAllTeams(completion: @escaping (Bool) -> Void)
+    func sendPushesToAll(teamname: String, score: Int, completion: @escaping (Bool) -> Void)
+    func sendTextPushesToAll(text: String, title: String, completion: @escaping (Bool) -> Void)
 }

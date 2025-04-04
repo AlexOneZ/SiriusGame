@@ -8,10 +8,11 @@
 import Foundation
 
 class SendPushViewModel: ObservableObject {
+    @Published var pushTitle: String = ""
     @Published var pushText: String = ""
 
     var canSubmit: Bool {
-        return !pushText.isEmpty
+        return !pushText.isEmpty && !pushTitle.isEmpty
     }
 
     let networkManager: NetworkManagerProtocol
@@ -22,5 +23,9 @@ class SendPushViewModel: ObservableObject {
         self.logging = logging
     }
 
-    func sendPush() {}
+    func sendPush() {
+        networkManager.sendTextPushesToAll(text: pushText, title: pushTitle) { _ in }
+        pushText = ""
+        pushTitle = ""
+    }
 }

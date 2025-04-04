@@ -62,4 +62,8 @@
 "createevent" = "Create event";
 "sendpush" = "Send push to all";
 "sendpushbutton" = "Send push";
-
+"finishevents" = "Finish";
+"deleteallteams" = "Delete all teams";
+"askdeleteallteams" = "Are you sure to delete all teams?";
+"delete" = "Delete";
+"teamsdeleted" = "All commands are deleted";

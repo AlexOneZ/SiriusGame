@@ -63,7 +63,7 @@ struct ContentView: View {
     ContentView(
         appViewModel: AppViewModel(
             logging: printLogging,
-            eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager(logging: printLogging), liveActivtityManager: LiveActivityManager(), logging: printLogging),
             settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
             loginViewModel: LoginViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: { _ in }),
             pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager(logging: printLogging)),

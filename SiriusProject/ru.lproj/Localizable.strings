@@ -62,3 +62,8 @@
 "createevent" = "Добавить событие";
 "sendpush" = "Уведомления для всех";
 "sendpushbutton" = "Отправить";
+"finishevents" = "Игры завершены";
+"deleteallteams" = "Удалить все команды";
+"askdeleteallteams" = "Вы точно хотите удалить все команды?";
+"delete" = "Удалить";
+"teamsdeleted" = "Все команды удалены";
