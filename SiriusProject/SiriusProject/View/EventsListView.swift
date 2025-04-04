@@ -49,11 +49,13 @@ struct EventsListView: View {
         .onAppear {
             print("Try get events on appear")
             viewModel.fetchEvents()
+            viewModel.updateLiveActivity()
         }
         .onChange(of: isNeedUpdate) {
             print("New fetch events")
             DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.5) {
                 viewModel.fetchEvents()
+                viewModel.updateLiveActivity()
             }
         }
         .overlay(alignment: .bottomTrailing) {
@@ -70,7 +72,7 @@ struct EventsListView: View {
     EventsListView(
         appViewModel: AppViewModel(
             logging: printLogging,
-            eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
+            eventsListViewModel: EventsListViewModel(networkManager: FakeNetworkManager(logging: printLogging), liveActivtityManager: LiveActivityManager(), logging: printLogging),
             settingsViewModel: SettingsViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
             loginViewModel: LoginViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
             pointsViewModel: PointsViewModel(networkManager: FakeNetworkManager(logging: printLogging)),
@@ -79,7 +81,7 @@ struct EventsListView: View {
             notificationsViewModel: NotificationsViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging), getRateReviewModel: GetRateReviewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging),
             createEventViewModel: CreateEventViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging), sendPushViewModel: SendPushViewModel(networkManager: FakeNetworkManager(logging: printLogging), logging: printLogging)
         ), eventsListViewModel: EventsListViewModel(
-            networkManager: FakeNetworkManager(logging: printLogging),
+            networkManager: FakeNetworkManager(logging: printLogging), liveActivtityManager: LiveActivityManager(),
             logging: printLogging
         ),
         isNotificationViewShowing: .constant(false)
