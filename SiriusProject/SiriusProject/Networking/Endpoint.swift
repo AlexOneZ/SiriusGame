@@ -22,6 +22,7 @@ enum Endpoint {
     case sendTokenToServer(url: String = Constants.pushesPath, url1: String = Constants.registerPath, token: String)
     case getHistoryNotifications(url: String = Constants.pushesPath, url1: String = Constants.historyPath, token: String)
     case sendPushesToAll(url: String = Constants.pushesPath, url1: String = Constants.sendToAllPath, teamname: String, score: Int)
+    case sendTextPushesToAll(url: String = Constants.pushesPath, url1: String = Constants.sendToAllPath, text: String, title: String)
 
     case deleteAllTeams(url: String = Constants.pushesPath)
 
@@ -74,6 +75,8 @@ enum Endpoint {
             return url
         case let .sendPushesToAll(url, url1, _, _):
             return url + url1
+        case let .sendTextPushesToAll(url, url1, _, _):
+            return url + url1
         }
     }
 
@@ -88,7 +91,8 @@ enum Endpoint {
              .sendTokenToServer,
              .getHistoryNotifications,
              .deleteAllTeams,
-             .sendPushesToAll:
+             .sendPushesToAll,
+             .sendTextPushesToAll:
             return []
         case let .enterTeam(_, name):
             return [.init(name: "name", value: name)]
@@ -116,7 +120,8 @@ enum Endpoint {
         case .enterTeam,
              .addEvent,
              .sendTokenToServer,
-             .sendPushesToAll:
+             .sendPushesToAll,
+             .sendTextPushesToAll:
             return HTTP.Method.post.rawValue
         case .updateTeamName,
              .setTeamEventScore:
@@ -131,6 +136,7 @@ enum Endpoint {
         case let .sendTokenToServer(_, _, token):
             let jsonPost = try? JSONEncoder().encode(["token": token])
             return jsonPost
+
         case let .sendPushesToAll(_, _, teamname, score):
             struct PushNotification: Encodable {
                 let recipients: [String]
@@ -149,6 +155,26 @@ enum Endpoint {
             )
 
             return try? JSONEncoder().encode(notification)
+
+        case let .sendTextPushesToAll(_, _, text, title):
+            struct PushNotification: Encodable {
+                let recipients: [String]
+                let title: String
+                let body: String
+                let sound: String
+                let destination: String
+            }
+
+            let notification = PushNotification(
+                recipients: [],
+                title: title,
+                body: text,
+                sound: "default",
+                destination: "notification"
+            )
+
+            return try? JSONEncoder().encode(notification)
+
         default:
             return nil
         }

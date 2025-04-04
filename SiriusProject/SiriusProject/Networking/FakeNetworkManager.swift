@@ -112,4 +112,10 @@ struct FakeNetworkManager: NetworkManagerProtocol {
         logging("Score: \(score)")
         completion(true)
     }
+
+    func sendTextPushesToAll(text: String, title: String, completion: @escaping (Bool) -> Void) {
+        logging("Title: \(title)")
+        logging("Text: \(text)")
+        completion(true)
+    }
 }
