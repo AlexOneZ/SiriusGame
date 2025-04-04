@@ -34,7 +34,7 @@ struct ContentView: View {
                 viewModel: appViewModel.mapViewModel)
                 .tabItem {
                     Image(systemName: "mappin.circle")
-                    Text("map")
+                    Text("Карта")
                 }
             LeaderboardView(liderboardViewModel: appViewModel.leaderboardViewModel)
                 .tabItem {
