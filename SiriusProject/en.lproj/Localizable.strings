@@ -62,4 +62,5 @@
 "createevent" = "Create event";
 "sendpush" = "Send push to all";
 "sendpushbutton" = "Send push";
+"finishevents" = "Finish";
 

@@ -12,6 +12,7 @@ import UserNotifications
 struct SiriusProjectApp: App {
     let networkManager: NetworkManagerProtocol
     var notificationsManager: NotificationsManager
+    let liveAcivityManager: LiveActivityManager
 
     var appViewModel: AppViewModel
     let logging: Logging
@@ -32,13 +33,15 @@ struct SiriusProjectApp: App {
 
         errorLogging = errorPublisherLogging(errorPublisher)
 
-        networkManager = /* FakeNetworkManager(logging: printLogging) */
+        networkManager =
             NetworkManager(service: APIService(urlSession: URLSession.shared), logging: errorLogging)
         notificationsManager = NotificationsManager()
 
+        liveAcivityManager = LiveActivityManager()
+
         appViewModel = AppViewModel(
             logging: logging,
-            eventsListViewModel: EventsListViewModel(networkManager: networkManager, logging: logging),
+            eventsListViewModel: EventsListViewModel(networkManager: networkManager, liveActivtityManager: LiveActivityManager(), logging: logging),
             settingsViewModel: SettingsViewModel(networkManager: networkManager, logging: logging),
             loginViewModel: LoginViewModel(networkManager: networkManager, logging: logging),
             pointsViewModel: PointsViewModel(networkManager: networkManager),

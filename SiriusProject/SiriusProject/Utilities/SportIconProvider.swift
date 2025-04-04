@@ -42,6 +42,7 @@ enum SportIconProvider {
         case "шахматы": return "rectangle.pattern.checkered"
         case "регби": return "figure.rugby"
         case "скалолазание": return "figure.climbing"
+        case "": return "flag.pattern.checkered"
         default: return "trophy.fill"
         }
     }
