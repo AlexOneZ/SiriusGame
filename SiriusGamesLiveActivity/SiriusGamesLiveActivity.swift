@@ -14,11 +14,11 @@ struct SportsActivityWidget: Widget {
         ActivityConfiguration(for: EventAttributes.self) { context in
             if let eventState = EventState(rawValue: context.state.status), let nextEventSutus = EventState(rawValue: context.state.nextEventSatus) {
                 LockScreenActivityView(eventName: context.state.eventName,
-                currentEventState: eventState,
-                status: context.state.status,
-                nextEventName: context.state.nextEventName,
-                nextEventStatus: nextEventSutus,
-                score: context.state.score)
+                                       currentEventState: eventState,
+                                       status: context.state.status,
+                                       nextEventName: context.state.nextEventName,
+                                       nextEventStatus: nextEventSutus,
+                                       score: context.state.score)
             }
         } dynamicIsland: { context in
             DynamicIsland {
