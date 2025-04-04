@@ -20,7 +20,8 @@ struct SportsActivityWidget: Widget {
                     nextEventName: context.state.nextEventName,
                     nextEventStatus: nextEventSutus,
                     score: context.state.score
-                )}
+                )
+            }
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
