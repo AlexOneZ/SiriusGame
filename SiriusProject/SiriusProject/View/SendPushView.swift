@@ -21,10 +21,12 @@ struct SendPushView: View {
                 .bold()
             Spacer()
 
+            TextFieldView(title: "Заголовок уведомления", text: $viewModel.pushTitle)
+
             TextFieldView(title: "Текст уведомления", text: $viewModel.pushText)
 
             Button {
-                viewModel.pushText
+                viewModel.sendPush()
             } label: {
                 Text("sendpushbutton")
                     .foregroundStyle(.white)
@@ -34,7 +36,7 @@ struct SendPushView: View {
                     .cornerRadius(20)
                     .padding()
             }
-            .disabled(viewModel.canSubmit)
+            .disabled(!viewModel.canSubmit)
 
             Spacer()
         }
